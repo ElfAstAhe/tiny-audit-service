@@ -2,11 +2,21 @@ package domain
 
 import (
 	"fmt"
-	"tiny-audit-service/internal/domain/errs"
+	"time"
 
 	"github.com/ElfAstAhe/go-service-template/pkg/domain"
+	"github.com/ElfAstAhe/tiny-audit-service/internal/domain/errs"
 	"github.com/google/uuid"
 )
+
+type commonAudit interface {
+	GetSource() string
+	GetEventDate() time.Time
+	GetEvent() string
+	GetStatus() string
+	GetRequestID() string
+	GetUsername() string
+}
 
 const (
 	AuditStatusSuccess string = "success"
@@ -75,6 +85,23 @@ func defaultBeforeCreate(entity domain.Entity[string]) error {
 	}
 
 	entity.SetID(newID.String())
+
+	return nil
+}
+
+func validateCommon(commonAudit commonAudit) error {
+	if commonAudit.GetSource() == "" {
+		return errs.NewBllValidateError("validateCommon", "source must not be empty", nil)
+	}
+	if commonAudit.GetEventDate().IsZero() {
+		return errs.NewBllValidateError("validateCommon", "event_date must not be empty", nil)
+	}
+	if err := validateAuditStatus(commonAudit.GetStatus()); err != nil {
+		return errs.NewBllValidateError("validateCommon", "status validate", err)
+	}
+	if commonAudit.GetUsername() == "" {
+		return errs.NewBllValidateError("validateCommon", "username cannot be empty", nil)
+	}
 
 	return nil
 }

@@ -2,9 +2,9 @@ package domain
 
 import (
 	"time"
-	"tiny-audit-service/internal/domain/errs"
 
 	"github.com/ElfAstAhe/go-service-template/pkg/domain"
+	"github.com/ElfAstAhe/tiny-audit-service/internal/domain/errs"
 )
 
 type AuthAudit struct {
@@ -22,6 +22,7 @@ type AuthAudit struct {
 }
 
 var _ domain.Entity[string] = (*AuthAudit)(nil)
+var _ commonAudit = (*AuthAudit)(nil)
 
 func NewEmptyAuthAudit() *AuthAudit {
 	return &AuthAudit{
@@ -44,7 +45,7 @@ func (aa *AuthAudit) IsExists() bool {
 
 func (aa *AuthAudit) BeforeCreate() error {
 	if err := defaultBeforeCreate(aa); err != nil {
-		return errs.NewBllError("DataAudit.BeforeCreate", "default before create failed", err)
+		return errs.NewBllError("AuthAudit.BeforeCreate", "default before create failed", err)
 	}
 
 	if aa.CreatedAt.IsZero() {
@@ -65,20 +66,11 @@ func (aa *AuthAudit) ValidateCreate() error {
 	if aa.ID != "" {
 		return errs.NewBllValidateError("AuthAudit.ValidateCreate", "id must be empty", nil)
 	}
-	if aa.Source != "" {
-		return errs.NewBllValidateError("AuthAudit.ValidateCreate", "source must be empty", nil)
-	}
-	if aa.EventDate.IsZero() {
-		return errs.NewBllValidateError("AuthAudit.ValidateCreate", "event_date must not be empty", nil)
-	}
 	if err := validateAuthEvent(aa.Event); err != nil {
 		return errs.NewBllValidateError("AuthAudit.ValidateCreate", "event validate", err)
 	}
-	if err := validateAuditStatus(aa.Status); err != nil {
-		return errs.NewBllValidateError("AuthAudit.ValidateCreate", "status validate", err)
-	}
-	if aa.Username == "" {
-		return errs.NewBllValidateError("AuthAudit.ValidateCreate", "username cannot be empty", nil)
+	if err := validateCommon(aa); err != nil {
+		return errs.NewBllValidateError("AuthAudit.ValidateCreate", "common audit validate", err)
 	}
 
 	return nil
@@ -88,18 +80,36 @@ func (aa *AuthAudit) ValidateChange() error {
 	if aa.ID == "" {
 		return errs.NewBllValidateError("AuthAudit.ValidateChange", "id cannot be empty", nil)
 	}
-	if aa.EventDate.IsZero() {
-		return errs.NewBllValidateError("AuthAudit.ValidateChange", "event_date must not be empty", nil)
-	}
 	if err := validateAuthEvent(aa.Event); err != nil {
 		return errs.NewBllValidateError("AuthAudit.ValidateChange", "event validate", err)
 	}
-	if err := validateAuditStatus(aa.Status); err != nil {
-		return errs.NewBllValidateError("AuthAudit.ValidateChange", "status validate", err)
-	}
-	if aa.Username == "" {
-		return errs.NewBllValidateError("AuthAudit.ValidateChange", "username cannot be empty", nil)
+	if err := validateCommon(aa); err != nil {
+		return errs.NewBllValidateError("AuthAudit.ValidateChange", "common audit validate", err)
 	}
 
 	return nil
+}
+
+func (aa *AuthAudit) GetSource() string {
+	return aa.Source
+}
+
+func (aa *AuthAudit) GetEventDate() time.Time {
+	return aa.EventDate
+}
+
+func (aa *AuthAudit) GetEvent() string {
+	return aa.Event
+}
+
+func (aa *AuthAudit) GetStatus() string {
+	return aa.Status
+}
+
+func (aa *AuthAudit) GetRequestID() string {
+	return aa.RequestID
+}
+
+func (aa *AuthAudit) GetUsername() string {
+	return aa.Username
 }
