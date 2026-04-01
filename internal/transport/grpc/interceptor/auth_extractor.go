@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/ElfAstAhe/go-service-template/pkg/auth"
+	"github.com/ElfAstAhe/go-service-template/pkg/helper"
 	"github.com/ElfAstAhe/go-service-template/pkg/logger"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
@@ -21,34 +22,72 @@ func (w *wrappedStream) Context() context.Context {
 }
 
 type AuthExtractor struct {
-	authHelper auth.Helper
-	log        logger.Logger
-	nonSecure  map[string]struct{}
+	jwtHelper     *helper.JWTHelper
+	jwtGRPCHelper *helper.JWTGRPCHelper
+	authHelper    auth.Helper
+	log           logger.Logger
+	nonSecure     map[string]struct{}
+	acceptIssuers map[string]struct{}
 }
 
-func NewAuthExtractor(authHelper auth.Helper, logger logger.Logger) *AuthExtractor {
+func NewAuthExtractor(
+	jwtHelper *helper.JWTHelper,
+	jwtGRPCHelper *helper.JWTGRPCHelper,
+	authHelper auth.Helper,
+	logger logger.Logger,
+	nonSecureMethods []string,
+	acceptIssuers []string,
+) *AuthExtractor {
+	nonSecureMap := make(map[string]struct{}, len(nonSecureMethods))
+	for _, nonSecureMethod := range nonSecureMethods {
+		nonSecureMap[nonSecureMethod] = struct{}{}
+	}
+	acceptIssuersMap := make(map[string]struct{}, len(acceptIssuers))
+	for _, acceptIssuer := range acceptIssuers {
+		acceptIssuersMap[acceptIssuer] = struct{}{}
+	}
+
 	return &AuthExtractor{
-		authHelper: authHelper,
-		log:        logger.GetLogger("gRPC-Auth-Extractor"),
-		nonSecure:  map[string]struct{}{},
+		jwtHelper:     jwtHelper,
+		jwtGRPCHelper: jwtGRPCHelper,
+		authHelper:    authHelper,
+		log:           logger.GetLogger("gRPC-Auth-Extractor"),
+		nonSecure:     nonSecureMap,
+		acceptIssuers: acceptIssuersMap,
 	}
 }
 
-func (ae *AuthExtractor) UnaryServerInterceptor(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
+func (ae *AuthExtractor) UnaryServerInterceptor(ctx context.Context, req any, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (any, error) {
 	ae.log.Debugf("UnaryServerInterceptor start with req: [%v]", req)
 	defer ae.log.Debug("UnaryServerInterceptor finish")
 
-	// ignorance
+	// check nonsecure methods
 	if ae.isNonSecure(info.FullMethod) {
 		return handler(ctx, req)
 	}
 
-	subj, err := ae.authHelper.SubjectFromGRPCContext(ctx)
+	// extract token
+	token, err := ae.jwtGRPCHelper.ExtractTokenFromContext(auth.DefaultMetadataName, ctx)
+	if err != nil {
+		return nil, status.Errorf(codes.Unauthenticated, "invalid auth token: %v", err)
+	}
+	// convert into claims
+	claims, err := ae.jwtHelper.ExtractClaims(token)
+	if err != nil {
+		return nil, status.Errorf(codes.Unauthenticated, "invalid auth token: %v", err)
+	}
+	// check issuers via white list
+	if !ae.isAcceptIssuer(claims.Issuer) {
+		return nil, status.Errorf(codes.Unauthenticated, "invalid auth token: invalid issuer: %v", claims.Issuer)
+	}
+
+	subj, err := ae.authHelper.SubjectFromToken(token)
 	if err != nil {
 		ae.log.Errorf("AuthExtractor.UnaryServerInterceptor failed with error: [%v]", err)
 
 		return nil, status.Error(codes.Unauthenticated, err.Error())
 	}
+
 	secureCtx := auth.WithSubject(ctx, subj)
 
 	return handler(secureCtx, req)
@@ -80,6 +119,12 @@ func (ae *AuthExtractor) StreamServerInterceptor(srv interface{}, stream grpc.Se
 
 func (ae *AuthExtractor) isNonSecure(method string) bool {
 	_, ok := ae.nonSecure[method]
+
+	return ok
+}
+
+func (ae *AuthExtractor) isAcceptIssuer(issuer string) bool {
+	_, ok := ae.acceptIssuers[issuer]
 
 	return ok
 }
