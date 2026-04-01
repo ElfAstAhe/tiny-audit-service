@@ -15,8 +15,9 @@ type AppConfig struct {
 
 func NewAppConfig(env AppEnv, maxListLimit int) *AppConfig {
 	return &AppConfig{
-		Env:          env,
-		MaxListLimit: maxListLimit,
+		Env:                env,
+		MaxListLimit:       maxListLimit,
+		AcceptTokenIssuers: make([]string, 0),
 	}
 }
 
@@ -41,9 +42,10 @@ func (ac *AppConfig) Validate() error {
 		return errs.NewConfigValidateError("app", "cipher-key", "must not be empty", nil)
 	}
 
-	if len(ac.AcceptTokenIssuers) == 0 {
-		return errs.NewConfigValidateError("app", "accept-token-issuers", "must not be empty", nil)
-	}
+	// ToDo: restore in future
+	//if len(ac.AcceptTokenIssuers) == 0 {
+	//	return errs.NewConfigValidateError("app", "accept-token-issuers", "must not be empty", nil)
+	//}
 
 	return nil
 }

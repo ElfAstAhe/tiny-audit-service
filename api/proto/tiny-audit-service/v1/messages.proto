@@ -1,0 +1,45 @@
+edition = "2023";
+
+package audit.service;
+
+option go_package = "tiny-audit-service/grpc/tiny-audit-service";
+
+import "google/protobuf/timestamp.proto";
+
+message AuthAudit {
+  string id = 1;
+  string source = 2;
+  google.protobuf.Timestamp event_date = 3;
+  string event = 4;
+  string status = 5;
+  string request_id = 6;
+  string username = 7;
+  string access_token = 8;
+  string refresh_token = 9;
+  google.protobuf.Timestamp create_at = 10;
+  google.protobuf.Timestamp update_at = 11;
+}
+
+message DataAuditValue {
+  string name = 1;
+  string description = 2;
+  string before = 3;
+  string after = 4;
+}
+
+message DataAudit {
+  string id = 1;
+  string source = 2;
+  google.protobuf.Timestamp event_date = 3;
+  string event = 4;
+  string status = 5;
+  string request_id = 6;
+  string username = 7;
+  string type_name = 8;
+  string type_description = 9;
+  string instance_id = 10;
+  string instance_name = 11;
+  repeated DataAuditValue values = 12;
+  google.protobuf.Timestamp create_at = 13;
+  google.protobuf.Timestamp update_at = 14;
+}

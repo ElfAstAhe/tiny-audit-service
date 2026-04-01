@@ -78,7 +78,7 @@ func (ae *AuthExtractor) UnaryServerInterceptor(ctx context.Context, req any, in
 	}
 	// check issuers via white list
 	if !ae.isAcceptIssuer(claims.Issuer) {
-		return nil, status.Errorf(codes.Unauthenticated, "invalid auth token: invalid issuer: %v", claims.Issuer)
+		return nil, status.Errorf(codes.Unauthenticated, "invalid issuer: %v", claims.Issuer)
 	}
 
 	subj, err := ae.authHelper.SubjectFromToken(token)
@@ -100,6 +100,21 @@ func (ae *AuthExtractor) StreamServerInterceptor(srv interface{}, stream grpc.Se
 	// ignorance
 	if ae.isNonSecure(info.FullMethod) {
 		return handler(srv, stream)
+	}
+
+	// extract token
+	token, err := ae.jwtGRPCHelper.ExtractTokenFromContext(auth.DefaultMetadataName, stream.Context())
+	if err != nil {
+		return status.Errorf(codes.Unauthenticated, "invalid auth token: %v", err)
+	}
+	// convert into claims
+	claims, err := ae.jwtHelper.ExtractClaims(token)
+	if err != nil {
+		return status.Errorf(codes.Unauthenticated, "invalid auth token: %v", err)
+	}
+	// check issuers via white list
+	if !ae.isAcceptIssuer(claims.Issuer) {
+		return status.Errorf(codes.Unauthenticated, "invalid issuer: %v", claims.Issuer)
 	}
 
 	subj, err := ae.authHelper.SubjectFromGRPCContext(stream.Context())
