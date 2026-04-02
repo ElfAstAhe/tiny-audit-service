@@ -1,5 +1,5 @@
-github.com/ElfAstAhe/go-service-template v0.0.33 h1:0+f64+whdxDDUWBXTiqEOUlPw/nMS4e9AcIclOqgFuQ=
-github.com/ElfAstAhe/go-service-template v0.0.33/go.mod h1:QTLMybNTkrYaHndtYoslBAk5Eik8EP72VxoFNxMEDj8=
+github.com/ElfAstAhe/go-service-template v0.0.34 h1:/gTd4CU6qV9DtwKMqQojPAilYylofTXse0PXLRodHQY=
+github.com/ElfAstAhe/go-service-template v0.0.34/go.mod h1:QTLMybNTkrYaHndtYoslBAk5Eik8EP72VxoFNxMEDj8=
 github.com/XSAM/otelsql v0.42.0 h1:Li0xF4eJUxG2e0x3D4rvRlys1f27yJKvjTh7ljkUP5o=
 github.com/XSAM/otelsql v0.42.0/go.mod h1:4mOrEv+cS1KmKzrvTktvJnstr5GtKSAK+QHvFR9OcpI=
 github.com/andybalholm/brotli v1.2.1 h1:R+f5xP285VArJDRgowrfb9DqL18yVK0gKAW/F+eTWro=

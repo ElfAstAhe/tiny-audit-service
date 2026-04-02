@@ -16,7 +16,7 @@ import (
 // @termsOfService  Free use
 
 // @contact.name   API Support
-// @contact.url    https://github.com/ElfAstAhe/tiny-auth-service
+// @contact.url    https://github.com/ElfAstAhe/tiny-audit-service
 // @contact.email  elf.ast.ahe@gmail.com
 
 // @license.name  Apache 2.0

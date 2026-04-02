@@ -84,7 +84,7 @@ func initFLags() (res *pflag.FlagSet, err error) {
 		res.String(FlagAppEnv, string(defaultAppEnv), "application environment")
 		res.Int(FlagAppMaxListLimit, usecase.DefaultMaxLimit, "max list limit")
 		res.String(FlagAppCipherKey, "", "cipher key")
-		res.String(FlagAppCipherKey, "", "cipher key")
+		res.String(FlagAppTokenIssuer, "", "token issuer")
 		res.StringSlice(FlagAppAcceptTokenIssuers, []string{}, `accept token issuers like: "issuer1 issuer2 issuer3"`)
 
 		// Auth
