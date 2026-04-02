@@ -9,6 +9,6 @@ import (
 
 type DataAuditFacade interface {
 	Audit(ctx context.Context, data *dto.DataAuditDTO) error
-	ListByPeriod(ctx context.Context, from, till time.Time, limit int) ([]*dto.DataAuditDTO, error)
-	ListByInstance(ctx context.Context, typeName string, instanceID string, limit int) ([]*dto.DataAuditDTO, error)
+	ListByPeriod(ctx context.Context, from, till time.Time, limit int, offset int) ([]*dto.DataAuditDTO, error)
+	ListByInstance(ctx context.Context, typeName string, instanceID string, limit int, offset int) ([]*dto.DataAuditDTO, error)
 }
