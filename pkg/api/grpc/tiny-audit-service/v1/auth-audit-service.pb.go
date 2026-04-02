@@ -95,6 +95,7 @@ type AuthListByPeriodRequest struct {
 	xxx_hidden_From        *timestamppb.Timestamp `protobuf:"bytes,1,opt,name=from"`
 	xxx_hidden_Till        *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=till"`
 	xxx_hidden_Limit       uint32                 `protobuf:"varint,3,opt,name=limit"`
+	xxx_hidden_Offset      uint32                 `protobuf:"varint,4,opt,name=offset"`
 	XXX_raceDetectHookData protoimpl.RaceDetectHookData
 	XXX_presence           [1]uint32
 	unknownFields          protoimpl.UnknownFields
@@ -147,6 +148,13 @@ func (x *AuthListByPeriodRequest) GetLimit() uint32 {
 	return 0
 }
 
+func (x *AuthListByPeriodRequest) GetOffset() uint32 {
+	if x != nil {
+		return x.xxx_hidden_Offset
+	}
+	return 0
+}
+
 func (x *AuthListByPeriodRequest) SetFrom(v *timestamppb.Timestamp) {
 	x.xxx_hidden_From = v
 }
@@ -157,7 +165,12 @@ func (x *AuthListByPeriodRequest) SetTill(v *timestamppb.Timestamp) {
 
 func (x *AuthListByPeriodRequest) SetLimit(v uint32) {
 	x.xxx_hidden_Limit = v
-	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 2, 3)
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 2, 4)
+}
+
+func (x *AuthListByPeriodRequest) SetOffset(v uint32) {
+	x.xxx_hidden_Offset = v
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 3, 4)
 }
 
 func (x *AuthListByPeriodRequest) HasFrom() bool {
@@ -181,6 +194,13 @@ func (x *AuthListByPeriodRequest) HasLimit() bool {
 	return protoimpl.X.Present(&(x.XXX_presence[0]), 2)
 }
 
+func (x *AuthListByPeriodRequest) HasOffset() bool {
+	if x == nil {
+		return false
+	}
+	return protoimpl.X.Present(&(x.XXX_presence[0]), 3)
+}
+
 func (x *AuthListByPeriodRequest) ClearFrom() {
 	x.xxx_hidden_From = nil
 }
@@ -194,12 +214,18 @@ func (x *AuthListByPeriodRequest) ClearLimit() {
 	x.xxx_hidden_Limit = 0
 }
 
+func (x *AuthListByPeriodRequest) ClearOffset() {
+	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 3)
+	x.xxx_hidden_Offset = 0
+}
+
 type AuthListByPeriodRequest_builder struct {
 	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
 
-	From  *timestamppb.Timestamp
-	Till  *timestamppb.Timestamp
-	Limit *uint32
+	From   *timestamppb.Timestamp
+	Till   *timestamppb.Timestamp
+	Limit  *uint32
+	Offset *uint32
 }
 
 func (b0 AuthListByPeriodRequest_builder) Build() *AuthListByPeriodRequest {
@@ -209,8 +235,12 @@ func (b0 AuthListByPeriodRequest_builder) Build() *AuthListByPeriodRequest {
 	x.xxx_hidden_From = b.From
 	x.xxx_hidden_Till = b.Till
 	if b.Limit != nil {
-		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 2, 3)
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 2, 4)
 		x.xxx_hidden_Limit = *b.Limit
+	}
+	if b.Offset != nil {
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 3, 4)
+		x.xxx_hidden_Offset = *b.Offset
 	}
 	return m0
 }
@@ -278,6 +308,7 @@ type AuthListByUsernameRequest struct {
 	state                  protoimpl.MessageState `protogen:"opaque.v1"`
 	xxx_hidden_Username    *string                `protobuf:"bytes,1,opt,name=username"`
 	xxx_hidden_Limit       uint32                 `protobuf:"varint,2,opt,name=limit"`
+	xxx_hidden_Offset      uint32                 `protobuf:"varint,3,opt,name=offset"`
 	XXX_raceDetectHookData protoimpl.RaceDetectHookData
 	XXX_presence           [1]uint32
 	unknownFields          protoimpl.UnknownFields
@@ -326,14 +357,26 @@ func (x *AuthListByUsernameRequest) GetLimit() uint32 {
 	return 0
 }
 
+func (x *AuthListByUsernameRequest) GetOffset() uint32 {
+	if x != nil {
+		return x.xxx_hidden_Offset
+	}
+	return 0
+}
+
 func (x *AuthListByUsernameRequest) SetUsername(v string) {
 	x.xxx_hidden_Username = &v
-	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 0, 2)
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 0, 3)
 }
 
 func (x *AuthListByUsernameRequest) SetLimit(v uint32) {
 	x.xxx_hidden_Limit = v
-	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 1, 2)
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 1, 3)
+}
+
+func (x *AuthListByUsernameRequest) SetOffset(v uint32) {
+	x.xxx_hidden_Offset = v
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 2, 3)
 }
 
 func (x *AuthListByUsernameRequest) HasUsername() bool {
@@ -350,6 +393,13 @@ func (x *AuthListByUsernameRequest) HasLimit() bool {
 	return protoimpl.X.Present(&(x.XXX_presence[0]), 1)
 }
 
+func (x *AuthListByUsernameRequest) HasOffset() bool {
+	if x == nil {
+		return false
+	}
+	return protoimpl.X.Present(&(x.XXX_presence[0]), 2)
+}
+
 func (x *AuthListByUsernameRequest) ClearUsername() {
 	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 0)
 	x.xxx_hidden_Username = nil
@@ -360,11 +410,17 @@ func (x *AuthListByUsernameRequest) ClearLimit() {
 	x.xxx_hidden_Limit = 0
 }
 
+func (x *AuthListByUsernameRequest) ClearOffset() {
+	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 2)
+	x.xxx_hidden_Offset = 0
+}
+
 type AuthListByUsernameRequest_builder struct {
 	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
 
 	Username *string
 	Limit    *uint32
+	Offset   *uint32
 }
 
 func (b0 AuthListByUsernameRequest_builder) Build() *AuthListByUsernameRequest {
@@ -372,12 +428,16 @@ func (b0 AuthListByUsernameRequest_builder) Build() *AuthListByUsernameRequest {
 	b, x := &b0, m0
 	_, _ = b, x
 	if b.Username != nil {
-		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 0, 2)
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 0, 3)
 		x.xxx_hidden_Username = b.Username
 	}
 	if b.Limit != nil {
-		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 1, 2)
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 1, 3)
 		x.xxx_hidden_Limit = *b.Limit
+	}
+	if b.Offset != nil {
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 2, 3)
+		x.xxx_hidden_Offset = *b.Offset
 	}
 	return m0
 }
@@ -388,16 +448,18 @@ const file_tiny_audit_service_v1_auth_audit_service_proto_rawDesc = "" +
 	"\n" +
 	".tiny-audit-service/v1/auth-audit-service.proto\x12\raudit.service\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a$tiny-audit-service/v1/messages.proto\"@\n" +
 	"\x10AuthAuditRequest\x12,\n" +
-	"\x04data\x18\x01 \x01(\v2\x18.audit.service.AuthAuditR\x04data\"\x8f\x01\n" +
+	"\x04data\x18\x01 \x01(\v2\x18.audit.service.AuthAuditR\x04data\"\xa7\x01\n" +
 	"\x17AuthListByPeriodRequest\x12.\n" +
 	"\x04from\x18\x01 \x01(\v2\x1a.google.protobuf.TimestampR\x04from\x12.\n" +
 	"\x04till\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\x04till\x12\x14\n" +
-	"\x05limit\x18\x03 \x01(\rR\x05limit\"L\n" +
+	"\x05limit\x18\x03 \x01(\rR\x05limit\x12\x16\n" +
+	"\x06offset\x18\x04 \x01(\rR\x06offset\"L\n" +
 	"\x12AuthAuditInstances\x126\n" +
-	"\tinstances\x18\x01 \x03(\v2\x18.audit.service.AuthAuditR\tinstances\"M\n" +
+	"\tinstances\x18\x01 \x03(\v2\x18.audit.service.AuthAuditR\tinstances\"e\n" +
 	"\x19AuthListByUsernameRequest\x12\x1a\n" +
 	"\busername\x18\x01 \x01(\tR\busername\x12\x14\n" +
-	"\x05limit\x18\x02 \x01(\rR\x05limit2\x8e\x02\n" +
+	"\x05limit\x18\x02 \x01(\rR\x05limit\x12\x16\n" +
+	"\x06offset\x18\x03 \x01(\rR\x06offset2\x8e\x02\n" +
 	"\x10AuthAuditService\x12@\n" +
 	"\x05Audit\x12\x1f.audit.service.AuthAuditRequest\x1a\x16.google.protobuf.Empty\x12Y\n" +
 	"\fListByPeriod\x12&.audit.service.AuthListByPeriodRequest\x1a!.audit.service.AuthAuditInstances\x12]\n" +

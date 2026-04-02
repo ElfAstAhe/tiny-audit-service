@@ -95,6 +95,7 @@ type DataListByPeriod struct {
 	xxx_hidden_From        *timestamppb.Timestamp `protobuf:"bytes,1,opt,name=from"`
 	xxx_hidden_Till        *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=till"`
 	xxx_hidden_Limit       uint32                 `protobuf:"varint,3,opt,name=limit"`
+	xxx_hidden_Offset      uint32                 `protobuf:"varint,4,opt,name=offset"`
 	XXX_raceDetectHookData protoimpl.RaceDetectHookData
 	XXX_presence           [1]uint32
 	unknownFields          protoimpl.UnknownFields
@@ -147,6 +148,13 @@ func (x *DataListByPeriod) GetLimit() uint32 {
 	return 0
 }
 
+func (x *DataListByPeriod) GetOffset() uint32 {
+	if x != nil {
+		return x.xxx_hidden_Offset
+	}
+	return 0
+}
+
 func (x *DataListByPeriod) SetFrom(v *timestamppb.Timestamp) {
 	x.xxx_hidden_From = v
 }
@@ -157,7 +165,12 @@ func (x *DataListByPeriod) SetTill(v *timestamppb.Timestamp) {
 
 func (x *DataListByPeriod) SetLimit(v uint32) {
 	x.xxx_hidden_Limit = v
-	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 2, 3)
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 2, 4)
+}
+
+func (x *DataListByPeriod) SetOffset(v uint32) {
+	x.xxx_hidden_Offset = v
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 3, 4)
 }
 
 func (x *DataListByPeriod) HasFrom() bool {
@@ -181,6 +194,13 @@ func (x *DataListByPeriod) HasLimit() bool {
 	return protoimpl.X.Present(&(x.XXX_presence[0]), 2)
 }
 
+func (x *DataListByPeriod) HasOffset() bool {
+	if x == nil {
+		return false
+	}
+	return protoimpl.X.Present(&(x.XXX_presence[0]), 3)
+}
+
 func (x *DataListByPeriod) ClearFrom() {
 	x.xxx_hidden_From = nil
 }
@@ -194,12 +214,18 @@ func (x *DataListByPeriod) ClearLimit() {
 	x.xxx_hidden_Limit = 0
 }
 
+func (x *DataListByPeriod) ClearOffset() {
+	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 3)
+	x.xxx_hidden_Offset = 0
+}
+
 type DataListByPeriod_builder struct {
 	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
 
-	From  *timestamppb.Timestamp
-	Till  *timestamppb.Timestamp
-	Limit *uint32
+	From   *timestamppb.Timestamp
+	Till   *timestamppb.Timestamp
+	Limit  *uint32
+	Offset *uint32
 }
 
 func (b0 DataListByPeriod_builder) Build() *DataListByPeriod {
@@ -209,8 +235,12 @@ func (b0 DataListByPeriod_builder) Build() *DataListByPeriod {
 	x.xxx_hidden_From = b.From
 	x.xxx_hidden_Till = b.Till
 	if b.Limit != nil {
-		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 2, 3)
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 2, 4)
 		x.xxx_hidden_Limit = *b.Limit
+	}
+	if b.Offset != nil {
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 3, 4)
+		x.xxx_hidden_Offset = *b.Offset
 	}
 	return m0
 }
@@ -279,6 +309,7 @@ type DataListByInstance struct {
 	xxx_hidden_TypeName    *string                `protobuf:"bytes,1,opt,name=type_name,json=typeName"`
 	xxx_hidden_InstanceId  *string                `protobuf:"bytes,2,opt,name=instance_id,json=instanceId"`
 	xxx_hidden_Limit       uint32                 `protobuf:"varint,3,opt,name=limit"`
+	xxx_hidden_Offset      uint32                 `protobuf:"varint,4,opt,name=offset"`
 	XXX_raceDetectHookData protoimpl.RaceDetectHookData
 	XXX_presence           [1]uint32
 	unknownFields          protoimpl.UnknownFields
@@ -337,19 +368,31 @@ func (x *DataListByInstance) GetLimit() uint32 {
 	return 0
 }
 
+func (x *DataListByInstance) GetOffset() uint32 {
+	if x != nil {
+		return x.xxx_hidden_Offset
+	}
+	return 0
+}
+
 func (x *DataListByInstance) SetTypeName(v string) {
 	x.xxx_hidden_TypeName = &v
-	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 0, 3)
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 0, 4)
 }
 
 func (x *DataListByInstance) SetInstanceId(v string) {
 	x.xxx_hidden_InstanceId = &v
-	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 1, 3)
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 1, 4)
 }
 
 func (x *DataListByInstance) SetLimit(v uint32) {
 	x.xxx_hidden_Limit = v
-	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 2, 3)
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 2, 4)
+}
+
+func (x *DataListByInstance) SetOffset(v uint32) {
+	x.xxx_hidden_Offset = v
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 3, 4)
 }
 
 func (x *DataListByInstance) HasTypeName() bool {
@@ -373,6 +416,13 @@ func (x *DataListByInstance) HasLimit() bool {
 	return protoimpl.X.Present(&(x.XXX_presence[0]), 2)
 }
 
+func (x *DataListByInstance) HasOffset() bool {
+	if x == nil {
+		return false
+	}
+	return protoimpl.X.Present(&(x.XXX_presence[0]), 3)
+}
+
 func (x *DataListByInstance) ClearTypeName() {
 	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 0)
 	x.xxx_hidden_TypeName = nil
@@ -388,12 +438,18 @@ func (x *DataListByInstance) ClearLimit() {
 	x.xxx_hidden_Limit = 0
 }
 
+func (x *DataListByInstance) ClearOffset() {
+	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 3)
+	x.xxx_hidden_Offset = 0
+}
+
 type DataListByInstance_builder struct {
 	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
 
 	TypeName   *string
 	InstanceId *string
 	Limit      *uint32
+	Offset     *uint32
 }
 
 func (b0 DataListByInstance_builder) Build() *DataListByInstance {
@@ -401,16 +457,20 @@ func (b0 DataListByInstance_builder) Build() *DataListByInstance {
 	b, x := &b0, m0
 	_, _ = b, x
 	if b.TypeName != nil {
-		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 0, 3)
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 0, 4)
 		x.xxx_hidden_TypeName = b.TypeName
 	}
 	if b.InstanceId != nil {
-		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 1, 3)
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 1, 4)
 		x.xxx_hidden_InstanceId = b.InstanceId
 	}
 	if b.Limit != nil {
-		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 2, 3)
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 2, 4)
 		x.xxx_hidden_Limit = *b.Limit
+	}
+	if b.Offset != nil {
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 3, 4)
+		x.xxx_hidden_Offset = *b.Offset
 	}
 	return m0
 }
@@ -421,18 +481,20 @@ const file_tiny_audit_service_v1_data_audit_service_proto_rawDesc = "" +
 	"\n" +
 	".tiny-audit-service/v1/data-audit-service.proto\x12\raudit.service\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a$tiny-audit-service/v1/messages.proto\"@\n" +
 	"\x10DataAuditRequest\x12,\n" +
-	"\x04data\x18\x01 \x01(\v2\x18.audit.service.DataAuditR\x04data\"\x88\x01\n" +
+	"\x04data\x18\x01 \x01(\v2\x18.audit.service.DataAuditR\x04data\"\xa0\x01\n" +
 	"\x10DataListByPeriod\x12.\n" +
 	"\x04from\x18\x01 \x01(\v2\x1a.google.protobuf.TimestampR\x04from\x12.\n" +
 	"\x04till\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\x04till\x12\x14\n" +
-	"\x05limit\x18\x03 \x01(\rR\x05limit\"L\n" +
+	"\x05limit\x18\x03 \x01(\rR\x05limit\x12\x16\n" +
+	"\x06offset\x18\x04 \x01(\rR\x06offset\"L\n" +
 	"\x12DataAuditInstances\x126\n" +
-	"\tinstances\x18\x01 \x03(\v2\x18.audit.service.DataAuditR\tinstances\"h\n" +
+	"\tinstances\x18\x01 \x03(\v2\x18.audit.service.DataAuditR\tinstances\"\x80\x01\n" +
 	"\x12DataListByInstance\x12\x1b\n" +
 	"\ttype_name\x18\x01 \x01(\tR\btypeName\x12\x1f\n" +
 	"\vinstance_id\x18\x02 \x01(\tR\n" +
 	"instanceId\x12\x14\n" +
-	"\x05limit\x18\x03 \x01(\rR\x05limit2\x80\x02\n" +
+	"\x05limit\x18\x03 \x01(\rR\x05limit\x12\x16\n" +
+	"\x06offset\x18\x04 \x01(\rR\x06offset2\x80\x02\n" +
 	"\x10DataAuditService\x12@\n" +
 	"\x05Audit\x12\x1f.audit.service.DataAuditRequest\x1a\x16.google.protobuf.Empty\x12R\n" +
 	"\fListByPeriod\x12\x1f.audit.service.DataListByPeriod\x1a!.audit.service.DataAuditInstances\x12V\n" +
