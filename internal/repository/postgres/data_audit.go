@@ -11,6 +11,7 @@ import (
 	"github.com/ElfAstAhe/go-service-template/pkg/errs"
 	"github.com/ElfAstAhe/go-service-template/pkg/repository"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/domain"
+	apprepo "github.com/ElfAstAhe/tiny-audit-service/internal/repository"
 )
 
 type DataAuditPgRepository struct {
@@ -70,19 +71,77 @@ func NewDataAuditPgRepository(executor db.Executor, errDecipher db.ErrorDecipher
 	return res, nil
 }
 
-func (dr *DataAuditPgRepository) ListByPeriod(ctx context.Context, from, till time.Time, limit, offset int) ([]*domain.DataAudit, error) {
-	// ToDo: implement
+func (da *DataAuditPgRepository) ListByPeriod(ctx context.Context, from, till time.Time, limit, offset int) ([]*domain.DataAudit, error) {
+	if err := da.validateListByPeriod(from, till, limit, offset); err != nil {
+		return nil, err
+	}
 
-	return nil, nil
+	res, err := da.GetHelper().List(ctx, apprepo.SourceLabelListByPeriod, sqlDataAuditListByPeriod,
+		from,
+		till,
+		limit,
+		offset,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
 }
 
-func (dr *DataAuditPgRepository) ListByInstance(ctx context.Context, typeName string, instanceID string, limit, offset int) ([]*domain.DataAudit, error) {
-	// ToDo: implement
+func (da *DataAuditPgRepository) validateListByPeriod(from, till time.Time, limit, offset int) error {
+	if from.IsZero() {
+		return errs.NewInvalidArgumentError("from", "field is required")
+	}
+	if till.IsZero() {
+		return errs.NewInvalidArgumentError("till", "field is required")
+	}
+	if !(limit > 0) {
+		return errs.NewInvalidArgumentError("limit", "limit must be grater than zero")
+	}
+	if !(offset >= 0) {
+		return errs.NewInvalidArgumentError("offset", "offset must be greater or equal than zero")
+	}
 
-	return nil, nil
+	return nil
 }
 
-func (dr *DataAuditPgRepository) entityScanner(scanner repository.Scannable, sourceLabel string, entity *domain.DataAudit, params ...any) error {
+func (da *DataAuditPgRepository) ListByInstance(ctx context.Context, typeName string, instanceID string, limit, offset int) ([]*domain.DataAudit, error) {
+	if err := da.validateListByInstance(typeName, instanceID, limit, offset); err != nil {
+		return nil, err
+	}
+
+	res, err := da.GetHelper().List(ctx, apprepo.SourceLabelListByInstance, sqlDataAuditListByInstance,
+		typeName,
+		instanceID,
+		limit,
+		offset,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
+
+func (da *DataAuditPgRepository) validateListByInstance(typeName, instanceID string, limit, offset int) error {
+	if typeName == "" {
+		return errs.NewInvalidArgumentError("typeName", "typeName is required")
+	}
+	if instanceID == "" {
+		return errs.NewInvalidArgumentError("instanceID", "instanceID is required")
+	}
+	if !(limit > 0) {
+		return errs.NewInvalidArgumentError("limit", "limit must be grater than zero")
+	}
+	if !(offset >= 0) {
+		return errs.NewInvalidArgumentError("offset", "offset must be greater or equal than zero")
+	}
+
+	return nil
+}
+
+func (da *DataAuditPgRepository) entityScanner(scanner repository.Scannable, sourceLabel string, entity *domain.DataAudit, params ...any) error {
 	var valuesRaw []byte
 	if err := scanner.Scan(
 		&entity.ID,
@@ -112,11 +171,11 @@ func (dr *DataAuditPgRepository) entityScanner(scanner repository.Scannable, sou
 	return nil
 }
 
-func (dr *DataAuditPgRepository) afterListYield(entity *domain.DataAudit, params ...any) (*domain.DataAudit, bool, error) {
+func (da *DataAuditPgRepository) afterListYield(entity *domain.DataAudit, params ...any) (*domain.DataAudit, bool, error) {
 	return entity, true, nil
 }
 
-func (dr *DataAuditPgRepository) validateCreate(entity *domain.DataAudit, params ...any) error {
+func (da *DataAuditPgRepository) validateCreate(entity *domain.DataAudit, params ...any) error {
 	if entity == nil {
 		return errs.NewInvalidArgumentError("entity", "cannot be nil")
 	}
@@ -124,7 +183,7 @@ func (dr *DataAuditPgRepository) validateCreate(entity *domain.DataAudit, params
 	return entity.ValidateCreate()
 }
 
-func (dr *DataAuditPgRepository) beforeCreate(entity *domain.DataAudit, params ...any) error {
+func (da *DataAuditPgRepository) beforeCreate(entity *domain.DataAudit, params ...any) error {
 	if err := entity.BeforeCreate(); err != nil {
 		return errs.NewDalError("DataAuditPgRepository.beforeCreate", "before create entity", err)
 	}
@@ -132,7 +191,7 @@ func (dr *DataAuditPgRepository) beforeCreate(entity *domain.DataAudit, params .
 	return nil
 }
 
-func (dr *DataAuditPgRepository) creator(ctx context.Context, querier db.Querier, entity *domain.DataAudit, params ...any) (*sql.Row, error) {
+func (da *DataAuditPgRepository) creator(ctx context.Context, querier db.Querier, entity *domain.DataAudit, params ...any) (*sql.Row, error) {
 	var valuesRaw []byte
 	var err error
 	if len(entity.Values) > 0 {
@@ -142,7 +201,7 @@ func (dr *DataAuditPgRepository) creator(ctx context.Context, querier db.Querier
 		}
 	}
 
-	return querier.QueryRowContext(ctx, dr.GetQueryBuilders().GetCreate()(),
+	return querier.QueryRowContext(ctx, da.GetQueryBuilders().GetCreate()(),
 		&entity.ID,
 		&entity.Source,
 		&entity.EventDate,
@@ -159,7 +218,7 @@ func (dr *DataAuditPgRepository) creator(ctx context.Context, querier db.Querier
 	), nil
 }
 
-func (dr *DataAuditPgRepository) validateChange(entity *domain.DataAudit, params ...any) error {
+func (da *DataAuditPgRepository) validateChange(entity *domain.DataAudit, params ...any) error {
 	if entity == nil {
 		return errs.NewInvalidArgumentError("entity", "cannot be nil")
 	}
@@ -167,7 +226,7 @@ func (dr *DataAuditPgRepository) validateChange(entity *domain.DataAudit, params
 	return entity.ValidateChange()
 }
 
-func (dr *DataAuditPgRepository) beforeChange(entity *domain.DataAudit, params ...any) error {
+func (da *DataAuditPgRepository) beforeChange(entity *domain.DataAudit, params ...any) error {
 	if err := entity.BeforeChange(); err != nil {
 		return errs.NewDalError("DataAuditPgRepository.beforeChange", "before change entity", err)
 	}
@@ -175,7 +234,7 @@ func (dr *DataAuditPgRepository) beforeChange(entity *domain.DataAudit, params .
 	return nil
 }
 
-func (dr *DataAuditPgRepository) changer(ctx context.Context, querier db.Querier, entity *domain.DataAudit, params ...any) (*sql.Row, error) {
+func (da *DataAuditPgRepository) changer(ctx context.Context, querier db.Querier, entity *domain.DataAudit, params ...any) (*sql.Row, error) {
 	var valuesRaw []byte
 	var err error
 	if len(entity.Values) > 0 {
@@ -185,7 +244,7 @@ func (dr *DataAuditPgRepository) changer(ctx context.Context, querier db.Querier
 		}
 	}
 
-	return querier.QueryRowContext(ctx, dr.GetQueryBuilders().GetChange()(),
+	return querier.QueryRowContext(ctx, da.GetQueryBuilders().GetChange()(),
 		&entity.ID,
 		&entity.Source,
 		&entity.EventDate,

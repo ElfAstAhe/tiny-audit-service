@@ -10,6 +10,7 @@ import (
 	"github.com/ElfAstAhe/go-service-template/pkg/errs"
 	"github.com/ElfAstAhe/go-service-template/pkg/repository"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/domain"
+	apprepo "github.com/ElfAstAhe/tiny-audit-service/internal/repository"
 )
 
 type AuthAuditPgRepository struct {
@@ -70,15 +71,69 @@ func NewAuthAuditPgRepository(executor db.Executor, errDecipher db.ErrorDecipher
 }
 
 func (aa *AuthAuditPgRepository) ListByPeriod(ctx context.Context, from, till time.Time, limit, offset int) ([]*domain.AuthAudit, error) {
-	// ToDo: implement
+	if err := aa.validateListByPeriod(from, till, limit, offset); err != nil {
+		return nil, err
+	}
 
-	return nil, nil
+	res, err := aa.GetHelper().List(ctx, apprepo.SourceLabelListByPeriod, sqlAuthAuditListByPeriod,
+		from,
+		till,
+		limit,
+		offset,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
+
+func (aa *AuthAuditPgRepository) validateListByPeriod(from, till time.Time, limit, offset int) error {
+	if from.IsZero() {
+		return errs.NewInvalidArgumentError("from", "field is required")
+	}
+	if till.IsZero() {
+		return errs.NewInvalidArgumentError("till", "field is required")
+	}
+	if !(limit > 0) {
+		return errs.NewInvalidArgumentError("limit", "limit must be grater than zero")
+	}
+	if !(offset >= 0) {
+		return errs.NewInvalidArgumentError("offset", "offset must be greater or equal than zero")
+	}
+
+	return nil
 }
 
 func (aa *AuthAuditPgRepository) ListByUsername(ctx context.Context, username string, offset, limit int) ([]*domain.AuthAudit, error) {
-	// ToDo: implement
+	if err := aa.validateListByUsername(username, limit, offset); err != nil {
+		return nil, err
+	}
 
-	return nil, nil
+	res, err := aa.GetHelper().List(ctx, apprepo.SourceLabelListByUsername, sqlAuthAuditListByUsername,
+		username,
+		limit,
+		offset,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
+
+func (aa *AuthAuditPgRepository) validateListByUsername(username string, offset, limit int) error {
+	if username == "" {
+		return errs.NewInvalidArgumentError("username", "field is required")
+	}
+	if !(limit > 0) {
+		return errs.NewInvalidArgumentError("limit", "limit must be grater than zero")
+	}
+	if !(offset >= 0) {
+		return errs.NewInvalidArgumentError("offset", "offset must be greater or equal than zero")
+	}
+
+	return nil
 }
 
 func (aa *AuthAuditPgRepository) entityScanner(scanner repository.Scannable, sourceLabel string, entity *domain.AuthAudit, params ...any) error {
