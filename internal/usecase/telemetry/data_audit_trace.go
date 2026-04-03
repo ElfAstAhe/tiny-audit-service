@@ -18,7 +18,7 @@ type DataAuditTraceInteractor struct {
 
 var _ usecase.DataAuditUseCase = (*DataAuditTraceInteractor)(nil)
 
-func NewDataAuditTraceUseCase(
+func NewDataAuditUseCase(
 	ucName string,
 	next usecase.DataAuditUseCase,
 ) *DataAuditTraceInteractor {

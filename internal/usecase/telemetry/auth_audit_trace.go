@@ -18,7 +18,7 @@ type AuthAuditTraceInteractor struct {
 
 var _ usecase.AuthAuditUseCase = (*AuthAuditTraceInteractor)(nil)
 
-func NewAuthAuditTraceUseCase(
+func NewAuthAuditUseCase(
 	ucName string,
 	next usecase.AuthAuditUseCase,
 ) *AuthAuditTraceInteractor {

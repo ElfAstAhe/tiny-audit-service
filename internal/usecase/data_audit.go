@@ -4,8 +4,9 @@ import (
 	"context"
 
 	usecade "github.com/ElfAstAhe/go-service-template/pkg/db"
+	"github.com/ElfAstAhe/go-service-template/pkg/errs"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/domain"
-	"github.com/ElfAstAhe/tiny-audit-service/internal/domain/errs"
+	domerrs "github.com/ElfAstAhe/tiny-audit-service/internal/domain/errs"
 )
 
 type DataAuditUseCase interface {
@@ -31,7 +32,7 @@ func NewDataAuditUseCase(
 
 func (dai *DataAuditInteractor) Audit(ctx context.Context, data *domain.DataAudit) error {
 	if err := dai.validate(data); err != nil {
-		return errs.NewBllValidateError("DataAuditInteractor.Audit", "validate failed", err)
+		return domerrs.NewBllValidateError("DataAuditInteractor.Audit", "validate income failed", err)
 	}
 	err := dai.tm.WithinTransaction(ctx, nil, func(ctx context.Context) error {
 		_, err := dai.dataRepo.Create(ctx, data)
@@ -39,14 +40,16 @@ func (dai *DataAuditInteractor) Audit(ctx context.Context, data *domain.DataAudi
 		return err
 	})
 	if err != nil {
-		return errs.NewBllValidateError("DataAuditInteractor.Audit", "add data audit failed", err)
+		return domerrs.NewBllValidateError("DataAuditInteractor.Audit", "add data audit failed", err)
 	}
 
 	return nil
 }
 
 func (dai *DataAuditInteractor) validate(data *domain.DataAudit) error {
-	// ToDo: implement
+	if data == nil {
+		return errs.NewInvalidArgumentError("data", "data is nil")
+	}
 
 	return nil
 }

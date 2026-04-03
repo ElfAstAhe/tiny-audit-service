@@ -32,8 +32,8 @@ func (aat *AuthAuditTraceRepository) ListByPeriod(ctx context.Context, from, til
 	defer span.End()
 
 	span.SetAttributes(
-		attribute.String("param.from", from.String()),
-		attribute.String("param.till", till.String()),
+		attribute.String("param.from", from.Format(time.DateTime)),
+		attribute.String("param.till", till.Format(time.DateTime)),
 		attribute.Int("param.limit", limit),
 		attribute.Int("param.offset", offset),
 	)

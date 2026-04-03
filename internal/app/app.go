@@ -12,6 +12,7 @@ import (
 	"github.com/ElfAstAhe/go-service-template/pkg/transport"
 	"github.com/ElfAstAhe/go-service-template/pkg/utils"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/config"
+	"github.com/ElfAstAhe/tiny-audit-service/internal/facade"
 	"github.com/hellofresh/health-go/v5"
 	"google.golang.org/grpc"
 )
@@ -57,7 +58,8 @@ type App struct {
 	grpcServer *grpc.Server
 
 	// facade
-	// ..
+	authFacade facade.AuthAuditFacade
+	dataFacade facade.DataAuditFacade
 }
 
 func NewApp(config *config.Config, logger logger.Logger) *App {

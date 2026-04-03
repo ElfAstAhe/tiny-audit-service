@@ -4,8 +4,9 @@ import (
 	"context"
 
 	usecase "github.com/ElfAstAhe/go-service-template/pkg/db"
+	"github.com/ElfAstAhe/go-service-template/pkg/errs"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/domain"
-	"github.com/ElfAstAhe/tiny-audit-service/internal/domain/errs"
+	domerrs "github.com/ElfAstAhe/tiny-audit-service/internal/domain/errs"
 )
 
 type AuthAuditUseCase interface {
@@ -28,7 +29,7 @@ func NewAuthAuditUseCase(tm usecase.TransactionManager, authRepo domain.AuthAudi
 
 func (aai *AuthAuditInteractor) Audit(ctx context.Context, data *domain.AuthAudit) error {
 	if err := aai.validate(data); err != nil {
-		return errs.NewBllValidateError("AuthAuditInteractor.Audit", "validate failed", err)
+		return domerrs.NewBllValidateError("AuthAuditInteractor.Audit", "validate failed", err)
 	}
 
 	err := aai.tm.WithinTransaction(ctx, nil, func(ctx context.Context) error {
@@ -37,14 +38,16 @@ func (aai *AuthAuditInteractor) Audit(ctx context.Context, data *domain.AuthAudi
 		return txErr
 	})
 	if err != nil {
-		return errs.NewBllError("AuthAuditInteractor.Audit", "add auth audit failed", err)
+		return domerrs.NewBllError("AuthAuditInteractor.Audit", "add auth audit failed", err)
 	}
 
 	return nil
 }
 
 func (aai *AuthAuditInteractor) validate(data *domain.AuthAudit) error {
-	// ToDo: implement
+	if data == nil {
+		return errs.NewInvalidArgumentError("data", "data is nil")
+	}
 
 	return nil
 }
