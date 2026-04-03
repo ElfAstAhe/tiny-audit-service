@@ -19,7 +19,7 @@ type AuthAuditPgRepository struct {
 var _ libdomain.CRUDRepository[*domain.AuthAudit, string] = (*AuthAuditPgRepository)(nil)
 var _ domain.AuthAuditRepository = (*AuthAuditPgRepository)(nil)
 
-func NewAuthAuditRepository(executor db.Executor, errDecipher db.ErrorDecipher) (*AuthAuditPgRepository, error) {
+func NewAuthAuditPgRepository(executor db.Executor, errDecipher db.ErrorDecipher) (*AuthAuditPgRepository, error) {
 	res := &AuthAuditPgRepository{}
 
 	// sql builders

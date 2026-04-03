@@ -4,7 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"encoding/json"
-	"strings"
 	"time"
 
 	"github.com/ElfAstAhe/go-service-template/pkg/db"
@@ -58,12 +57,12 @@ func NewDataAuditPgRepository(executor db.Executor, errDecipher db.ErrorDecipher
 	base, err := repository.NewBaseCRUDRepository[*domain.DataAudit, string](
 		executor,
 		errDecipher,
-		repository.NewEntityInfo("auth_audit_[index]", "AuditAudit"),
+		repository.NewEntityInfo("data_audit_[index]", "DataAudit"),
 		queryBuilders,
 		callbacks,
 	)
 	if err != nil {
-		return nil, errs.NewCommonError("error create AuthAuditPgRepository", err)
+		return nil, errs.NewCommonError("error create DataAuditPgRepository", err)
 	}
 
 	res.BaseCRUDRepository = base
@@ -106,7 +105,7 @@ func (dr *DataAuditPgRepository) entityScanner(scanner repository.Scannable, sou
 
 	if len(valuesRaw) > 0 {
 		if err := json.Unmarshal(valuesRaw, &entity.Values); err != nil {
-			return errs.NewDalError("DataAuditPgRepository.entityScanner", "decode values json", err)
+			return errs.NewDalError("DataAuditPgRepository.entityScanner", "unmarshal values json", err)
 		}
 	}
 
@@ -118,25 +117,87 @@ func (dr *DataAuditPgRepository) afterListYield(entity *domain.DataAudit, params
 }
 
 func (dr *DataAuditPgRepository) validateCreate(entity *domain.DataAudit, params ...any) error {
+	if entity == nil {
+		return errs.NewInvalidArgumentError("entity", "cannot be nil")
+	}
 
+	return entity.ValidateCreate()
 }
 
 func (dr *DataAuditPgRepository) beforeCreate(entity *domain.DataAudit, params ...any) error {
+	if err := entity.BeforeCreate(); err != nil {
+		return errs.NewDalError("DataAuditPgRepository.beforeCreate", "before create entity", err)
+	}
 
+	return nil
 }
 
 func (dr *DataAuditPgRepository) creator(ctx context.Context, querier db.Querier, entity *domain.DataAudit, params ...any) (*sql.Row, error) {
+	var valuesRaw []byte
+	var err error
+	if len(entity.Values) > 0 {
+		valuesRaw, err = json.Marshal(entity.Values)
+		if err != nil {
+			return nil, errs.NewDalError("DataAuditPgRepository.creator", "marshal values json", err)
+		}
+	}
 
+	return querier.QueryRowContext(ctx, dr.GetQueryBuilders().GetCreate()(),
+		&entity.ID,
+		&entity.Source,
+		&entity.EventDate,
+		&entity.Event,
+		&entity.Status,
+		&entity.RequestID,
+		&entity.Username,
+		&entity.TypeName,
+		&entity.TypeDescription,
+		&entity.InstanceID,
+		&entity.InstanceName,
+		&valuesRaw,
+		&entity.CreatedAt,
+	), nil
 }
 
 func (dr *DataAuditPgRepository) validateChange(entity *domain.DataAudit, params ...any) error {
+	if entity == nil {
+		return errs.NewInvalidArgumentError("entity", "cannot be nil")
+	}
 
+	return entity.ValidateChange()
 }
 
 func (dr *DataAuditPgRepository) beforeChange(entity *domain.DataAudit, params ...any) error {
+	if err := entity.BeforeChange(); err != nil {
+		return errs.NewDalError("DataAuditPgRepository.beforeChange", "before change entity", err)
+	}
 
+	return nil
 }
 
 func (dr *DataAuditPgRepository) changer(ctx context.Context, querier db.Querier, entity *domain.DataAudit, params ...any) (*sql.Row, error) {
+	var valuesRaw []byte
+	var err error
+	if len(entity.Values) > 0 {
+		valuesRaw, err = json.Marshal(entity.Values)
+		if err != nil {
+			return nil, errs.NewDalError("DataAuditPgRepository.changer", "marshal values json", err)
+		}
+	}
 
+	return querier.QueryRowContext(ctx, dr.GetQueryBuilders().GetChange()(),
+		&entity.ID,
+		&entity.Source,
+		&entity.EventDate,
+		&entity.Event,
+		&entity.Status,
+		&entity.RequestID,
+		&entity.Username,
+		&entity.TypeName,
+		&entity.TypeDescription,
+		&entity.InstanceID,
+		&entity.InstanceName,
+		&valuesRaw,
+		&entity.UpdatedAt,
+	), nil
 }

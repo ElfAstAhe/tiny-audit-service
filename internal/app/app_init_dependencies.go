@@ -2,13 +2,36 @@ package app
 
 import (
 	"github.com/ElfAstAhe/go-service-template/pkg/db"
+	"github.com/ElfAstAhe/tiny-audit-service/internal/domain"
+	"github.com/ElfAstAhe/tiny-audit-service/internal/repository/metrics"
+	"github.com/ElfAstAhe/tiny-audit-service/internal/repository/postgres"
+	"github.com/ElfAstAhe/tiny-audit-service/internal/repository/trace"
 )
 
 //goland:noinspection DuplicatedCode
 func (app *App) initDependencies() error {
-	//    var err error
+	var err error
 	// transaction manager
 	app.tm = db.NewTxManager(app.db)
+	var (
+		authAudit domain.AuthAuditRepository
+		dataAudit domain.DataAuditRepository
+	)
+	// repositories
+	{
+		authAudit, err = postgres.NewAuthAuditPgRepository(app.db, app.db)
+		if err != nil {
+			return err
+		}
+		authAudit = trace.NewAuthAuditTraceRepository(metrics.NewAuthAuditMetricsRepository(authAudit))
+
+		dataAudit, err = postgres.NewDataAuditPgRepository(app.db, app.db)
+		if err != nil {
+			return err
+		}
+		dataAudit = trace.NewDataAuditTraceRepository(metrics.NewDataAuditMetricsRepository(dataAudit))
+	}
+
 	/*
 	   var (
 	       roleAdminRepo      domain.RoleAdminRepository
