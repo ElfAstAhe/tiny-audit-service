@@ -13,6 +13,7 @@ import (
 	"github.com/ElfAstAhe/go-service-template/pkg/utils"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/config"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/facade"
+	grpcsvc "github.com/ElfAstAhe/tiny-audit-service/internal/transport/grpc"
 	"github.com/hellofresh/health-go/v5"
 	"google.golang.org/grpc"
 )
@@ -55,7 +56,9 @@ type App struct {
 	httpServer *http.Server
 
 	// gRPC
-	grpcServer *grpc.Server
+	grpcServer           *grpc.Server
+	grpcAuthAuditService *grpcsvc.AuthAuditGRPCService
+	grpcDataAuditService *grpcsvc.DataAuditGRPCService
 
 	// facade
 	authFacade facade.AuthAuditFacade

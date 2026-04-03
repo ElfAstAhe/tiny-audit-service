@@ -4,7 +4,9 @@ import (
 	"context"
 
 	"github.com/ElfAstAhe/go-service-template/pkg/errs"
+	grpcsvc "github.com/ElfAstAhe/tiny-audit-service/internal/transport/grpc"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/transport/grpc/interceptor"
+	pb "github.com/ElfAstAhe/tiny-audit-service/pkg/api/grpc/tiny-audit-service/v1"
 	grpcprom "github.com/grpc-ecosystem/go-grpc-middleware/providers/prometheus"
 	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/recovery"
 	"github.com/grpc-ecosystem/go-grpc-middleware/v2/metadata"
@@ -19,10 +21,8 @@ import (
 )
 
 func (app *App) initGRPCService() error {
-	//app.grpcAuthService = grpcsvc.NewAuthGRPCService(app.authFacade)
-	//app.grpcUserService = grpcsvc.NewUserGRPCService(app.userFacade)
-	//app.grpcRoleAdminService = grpcsvc.NewRoleAdminGRPCService(app.roleAdminFacade)
-	//app.grpcUserAdminService = grpcsvc.NewUserAdminGRPCService(app.userAdminFacade)
+	app.grpcAuthAuditService = grpcsvc.NewAuthAuditGRPCService(app.authFacade)
+	app.grpcDataAuditService = grpcsvc.NewDataAuditGRPCService(app.dataFacade)
 
 	return nil
 }
@@ -120,10 +120,8 @@ func (app *App) initGRPCServer() error {
 	app.grpcServer = grpc.NewServer(opts...)
 
 	// Регистрация
-	//pb.RegisterAuthServiceServer(app.grpcServer, app.grpcAuthService)
-	//pb.RegisterUserServiceServer(app.grpcServer, app.grpcUserService)
-	//pb.RegisterAdminUsersServiceServer(app.grpcServer, app.grpcUserAdminService)
-	//pb.RegisterAdminRolesServiceServer(app.grpcServer, app.grpcRoleAdminService)
+	pb.RegisterAuthAuditServiceServer(app.grpcServer, app.grpcAuthAuditService)
+	pb.RegisterDataAuditServiceServer(app.grpcServer, app.grpcDataAuditService)
 
 	// Инициализация метрик с нулевыми рядами
 	srvMetrics.InitializeMetrics(app.grpcServer)
