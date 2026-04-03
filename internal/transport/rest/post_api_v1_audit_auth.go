@@ -17,7 +17,7 @@ func (cr *AppChiRouter) postAPIV1AuditAuth(rw http.ResponseWriter, r *http.Reque
 	var income = &dto.AuthAuditDTO{}
 	err := cr.decodeJSON(r, income)
 	if err != nil {
-		cr.log.Error(err)
+		cr.log.Errorf("postAPIV1AuditAuth decode income json [%v]", err)
 
 		cr.renderError(rw, err)
 
