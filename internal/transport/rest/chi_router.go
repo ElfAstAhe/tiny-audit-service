@@ -133,6 +133,40 @@ func (cr *AppChiRouter) setupRoutes() {
 	cr.router.Route("/api", func(r chi.Router) {
 		// /v1
 		r.Route("/v1", func(r chi.Router) {
+			// /audit
+			r.Route("/audit", func(r chi.Router) {
+				// /auth
+				r.Route("/auth", func(r chi.Router) {
+					r.Post("/", cr.postAPIV1AuditAuth)
+					r.Post("/period", cr.postAPIV1AuditAuthPeriod)
+					r.Post("/username", cr.postAPIV1AuditAuthUsername)
+				})
+				// /data
+				r.Route("/data", func(r chi.Router) {
+					r.Post("/", cr.postAPIV1AuditData)
+					r.Post("/period", cr.postAPIV1AuditDataPeriod)
+					r.Post("/instance", cr.postAPIV1AuditDataInstance)
+				})
+			})
+			/*
+			   // crud, может и не нужен...
+			   // /auth
+			   r.Route("/auth", func(r chi.Router) {
+			       r.Get("/{id}", cr.getAPIV1AuthAudit)
+			       r.Get("/", cr.getAPIV1AuthAudits)
+			       r.Post("/", cr.postAPIV1Auth)
+			       r.Put("/{id}", cr.putAPIV1Auth)
+			       r.Delete("/{id}", cr.deleteAPIV1Auth)
+			   })
+			   // /data
+			   r.Route("/data", func(r chi.Router) {
+			       r.Get("/{id}", cr.getAPIV1DataAudit)
+			       r.Get("/", cr.getAPIV1DataAudits)
+			       r.Post("/", cr.postAPIV1DataAudit)
+			       r.Put("/{id}", cr.putAPIV1DataAudit)
+			       r.Delete("/{id}", cr.deleteAPIV1DataAudit)
+			   })
+			*/
 		})
 	})
 }
