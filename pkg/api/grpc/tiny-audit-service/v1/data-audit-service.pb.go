@@ -10,7 +10,6 @@ import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
-	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	reflect "reflect"
 	unsafe "unsafe"
 )
@@ -90,161 +89,6 @@ func (b0 DataAuditRequest_builder) Build() *DataAuditRequest {
 	return m0
 }
 
-type DataListByPeriod struct {
-	state                  protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_From        *timestamppb.Timestamp `protobuf:"bytes,1,opt,name=from"`
-	xxx_hidden_Till        *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=till"`
-	xxx_hidden_Limit       uint32                 `protobuf:"varint,3,opt,name=limit"`
-	xxx_hidden_Offset      uint32                 `protobuf:"varint,4,opt,name=offset"`
-	XXX_raceDetectHookData protoimpl.RaceDetectHookData
-	XXX_presence           [1]uint32
-	unknownFields          protoimpl.UnknownFields
-	sizeCache              protoimpl.SizeCache
-}
-
-func (x *DataListByPeriod) Reset() {
-	*x = DataListByPeriod{}
-	mi := &file_tiny_audit_service_v1_data_audit_service_proto_msgTypes[1]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *DataListByPeriod) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*DataListByPeriod) ProtoMessage() {}
-
-func (x *DataListByPeriod) ProtoReflect() protoreflect.Message {
-	mi := &file_tiny_audit_service_v1_data_audit_service_proto_msgTypes[1]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-func (x *DataListByPeriod) GetFrom() *timestamppb.Timestamp {
-	if x != nil {
-		return x.xxx_hidden_From
-	}
-	return nil
-}
-
-func (x *DataListByPeriod) GetTill() *timestamppb.Timestamp {
-	if x != nil {
-		return x.xxx_hidden_Till
-	}
-	return nil
-}
-
-func (x *DataListByPeriod) GetLimit() uint32 {
-	if x != nil {
-		return x.xxx_hidden_Limit
-	}
-	return 0
-}
-
-func (x *DataListByPeriod) GetOffset() uint32 {
-	if x != nil {
-		return x.xxx_hidden_Offset
-	}
-	return 0
-}
-
-func (x *DataListByPeriod) SetFrom(v *timestamppb.Timestamp) {
-	x.xxx_hidden_From = v
-}
-
-func (x *DataListByPeriod) SetTill(v *timestamppb.Timestamp) {
-	x.xxx_hidden_Till = v
-}
-
-func (x *DataListByPeriod) SetLimit(v uint32) {
-	x.xxx_hidden_Limit = v
-	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 2, 4)
-}
-
-func (x *DataListByPeriod) SetOffset(v uint32) {
-	x.xxx_hidden_Offset = v
-	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 3, 4)
-}
-
-func (x *DataListByPeriod) HasFrom() bool {
-	if x == nil {
-		return false
-	}
-	return x.xxx_hidden_From != nil
-}
-
-func (x *DataListByPeriod) HasTill() bool {
-	if x == nil {
-		return false
-	}
-	return x.xxx_hidden_Till != nil
-}
-
-func (x *DataListByPeriod) HasLimit() bool {
-	if x == nil {
-		return false
-	}
-	return protoimpl.X.Present(&(x.XXX_presence[0]), 2)
-}
-
-func (x *DataListByPeriod) HasOffset() bool {
-	if x == nil {
-		return false
-	}
-	return protoimpl.X.Present(&(x.XXX_presence[0]), 3)
-}
-
-func (x *DataListByPeriod) ClearFrom() {
-	x.xxx_hidden_From = nil
-}
-
-func (x *DataListByPeriod) ClearTill() {
-	x.xxx_hidden_Till = nil
-}
-
-func (x *DataListByPeriod) ClearLimit() {
-	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 2)
-	x.xxx_hidden_Limit = 0
-}
-
-func (x *DataListByPeriod) ClearOffset() {
-	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 3)
-	x.xxx_hidden_Offset = 0
-}
-
-type DataListByPeriod_builder struct {
-	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
-
-	From   *timestamppb.Timestamp
-	Till   *timestamppb.Timestamp
-	Limit  *uint32
-	Offset *uint32
-}
-
-func (b0 DataListByPeriod_builder) Build() *DataListByPeriod {
-	m0 := &DataListByPeriod{}
-	b, x := &b0, m0
-	_, _ = b, x
-	x.xxx_hidden_From = b.From
-	x.xxx_hidden_Till = b.Till
-	if b.Limit != nil {
-		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 2, 4)
-		x.xxx_hidden_Limit = *b.Limit
-	}
-	if b.Offset != nil {
-		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 3, 4)
-		x.xxx_hidden_Offset = *b.Offset
-	}
-	return m0
-}
-
 type DataAuditInstances struct {
 	state                protoimpl.MessageState `protogen:"opaque.v1"`
 	xxx_hidden_Instances *[]*DataAudit          `protobuf:"bytes,1,rep,name=instances"`
@@ -254,7 +98,7 @@ type DataAuditInstances struct {
 
 func (x *DataAuditInstances) Reset() {
 	*x = DataAuditInstances{}
-	mi := &file_tiny_audit_service_v1_data_audit_service_proto_msgTypes[2]
+	mi := &file_tiny_audit_service_v1_data_audit_service_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -266,7 +110,7 @@ func (x *DataAuditInstances) String() string {
 func (*DataAuditInstances) ProtoMessage() {}
 
 func (x *DataAuditInstances) ProtoReflect() protoreflect.Message {
-	mi := &file_tiny_audit_service_v1_data_audit_service_proto_msgTypes[2]
+	mi := &file_tiny_audit_service_v1_data_audit_service_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -304,7 +148,7 @@ func (b0 DataAuditInstances_builder) Build() *DataAuditInstances {
 	return m0
 }
 
-type DataListByInstance struct {
+type ListByInstanceRequest struct {
 	state                  protoimpl.MessageState `protogen:"opaque.v1"`
 	xxx_hidden_TypeName    *string                `protobuf:"bytes,1,opt,name=type_name,json=typeName"`
 	xxx_hidden_InstanceId  *string                `protobuf:"bytes,2,opt,name=instance_id,json=instanceId"`
@@ -316,21 +160,21 @@ type DataListByInstance struct {
 	sizeCache              protoimpl.SizeCache
 }
 
-func (x *DataListByInstance) Reset() {
-	*x = DataListByInstance{}
-	mi := &file_tiny_audit_service_v1_data_audit_service_proto_msgTypes[3]
+func (x *ListByInstanceRequest) Reset() {
+	*x = ListByInstanceRequest{}
+	mi := &file_tiny_audit_service_v1_data_audit_service_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *DataListByInstance) String() string {
+func (x *ListByInstanceRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*DataListByInstance) ProtoMessage() {}
+func (*ListByInstanceRequest) ProtoMessage() {}
 
-func (x *DataListByInstance) ProtoReflect() protoreflect.Message {
-	mi := &file_tiny_audit_service_v1_data_audit_service_proto_msgTypes[3]
+func (x *ListByInstanceRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_tiny_audit_service_v1_data_audit_service_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -341,7 +185,7 @@ func (x *DataListByInstance) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *DataListByInstance) GetTypeName() string {
+func (x *ListByInstanceRequest) GetTypeName() string {
 	if x != nil {
 		if x.xxx_hidden_TypeName != nil {
 			return *x.xxx_hidden_TypeName
@@ -351,7 +195,7 @@ func (x *DataListByInstance) GetTypeName() string {
 	return ""
 }
 
-func (x *DataListByInstance) GetInstanceId() string {
+func (x *ListByInstanceRequest) GetInstanceId() string {
 	if x != nil {
 		if x.xxx_hidden_InstanceId != nil {
 			return *x.xxx_hidden_InstanceId
@@ -361,89 +205,89 @@ func (x *DataListByInstance) GetInstanceId() string {
 	return ""
 }
 
-func (x *DataListByInstance) GetLimit() uint32 {
+func (x *ListByInstanceRequest) GetLimit() uint32 {
 	if x != nil {
 		return x.xxx_hidden_Limit
 	}
 	return 0
 }
 
-func (x *DataListByInstance) GetOffset() uint32 {
+func (x *ListByInstanceRequest) GetOffset() uint32 {
 	if x != nil {
 		return x.xxx_hidden_Offset
 	}
 	return 0
 }
 
-func (x *DataListByInstance) SetTypeName(v string) {
+func (x *ListByInstanceRequest) SetTypeName(v string) {
 	x.xxx_hidden_TypeName = &v
 	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 0, 4)
 }
 
-func (x *DataListByInstance) SetInstanceId(v string) {
+func (x *ListByInstanceRequest) SetInstanceId(v string) {
 	x.xxx_hidden_InstanceId = &v
 	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 1, 4)
 }
 
-func (x *DataListByInstance) SetLimit(v uint32) {
+func (x *ListByInstanceRequest) SetLimit(v uint32) {
 	x.xxx_hidden_Limit = v
 	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 2, 4)
 }
 
-func (x *DataListByInstance) SetOffset(v uint32) {
+func (x *ListByInstanceRequest) SetOffset(v uint32) {
 	x.xxx_hidden_Offset = v
 	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 3, 4)
 }
 
-func (x *DataListByInstance) HasTypeName() bool {
+func (x *ListByInstanceRequest) HasTypeName() bool {
 	if x == nil {
 		return false
 	}
 	return protoimpl.X.Present(&(x.XXX_presence[0]), 0)
 }
 
-func (x *DataListByInstance) HasInstanceId() bool {
+func (x *ListByInstanceRequest) HasInstanceId() bool {
 	if x == nil {
 		return false
 	}
 	return protoimpl.X.Present(&(x.XXX_presence[0]), 1)
 }
 
-func (x *DataListByInstance) HasLimit() bool {
+func (x *ListByInstanceRequest) HasLimit() bool {
 	if x == nil {
 		return false
 	}
 	return protoimpl.X.Present(&(x.XXX_presence[0]), 2)
 }
 
-func (x *DataListByInstance) HasOffset() bool {
+func (x *ListByInstanceRequest) HasOffset() bool {
 	if x == nil {
 		return false
 	}
 	return protoimpl.X.Present(&(x.XXX_presence[0]), 3)
 }
 
-func (x *DataListByInstance) ClearTypeName() {
+func (x *ListByInstanceRequest) ClearTypeName() {
 	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 0)
 	x.xxx_hidden_TypeName = nil
 }
 
-func (x *DataListByInstance) ClearInstanceId() {
+func (x *ListByInstanceRequest) ClearInstanceId() {
 	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 1)
 	x.xxx_hidden_InstanceId = nil
 }
 
-func (x *DataListByInstance) ClearLimit() {
+func (x *ListByInstanceRequest) ClearLimit() {
 	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 2)
 	x.xxx_hidden_Limit = 0
 }
 
-func (x *DataListByInstance) ClearOffset() {
+func (x *ListByInstanceRequest) ClearOffset() {
 	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 3)
 	x.xxx_hidden_Offset = 0
 }
 
-type DataListByInstance_builder struct {
+type ListByInstanceRequest_builder struct {
 	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
 
 	TypeName   *string
@@ -452,8 +296,8 @@ type DataListByInstance_builder struct {
 	Offset     *uint32
 }
 
-func (b0 DataListByInstance_builder) Build() *DataListByInstance {
-	m0 := &DataListByInstance{}
+func (b0 ListByInstanceRequest_builder) Build() *ListByInstanceRequest {
+	m0 := &ListByInstanceRequest{}
 	b, x := &b0, m0
 	_, _ = b, x
 	if b.TypeName != nil {
@@ -479,53 +323,45 @@ var File_tiny_audit_service_v1_data_audit_service_proto protoreflect.FileDescrip
 
 const file_tiny_audit_service_v1_data_audit_service_proto_rawDesc = "" +
 	"\n" +
-	".tiny-audit-service/v1/data-audit-service.proto\x12\raudit.service\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a$tiny-audit-service/v1/messages.proto\"@\n" +
+	".tiny-audit-service/v1/data-audit-service.proto\x12\raudit.service\x1a\x1bgoogle/protobuf/empty.proto\x1a$tiny-audit-service/v1/messages.proto\"@\n" +
 	"\x10DataAuditRequest\x12,\n" +
-	"\x04data\x18\x01 \x01(\v2\x18.audit.service.DataAuditR\x04data\"\xa0\x01\n" +
-	"\x10DataListByPeriod\x12.\n" +
-	"\x04from\x18\x01 \x01(\v2\x1a.google.protobuf.TimestampR\x04from\x12.\n" +
-	"\x04till\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\x04till\x12\x14\n" +
-	"\x05limit\x18\x03 \x01(\rR\x05limit\x12\x16\n" +
-	"\x06offset\x18\x04 \x01(\rR\x06offset\"L\n" +
+	"\x04data\x18\x01 \x01(\v2\x18.audit.service.DataAuditR\x04data\"L\n" +
 	"\x12DataAuditInstances\x126\n" +
-	"\tinstances\x18\x01 \x03(\v2\x18.audit.service.DataAuditR\tinstances\"\x80\x01\n" +
-	"\x12DataListByInstance\x12\x1b\n" +
+	"\tinstances\x18\x01 \x03(\v2\x18.audit.service.DataAuditR\tinstances\"\x83\x01\n" +
+	"\x15ListByInstanceRequest\x12\x1b\n" +
 	"\ttype_name\x18\x01 \x01(\tR\btypeName\x12\x1f\n" +
 	"\vinstance_id\x18\x02 \x01(\tR\n" +
 	"instanceId\x12\x14\n" +
 	"\x05limit\x18\x03 \x01(\rR\x05limit\x12\x16\n" +
-	"\x06offset\x18\x04 \x01(\rR\x06offset2\x80\x02\n" +
+	"\x06offset\x18\x04 \x01(\rR\x06offset2\x86\x02\n" +
 	"\x10DataAuditService\x12@\n" +
-	"\x05Audit\x12\x1f.audit.service.DataAuditRequest\x1a\x16.google.protobuf.Empty\x12R\n" +
-	"\fListByPeriod\x12\x1f.audit.service.DataListByPeriod\x1a!.audit.service.DataAuditInstances\x12V\n" +
-	"\x0eListByInstance\x12!.audit.service.DataListByInstance\x1a!.audit.service.DataAuditInstancesB,Z*tiny-audit-service/grpc/tiny-audit-serviceb\beditionsp\xe8\a"
+	"\x05Audit\x12\x1f.audit.service.DataAuditRequest\x1a\x16.google.protobuf.Empty\x12U\n" +
+	"\fListByPeriod\x12\".audit.service.ListByPeriodRequest\x1a!.audit.service.DataAuditInstances\x12Y\n" +
+	"\x0eListByInstance\x12$.audit.service.ListByInstanceRequest\x1a!.audit.service.DataAuditInstancesB,Z*tiny-audit-service/grpc/tiny-audit-serviceb\beditionsp\xe8\a"
 
-var file_tiny_audit_service_v1_data_audit_service_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_tiny_audit_service_v1_data_audit_service_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_tiny_audit_service_v1_data_audit_service_proto_goTypes = []any{
 	(*DataAuditRequest)(nil),      // 0: audit.service.DataAuditRequest
-	(*DataListByPeriod)(nil),      // 1: audit.service.DataListByPeriod
-	(*DataAuditInstances)(nil),    // 2: audit.service.DataAuditInstances
-	(*DataListByInstance)(nil),    // 3: audit.service.DataListByInstance
-	(*DataAudit)(nil),             // 4: audit.service.DataAudit
-	(*timestamppb.Timestamp)(nil), // 5: google.protobuf.Timestamp
-	(*emptypb.Empty)(nil),         // 6: google.protobuf.Empty
+	(*DataAuditInstances)(nil),    // 1: audit.service.DataAuditInstances
+	(*ListByInstanceRequest)(nil), // 2: audit.service.ListByInstanceRequest
+	(*DataAudit)(nil),             // 3: audit.service.DataAudit
+	(*ListByPeriodRequest)(nil),   // 4: audit.service.ListByPeriodRequest
+	(*emptypb.Empty)(nil),         // 5: google.protobuf.Empty
 }
 var file_tiny_audit_service_v1_data_audit_service_proto_depIdxs = []int32{
-	4, // 0: audit.service.DataAuditRequest.data:type_name -> audit.service.DataAudit
-	5, // 1: audit.service.DataListByPeriod.from:type_name -> google.protobuf.Timestamp
-	5, // 2: audit.service.DataListByPeriod.till:type_name -> google.protobuf.Timestamp
-	4, // 3: audit.service.DataAuditInstances.instances:type_name -> audit.service.DataAudit
-	0, // 4: audit.service.DataAuditService.Audit:input_type -> audit.service.DataAuditRequest
-	1, // 5: audit.service.DataAuditService.ListByPeriod:input_type -> audit.service.DataListByPeriod
-	3, // 6: audit.service.DataAuditService.ListByInstance:input_type -> audit.service.DataListByInstance
-	6, // 7: audit.service.DataAuditService.Audit:output_type -> google.protobuf.Empty
-	2, // 8: audit.service.DataAuditService.ListByPeriod:output_type -> audit.service.DataAuditInstances
-	2, // 9: audit.service.DataAuditService.ListByInstance:output_type -> audit.service.DataAuditInstances
-	7, // [7:10] is the sub-list for method output_type
-	4, // [4:7] is the sub-list for method input_type
-	4, // [4:4] is the sub-list for extension type_name
-	4, // [4:4] is the sub-list for extension extendee
-	0, // [0:4] is the sub-list for field type_name
+	3, // 0: audit.service.DataAuditRequest.data:type_name -> audit.service.DataAudit
+	3, // 1: audit.service.DataAuditInstances.instances:type_name -> audit.service.DataAudit
+	0, // 2: audit.service.DataAuditService.Audit:input_type -> audit.service.DataAuditRequest
+	4, // 3: audit.service.DataAuditService.ListByPeriod:input_type -> audit.service.ListByPeriodRequest
+	2, // 4: audit.service.DataAuditService.ListByInstance:input_type -> audit.service.ListByInstanceRequest
+	5, // 5: audit.service.DataAuditService.Audit:output_type -> google.protobuf.Empty
+	1, // 6: audit.service.DataAuditService.ListByPeriod:output_type -> audit.service.DataAuditInstances
+	1, // 7: audit.service.DataAuditService.ListByInstance:output_type -> audit.service.DataAuditInstances
+	5, // [5:8] is the sub-list for method output_type
+	2, // [2:5] is the sub-list for method input_type
+	2, // [2:2] is the sub-list for extension type_name
+	2, // [2:2] is the sub-list for extension extendee
+	0, // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_tiny_audit_service_v1_data_audit_service_proto_init() }
@@ -540,7 +376,7 @@ func file_tiny_audit_service_v1_data_audit_service_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_tiny_audit_service_v1_data_audit_service_proto_rawDesc), len(file_tiny_audit_service_v1_data_audit_service_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   4,
+			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

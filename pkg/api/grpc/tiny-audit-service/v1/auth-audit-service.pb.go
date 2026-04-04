@@ -10,7 +10,6 @@ import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
-	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	reflect "reflect"
 	unsafe "unsafe"
 )
@@ -90,161 +89,6 @@ func (b0 AuthAuditRequest_builder) Build() *AuthAuditRequest {
 	return m0
 }
 
-type AuthListByPeriodRequest struct {
-	state                  protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_From        *timestamppb.Timestamp `protobuf:"bytes,1,opt,name=from"`
-	xxx_hidden_Till        *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=till"`
-	xxx_hidden_Limit       uint32                 `protobuf:"varint,3,opt,name=limit"`
-	xxx_hidden_Offset      uint32                 `protobuf:"varint,4,opt,name=offset"`
-	XXX_raceDetectHookData protoimpl.RaceDetectHookData
-	XXX_presence           [1]uint32
-	unknownFields          protoimpl.UnknownFields
-	sizeCache              protoimpl.SizeCache
-}
-
-func (x *AuthListByPeriodRequest) Reset() {
-	*x = AuthListByPeriodRequest{}
-	mi := &file_tiny_audit_service_v1_auth_audit_service_proto_msgTypes[1]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *AuthListByPeriodRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*AuthListByPeriodRequest) ProtoMessage() {}
-
-func (x *AuthListByPeriodRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_tiny_audit_service_v1_auth_audit_service_proto_msgTypes[1]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-func (x *AuthListByPeriodRequest) GetFrom() *timestamppb.Timestamp {
-	if x != nil {
-		return x.xxx_hidden_From
-	}
-	return nil
-}
-
-func (x *AuthListByPeriodRequest) GetTill() *timestamppb.Timestamp {
-	if x != nil {
-		return x.xxx_hidden_Till
-	}
-	return nil
-}
-
-func (x *AuthListByPeriodRequest) GetLimit() uint32 {
-	if x != nil {
-		return x.xxx_hidden_Limit
-	}
-	return 0
-}
-
-func (x *AuthListByPeriodRequest) GetOffset() uint32 {
-	if x != nil {
-		return x.xxx_hidden_Offset
-	}
-	return 0
-}
-
-func (x *AuthListByPeriodRequest) SetFrom(v *timestamppb.Timestamp) {
-	x.xxx_hidden_From = v
-}
-
-func (x *AuthListByPeriodRequest) SetTill(v *timestamppb.Timestamp) {
-	x.xxx_hidden_Till = v
-}
-
-func (x *AuthListByPeriodRequest) SetLimit(v uint32) {
-	x.xxx_hidden_Limit = v
-	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 2, 4)
-}
-
-func (x *AuthListByPeriodRequest) SetOffset(v uint32) {
-	x.xxx_hidden_Offset = v
-	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 3, 4)
-}
-
-func (x *AuthListByPeriodRequest) HasFrom() bool {
-	if x == nil {
-		return false
-	}
-	return x.xxx_hidden_From != nil
-}
-
-func (x *AuthListByPeriodRequest) HasTill() bool {
-	if x == nil {
-		return false
-	}
-	return x.xxx_hidden_Till != nil
-}
-
-func (x *AuthListByPeriodRequest) HasLimit() bool {
-	if x == nil {
-		return false
-	}
-	return protoimpl.X.Present(&(x.XXX_presence[0]), 2)
-}
-
-func (x *AuthListByPeriodRequest) HasOffset() bool {
-	if x == nil {
-		return false
-	}
-	return protoimpl.X.Present(&(x.XXX_presence[0]), 3)
-}
-
-func (x *AuthListByPeriodRequest) ClearFrom() {
-	x.xxx_hidden_From = nil
-}
-
-func (x *AuthListByPeriodRequest) ClearTill() {
-	x.xxx_hidden_Till = nil
-}
-
-func (x *AuthListByPeriodRequest) ClearLimit() {
-	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 2)
-	x.xxx_hidden_Limit = 0
-}
-
-func (x *AuthListByPeriodRequest) ClearOffset() {
-	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 3)
-	x.xxx_hidden_Offset = 0
-}
-
-type AuthListByPeriodRequest_builder struct {
-	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
-
-	From   *timestamppb.Timestamp
-	Till   *timestamppb.Timestamp
-	Limit  *uint32
-	Offset *uint32
-}
-
-func (b0 AuthListByPeriodRequest_builder) Build() *AuthListByPeriodRequest {
-	m0 := &AuthListByPeriodRequest{}
-	b, x := &b0, m0
-	_, _ = b, x
-	x.xxx_hidden_From = b.From
-	x.xxx_hidden_Till = b.Till
-	if b.Limit != nil {
-		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 2, 4)
-		x.xxx_hidden_Limit = *b.Limit
-	}
-	if b.Offset != nil {
-		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 3, 4)
-		x.xxx_hidden_Offset = *b.Offset
-	}
-	return m0
-}
-
 type AuthAuditInstances struct {
 	state                protoimpl.MessageState `protogen:"opaque.v1"`
 	xxx_hidden_Instances *[]*AuthAudit          `protobuf:"bytes,1,rep,name=instances"`
@@ -254,7 +98,7 @@ type AuthAuditInstances struct {
 
 func (x *AuthAuditInstances) Reset() {
 	*x = AuthAuditInstances{}
-	mi := &file_tiny_audit_service_v1_auth_audit_service_proto_msgTypes[2]
+	mi := &file_tiny_audit_service_v1_auth_audit_service_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -266,7 +110,7 @@ func (x *AuthAuditInstances) String() string {
 func (*AuthAuditInstances) ProtoMessage() {}
 
 func (x *AuthAuditInstances) ProtoReflect() protoreflect.Message {
-	mi := &file_tiny_audit_service_v1_auth_audit_service_proto_msgTypes[2]
+	mi := &file_tiny_audit_service_v1_auth_audit_service_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -317,7 +161,7 @@ type AuthListByUsernameRequest struct {
 
 func (x *AuthListByUsernameRequest) Reset() {
 	*x = AuthListByUsernameRequest{}
-	mi := &file_tiny_audit_service_v1_auth_audit_service_proto_msgTypes[3]
+	mi := &file_tiny_audit_service_v1_auth_audit_service_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -329,7 +173,7 @@ func (x *AuthListByUsernameRequest) String() string {
 func (*AuthListByUsernameRequest) ProtoMessage() {}
 
 func (x *AuthListByUsernameRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_tiny_audit_service_v1_auth_audit_service_proto_msgTypes[3]
+	mi := &file_tiny_audit_service_v1_auth_audit_service_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -446,51 +290,43 @@ var File_tiny_audit_service_v1_auth_audit_service_proto protoreflect.FileDescrip
 
 const file_tiny_audit_service_v1_auth_audit_service_proto_rawDesc = "" +
 	"\n" +
-	".tiny-audit-service/v1/auth-audit-service.proto\x12\raudit.service\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a$tiny-audit-service/v1/messages.proto\"@\n" +
+	".tiny-audit-service/v1/auth-audit-service.proto\x12\raudit.service\x1a\x1bgoogle/protobuf/empty.proto\x1a$tiny-audit-service/v1/messages.proto\"@\n" +
 	"\x10AuthAuditRequest\x12,\n" +
-	"\x04data\x18\x01 \x01(\v2\x18.audit.service.AuthAuditR\x04data\"\xa7\x01\n" +
-	"\x17AuthListByPeriodRequest\x12.\n" +
-	"\x04from\x18\x01 \x01(\v2\x1a.google.protobuf.TimestampR\x04from\x12.\n" +
-	"\x04till\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\x04till\x12\x14\n" +
-	"\x05limit\x18\x03 \x01(\rR\x05limit\x12\x16\n" +
-	"\x06offset\x18\x04 \x01(\rR\x06offset\"L\n" +
+	"\x04data\x18\x01 \x01(\v2\x18.audit.service.AuthAuditR\x04data\"L\n" +
 	"\x12AuthAuditInstances\x126\n" +
 	"\tinstances\x18\x01 \x03(\v2\x18.audit.service.AuthAuditR\tinstances\"e\n" +
 	"\x19AuthListByUsernameRequest\x12\x1a\n" +
 	"\busername\x18\x01 \x01(\tR\busername\x12\x14\n" +
 	"\x05limit\x18\x02 \x01(\rR\x05limit\x12\x16\n" +
-	"\x06offset\x18\x03 \x01(\rR\x06offset2\x8e\x02\n" +
+	"\x06offset\x18\x03 \x01(\rR\x06offset2\x8a\x02\n" +
 	"\x10AuthAuditService\x12@\n" +
-	"\x05Audit\x12\x1f.audit.service.AuthAuditRequest\x1a\x16.google.protobuf.Empty\x12Y\n" +
-	"\fListByPeriod\x12&.audit.service.AuthListByPeriodRequest\x1a!.audit.service.AuthAuditInstances\x12]\n" +
+	"\x05Audit\x12\x1f.audit.service.AuthAuditRequest\x1a\x16.google.protobuf.Empty\x12U\n" +
+	"\fListByPeriod\x12\".audit.service.ListByPeriodRequest\x1a!.audit.service.AuthAuditInstances\x12]\n" +
 	"\x0eListByUsername\x12(.audit.service.AuthListByUsernameRequest\x1a!.audit.service.AuthAuditInstancesB,Z*tiny-audit-service/grpc/tiny-audit-serviceb\beditionsp\xe8\a"
 
-var file_tiny_audit_service_v1_auth_audit_service_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_tiny_audit_service_v1_auth_audit_service_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_tiny_audit_service_v1_auth_audit_service_proto_goTypes = []any{
 	(*AuthAuditRequest)(nil),          // 0: audit.service.AuthAuditRequest
-	(*AuthListByPeriodRequest)(nil),   // 1: audit.service.AuthListByPeriodRequest
-	(*AuthAuditInstances)(nil),        // 2: audit.service.AuthAuditInstances
-	(*AuthListByUsernameRequest)(nil), // 3: audit.service.AuthListByUsernameRequest
-	(*AuthAudit)(nil),                 // 4: audit.service.AuthAudit
-	(*timestamppb.Timestamp)(nil),     // 5: google.protobuf.Timestamp
-	(*emptypb.Empty)(nil),             // 6: google.protobuf.Empty
+	(*AuthAuditInstances)(nil),        // 1: audit.service.AuthAuditInstances
+	(*AuthListByUsernameRequest)(nil), // 2: audit.service.AuthListByUsernameRequest
+	(*AuthAudit)(nil),                 // 3: audit.service.AuthAudit
+	(*ListByPeriodRequest)(nil),       // 4: audit.service.ListByPeriodRequest
+	(*emptypb.Empty)(nil),             // 5: google.protobuf.Empty
 }
 var file_tiny_audit_service_v1_auth_audit_service_proto_depIdxs = []int32{
-	4, // 0: audit.service.AuthAuditRequest.data:type_name -> audit.service.AuthAudit
-	5, // 1: audit.service.AuthListByPeriodRequest.from:type_name -> google.protobuf.Timestamp
-	5, // 2: audit.service.AuthListByPeriodRequest.till:type_name -> google.protobuf.Timestamp
-	4, // 3: audit.service.AuthAuditInstances.instances:type_name -> audit.service.AuthAudit
-	0, // 4: audit.service.AuthAuditService.Audit:input_type -> audit.service.AuthAuditRequest
-	1, // 5: audit.service.AuthAuditService.ListByPeriod:input_type -> audit.service.AuthListByPeriodRequest
-	3, // 6: audit.service.AuthAuditService.ListByUsername:input_type -> audit.service.AuthListByUsernameRequest
-	6, // 7: audit.service.AuthAuditService.Audit:output_type -> google.protobuf.Empty
-	2, // 8: audit.service.AuthAuditService.ListByPeriod:output_type -> audit.service.AuthAuditInstances
-	2, // 9: audit.service.AuthAuditService.ListByUsername:output_type -> audit.service.AuthAuditInstances
-	7, // [7:10] is the sub-list for method output_type
-	4, // [4:7] is the sub-list for method input_type
-	4, // [4:4] is the sub-list for extension type_name
-	4, // [4:4] is the sub-list for extension extendee
-	0, // [0:4] is the sub-list for field type_name
+	3, // 0: audit.service.AuthAuditRequest.data:type_name -> audit.service.AuthAudit
+	3, // 1: audit.service.AuthAuditInstances.instances:type_name -> audit.service.AuthAudit
+	0, // 2: audit.service.AuthAuditService.Audit:input_type -> audit.service.AuthAuditRequest
+	4, // 3: audit.service.AuthAuditService.ListByPeriod:input_type -> audit.service.ListByPeriodRequest
+	2, // 4: audit.service.AuthAuditService.ListByUsername:input_type -> audit.service.AuthListByUsernameRequest
+	5, // 5: audit.service.AuthAuditService.Audit:output_type -> google.protobuf.Empty
+	1, // 6: audit.service.AuthAuditService.ListByPeriod:output_type -> audit.service.AuthAuditInstances
+	1, // 7: audit.service.AuthAuditService.ListByUsername:output_type -> audit.service.AuthAuditInstances
+	5, // [5:8] is the sub-list for method output_type
+	2, // [2:5] is the sub-list for method input_type
+	2, // [2:2] is the sub-list for extension type_name
+	2, // [2:2] is the sub-list for extension extendee
+	0, // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_tiny_audit_service_v1_auth_audit_service_proto_init() }
@@ -505,7 +341,7 @@ func file_tiny_audit_service_v1_auth_audit_service_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_tiny_audit_service_v1_auth_audit_service_proto_rawDesc), len(file_tiny_audit_service_v1_auth_audit_service_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   4,
+			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

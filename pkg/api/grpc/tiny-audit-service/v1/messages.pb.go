@@ -21,6 +21,161 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+type ListByPeriodRequest struct {
+	state                  protoimpl.MessageState `protogen:"opaque.v1"`
+	xxx_hidden_From        *timestamppb.Timestamp `protobuf:"bytes,1,opt,name=from"`
+	xxx_hidden_Till        *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=till"`
+	xxx_hidden_Limit       uint32                 `protobuf:"varint,3,opt,name=limit"`
+	xxx_hidden_Offset      uint32                 `protobuf:"varint,4,opt,name=offset"`
+	XXX_raceDetectHookData protoimpl.RaceDetectHookData
+	XXX_presence           [1]uint32
+	unknownFields          protoimpl.UnknownFields
+	sizeCache              protoimpl.SizeCache
+}
+
+func (x *ListByPeriodRequest) Reset() {
+	*x = ListByPeriodRequest{}
+	mi := &file_tiny_audit_service_v1_messages_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListByPeriodRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListByPeriodRequest) ProtoMessage() {}
+
+func (x *ListByPeriodRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_tiny_audit_service_v1_messages_proto_msgTypes[0]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *ListByPeriodRequest) GetFrom() *timestamppb.Timestamp {
+	if x != nil {
+		return x.xxx_hidden_From
+	}
+	return nil
+}
+
+func (x *ListByPeriodRequest) GetTill() *timestamppb.Timestamp {
+	if x != nil {
+		return x.xxx_hidden_Till
+	}
+	return nil
+}
+
+func (x *ListByPeriodRequest) GetLimit() uint32 {
+	if x != nil {
+		return x.xxx_hidden_Limit
+	}
+	return 0
+}
+
+func (x *ListByPeriodRequest) GetOffset() uint32 {
+	if x != nil {
+		return x.xxx_hidden_Offset
+	}
+	return 0
+}
+
+func (x *ListByPeriodRequest) SetFrom(v *timestamppb.Timestamp) {
+	x.xxx_hidden_From = v
+}
+
+func (x *ListByPeriodRequest) SetTill(v *timestamppb.Timestamp) {
+	x.xxx_hidden_Till = v
+}
+
+func (x *ListByPeriodRequest) SetLimit(v uint32) {
+	x.xxx_hidden_Limit = v
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 2, 4)
+}
+
+func (x *ListByPeriodRequest) SetOffset(v uint32) {
+	x.xxx_hidden_Offset = v
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 3, 4)
+}
+
+func (x *ListByPeriodRequest) HasFrom() bool {
+	if x == nil {
+		return false
+	}
+	return x.xxx_hidden_From != nil
+}
+
+func (x *ListByPeriodRequest) HasTill() bool {
+	if x == nil {
+		return false
+	}
+	return x.xxx_hidden_Till != nil
+}
+
+func (x *ListByPeriodRequest) HasLimit() bool {
+	if x == nil {
+		return false
+	}
+	return protoimpl.X.Present(&(x.XXX_presence[0]), 2)
+}
+
+func (x *ListByPeriodRequest) HasOffset() bool {
+	if x == nil {
+		return false
+	}
+	return protoimpl.X.Present(&(x.XXX_presence[0]), 3)
+}
+
+func (x *ListByPeriodRequest) ClearFrom() {
+	x.xxx_hidden_From = nil
+}
+
+func (x *ListByPeriodRequest) ClearTill() {
+	x.xxx_hidden_Till = nil
+}
+
+func (x *ListByPeriodRequest) ClearLimit() {
+	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 2)
+	x.xxx_hidden_Limit = 0
+}
+
+func (x *ListByPeriodRequest) ClearOffset() {
+	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 3)
+	x.xxx_hidden_Offset = 0
+}
+
+type ListByPeriodRequest_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	From   *timestamppb.Timestamp
+	Till   *timestamppb.Timestamp
+	Limit  *uint32
+	Offset *uint32
+}
+
+func (b0 ListByPeriodRequest_builder) Build() *ListByPeriodRequest {
+	m0 := &ListByPeriodRequest{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.xxx_hidden_From = b.From
+	x.xxx_hidden_Till = b.Till
+	if b.Limit != nil {
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 2, 4)
+		x.xxx_hidden_Limit = *b.Limit
+	}
+	if b.Offset != nil {
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 3, 4)
+		x.xxx_hidden_Offset = *b.Offset
+	}
+	return m0
+}
+
 type AuthAudit struct {
 	state                   protoimpl.MessageState `protogen:"opaque.v1"`
 	xxx_hidden_Id           *string                `protobuf:"bytes,1,opt,name=id"`
@@ -42,7 +197,7 @@ type AuthAudit struct {
 
 func (x *AuthAudit) Reset() {
 	*x = AuthAudit{}
-	mi := &file_tiny_audit_service_v1_messages_proto_msgTypes[0]
+	mi := &file_tiny_audit_service_v1_messages_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -54,7 +209,7 @@ func (x *AuthAudit) String() string {
 func (*AuthAudit) ProtoMessage() {}
 
 func (x *AuthAudit) ProtoReflect() protoreflect.Message {
-	mi := &file_tiny_audit_service_v1_messages_proto_msgTypes[0]
+	mi := &file_tiny_audit_service_v1_messages_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -419,7 +574,7 @@ type DataAuditValue struct {
 
 func (x *DataAuditValue) Reset() {
 	*x = DataAuditValue{}
-	mi := &file_tiny_audit_service_v1_messages_proto_msgTypes[1]
+	mi := &file_tiny_audit_service_v1_messages_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -431,7 +586,7 @@ func (x *DataAuditValue) String() string {
 func (*DataAuditValue) ProtoMessage() {}
 
 func (x *DataAuditValue) ProtoReflect() protoreflect.Message {
-	mi := &file_tiny_audit_service_v1_messages_proto_msgTypes[1]
+	mi := &file_tiny_audit_service_v1_messages_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -606,7 +761,7 @@ type DataAudit struct {
 
 func (x *DataAudit) Reset() {
 	*x = DataAudit{}
-	mi := &file_tiny_audit_service_v1_messages_proto_msgTypes[2]
+	mi := &file_tiny_audit_service_v1_messages_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -618,7 +773,7 @@ func (x *DataAudit) String() string {
 func (*DataAudit) ProtoMessage() {}
 
 func (x *DataAudit) ProtoReflect() protoreflect.Message {
-	mi := &file_tiny_audit_service_v1_messages_proto_msgTypes[2]
+	mi := &file_tiny_audit_service_v1_messages_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1052,7 +1207,12 @@ var File_tiny_audit_service_v1_messages_proto protoreflect.FileDescriptor
 
 const file_tiny_audit_service_v1_messages_proto_rawDesc = "" +
 	"\n" +
-	"$tiny-audit-service/v1/messages.proto\x12\raudit.service\x1a\x1fgoogle/protobuf/timestamp.proto\"\x91\x03\n" +
+	"$tiny-audit-service/v1/messages.proto\x12\raudit.service\x1a\x1fgoogle/protobuf/timestamp.proto\"\xa3\x01\n" +
+	"\x13ListByPeriodRequest\x12.\n" +
+	"\x04from\x18\x01 \x01(\v2\x1a.google.protobuf.TimestampR\x04from\x12.\n" +
+	"\x04till\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\x04till\x12\x14\n" +
+	"\x05limit\x18\x03 \x01(\rR\x05limit\x12\x16\n" +
+	"\x06offset\x18\x04 \x01(\rR\x06offset\"\x91\x03\n" +
 	"\tAuthAudit\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x16\n" +
 	"\x06source\x18\x02 \x01(\tR\x06source\x129\n" +
@@ -1093,26 +1253,29 @@ const file_tiny_audit_service_v1_messages_proto_rawDesc = "" +
 	"\tcreate_at\x18\r \x01(\v2\x1a.google.protobuf.TimestampR\bcreateAt\x127\n" +
 	"\tupdate_at\x18\x0e \x01(\v2\x1a.google.protobuf.TimestampR\bupdateAtB,Z*tiny-audit-service/grpc/tiny-audit-serviceb\beditionsp\xe8\a"
 
-var file_tiny_audit_service_v1_messages_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_tiny_audit_service_v1_messages_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_tiny_audit_service_v1_messages_proto_goTypes = []any{
-	(*AuthAudit)(nil),             // 0: audit.service.AuthAudit
-	(*DataAuditValue)(nil),        // 1: audit.service.DataAuditValue
-	(*DataAudit)(nil),             // 2: audit.service.DataAudit
-	(*timestamppb.Timestamp)(nil), // 3: google.protobuf.Timestamp
+	(*ListByPeriodRequest)(nil),   // 0: audit.service.ListByPeriodRequest
+	(*AuthAudit)(nil),             // 1: audit.service.AuthAudit
+	(*DataAuditValue)(nil),        // 2: audit.service.DataAuditValue
+	(*DataAudit)(nil),             // 3: audit.service.DataAudit
+	(*timestamppb.Timestamp)(nil), // 4: google.protobuf.Timestamp
 }
 var file_tiny_audit_service_v1_messages_proto_depIdxs = []int32{
-	3, // 0: audit.service.AuthAudit.event_date:type_name -> google.protobuf.Timestamp
-	3, // 1: audit.service.AuthAudit.create_at:type_name -> google.protobuf.Timestamp
-	3, // 2: audit.service.AuthAudit.update_at:type_name -> google.protobuf.Timestamp
-	3, // 3: audit.service.DataAudit.event_date:type_name -> google.protobuf.Timestamp
-	1, // 4: audit.service.DataAudit.values:type_name -> audit.service.DataAuditValue
-	3, // 5: audit.service.DataAudit.create_at:type_name -> google.protobuf.Timestamp
-	3, // 6: audit.service.DataAudit.update_at:type_name -> google.protobuf.Timestamp
-	7, // [7:7] is the sub-list for method output_type
-	7, // [7:7] is the sub-list for method input_type
-	7, // [7:7] is the sub-list for extension type_name
-	7, // [7:7] is the sub-list for extension extendee
-	0, // [0:7] is the sub-list for field type_name
+	4, // 0: audit.service.ListByPeriodRequest.from:type_name -> google.protobuf.Timestamp
+	4, // 1: audit.service.ListByPeriodRequest.till:type_name -> google.protobuf.Timestamp
+	4, // 2: audit.service.AuthAudit.event_date:type_name -> google.protobuf.Timestamp
+	4, // 3: audit.service.AuthAudit.create_at:type_name -> google.protobuf.Timestamp
+	4, // 4: audit.service.AuthAudit.update_at:type_name -> google.protobuf.Timestamp
+	4, // 5: audit.service.DataAudit.event_date:type_name -> google.protobuf.Timestamp
+	2, // 6: audit.service.DataAudit.values:type_name -> audit.service.DataAuditValue
+	4, // 7: audit.service.DataAudit.create_at:type_name -> google.protobuf.Timestamp
+	4, // 8: audit.service.DataAudit.update_at:type_name -> google.protobuf.Timestamp
+	9, // [9:9] is the sub-list for method output_type
+	9, // [9:9] is the sub-list for method input_type
+	9, // [9:9] is the sub-list for extension type_name
+	9, // [9:9] is the sub-list for extension extendee
+	0, // [0:9] is the sub-list for field type_name
 }
 
 func init() { file_tiny_audit_service_v1_messages_proto_init() }
@@ -1126,7 +1289,7 @@ func file_tiny_audit_service_v1_messages_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_tiny_audit_service_v1_messages_proto_rawDesc), len(file_tiny_audit_service_v1_messages_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   3,
+			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

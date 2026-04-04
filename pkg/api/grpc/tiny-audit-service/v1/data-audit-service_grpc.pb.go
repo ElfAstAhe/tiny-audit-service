@@ -30,8 +30,8 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type DataAuditServiceClient interface {
 	Audit(ctx context.Context, in *DataAuditRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	ListByPeriod(ctx context.Context, in *DataListByPeriod, opts ...grpc.CallOption) (*DataAuditInstances, error)
-	ListByInstance(ctx context.Context, in *DataListByInstance, opts ...grpc.CallOption) (*DataAuditInstances, error)
+	ListByPeriod(ctx context.Context, in *ListByPeriodRequest, opts ...grpc.CallOption) (*DataAuditInstances, error)
+	ListByInstance(ctx context.Context, in *ListByInstanceRequest, opts ...grpc.CallOption) (*DataAuditInstances, error)
 }
 
 type dataAuditServiceClient struct {
@@ -52,7 +52,7 @@ func (c *dataAuditServiceClient) Audit(ctx context.Context, in *DataAuditRequest
 	return out, nil
 }
 
-func (c *dataAuditServiceClient) ListByPeriod(ctx context.Context, in *DataListByPeriod, opts ...grpc.CallOption) (*DataAuditInstances, error) {
+func (c *dataAuditServiceClient) ListByPeriod(ctx context.Context, in *ListByPeriodRequest, opts ...grpc.CallOption) (*DataAuditInstances, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(DataAuditInstances)
 	err := c.cc.Invoke(ctx, DataAuditService_ListByPeriod_FullMethodName, in, out, cOpts...)
@@ -62,7 +62,7 @@ func (c *dataAuditServiceClient) ListByPeriod(ctx context.Context, in *DataListB
 	return out, nil
 }
 
-func (c *dataAuditServiceClient) ListByInstance(ctx context.Context, in *DataListByInstance, opts ...grpc.CallOption) (*DataAuditInstances, error) {
+func (c *dataAuditServiceClient) ListByInstance(ctx context.Context, in *ListByInstanceRequest, opts ...grpc.CallOption) (*DataAuditInstances, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(DataAuditInstances)
 	err := c.cc.Invoke(ctx, DataAuditService_ListByInstance_FullMethodName, in, out, cOpts...)
@@ -77,8 +77,8 @@ func (c *dataAuditServiceClient) ListByInstance(ctx context.Context, in *DataLis
 // for forward compatibility.
 type DataAuditServiceServer interface {
 	Audit(context.Context, *DataAuditRequest) (*emptypb.Empty, error)
-	ListByPeriod(context.Context, *DataListByPeriod) (*DataAuditInstances, error)
-	ListByInstance(context.Context, *DataListByInstance) (*DataAuditInstances, error)
+	ListByPeriod(context.Context, *ListByPeriodRequest) (*DataAuditInstances, error)
+	ListByInstance(context.Context, *ListByInstanceRequest) (*DataAuditInstances, error)
 	mustEmbedUnimplementedDataAuditServiceServer()
 }
 
@@ -92,10 +92,10 @@ type UnimplementedDataAuditServiceServer struct{}
 func (UnimplementedDataAuditServiceServer) Audit(context.Context, *DataAuditRequest) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Audit not implemented")
 }
-func (UnimplementedDataAuditServiceServer) ListByPeriod(context.Context, *DataListByPeriod) (*DataAuditInstances, error) {
+func (UnimplementedDataAuditServiceServer) ListByPeriod(context.Context, *ListByPeriodRequest) (*DataAuditInstances, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListByPeriod not implemented")
 }
-func (UnimplementedDataAuditServiceServer) ListByInstance(context.Context, *DataListByInstance) (*DataAuditInstances, error) {
+func (UnimplementedDataAuditServiceServer) ListByInstance(context.Context, *ListByInstanceRequest) (*DataAuditInstances, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListByInstance not implemented")
 }
 func (UnimplementedDataAuditServiceServer) mustEmbedUnimplementedDataAuditServiceServer() {}
@@ -138,7 +138,7 @@ func _DataAuditService_Audit_Handler(srv interface{}, ctx context.Context, dec f
 }
 
 func _DataAuditService_ListByPeriod_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DataListByPeriod)
+	in := new(ListByPeriodRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -150,13 +150,13 @@ func _DataAuditService_ListByPeriod_Handler(srv interface{}, ctx context.Context
 		FullMethod: DataAuditService_ListByPeriod_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DataAuditServiceServer).ListByPeriod(ctx, req.(*DataListByPeriod))
+		return srv.(DataAuditServiceServer).ListByPeriod(ctx, req.(*ListByPeriodRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _DataAuditService_ListByInstance_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DataListByInstance)
+	in := new(ListByInstanceRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -168,7 +168,7 @@ func _DataAuditService_ListByInstance_Handler(srv interface{}, ctx context.Conte
 		FullMethod: DataAuditService_ListByInstance_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DataAuditServiceServer).ListByInstance(ctx, req.(*DataListByInstance))
+		return srv.(DataAuditServiceServer).ListByInstance(ctx, req.(*ListByInstanceRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

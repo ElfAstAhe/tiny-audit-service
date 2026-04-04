@@ -30,7 +30,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AuthAuditServiceClient interface {
 	Audit(ctx context.Context, in *AuthAuditRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	ListByPeriod(ctx context.Context, in *AuthListByPeriodRequest, opts ...grpc.CallOption) (*AuthAuditInstances, error)
+	ListByPeriod(ctx context.Context, in *ListByPeriodRequest, opts ...grpc.CallOption) (*AuthAuditInstances, error)
 	ListByUsername(ctx context.Context, in *AuthListByUsernameRequest, opts ...grpc.CallOption) (*AuthAuditInstances, error)
 }
 
@@ -52,7 +52,7 @@ func (c *authAuditServiceClient) Audit(ctx context.Context, in *AuthAuditRequest
 	return out, nil
 }
 
-func (c *authAuditServiceClient) ListByPeriod(ctx context.Context, in *AuthListByPeriodRequest, opts ...grpc.CallOption) (*AuthAuditInstances, error) {
+func (c *authAuditServiceClient) ListByPeriod(ctx context.Context, in *ListByPeriodRequest, opts ...grpc.CallOption) (*AuthAuditInstances, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(AuthAuditInstances)
 	err := c.cc.Invoke(ctx, AuthAuditService_ListByPeriod_FullMethodName, in, out, cOpts...)
@@ -77,7 +77,7 @@ func (c *authAuditServiceClient) ListByUsername(ctx context.Context, in *AuthLis
 // for forward compatibility.
 type AuthAuditServiceServer interface {
 	Audit(context.Context, *AuthAuditRequest) (*emptypb.Empty, error)
-	ListByPeriod(context.Context, *AuthListByPeriodRequest) (*AuthAuditInstances, error)
+	ListByPeriod(context.Context, *ListByPeriodRequest) (*AuthAuditInstances, error)
 	ListByUsername(context.Context, *AuthListByUsernameRequest) (*AuthAuditInstances, error)
 	mustEmbedUnimplementedAuthAuditServiceServer()
 }
@@ -92,7 +92,7 @@ type UnimplementedAuthAuditServiceServer struct{}
 func (UnimplementedAuthAuditServiceServer) Audit(context.Context, *AuthAuditRequest) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Audit not implemented")
 }
-func (UnimplementedAuthAuditServiceServer) ListByPeriod(context.Context, *AuthListByPeriodRequest) (*AuthAuditInstances, error) {
+func (UnimplementedAuthAuditServiceServer) ListByPeriod(context.Context, *ListByPeriodRequest) (*AuthAuditInstances, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListByPeriod not implemented")
 }
 func (UnimplementedAuthAuditServiceServer) ListByUsername(context.Context, *AuthListByUsernameRequest) (*AuthAuditInstances, error) {
@@ -138,7 +138,7 @@ func _AuthAuditService_Audit_Handler(srv interface{}, ctx context.Context, dec f
 }
 
 func _AuthAuditService_ListByPeriod_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AuthListByPeriodRequest)
+	in := new(ListByPeriodRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -150,7 +150,7 @@ func _AuthAuditService_ListByPeriod_Handler(srv interface{}, ctx context.Context
 		FullMethod: AuthAuditService_ListByPeriod_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthAuditServiceServer).ListByPeriod(ctx, req.(*AuthListByPeriodRequest))
+		return srv.(AuthAuditServiceServer).ListByPeriod(ctx, req.(*ListByPeriodRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

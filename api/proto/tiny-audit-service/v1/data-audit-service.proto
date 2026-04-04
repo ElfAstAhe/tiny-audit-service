@@ -5,31 +5,23 @@ package audit.service;
 option go_package = "tiny-audit-service/grpc/tiny-audit-service";
 
 import "google/protobuf/empty.proto";
-import "google/protobuf/timestamp.proto";
 import "tiny-audit-service/v1/messages.proto";
 
 service DataAuditService {
   rpc Audit(DataAuditRequest) returns (google.protobuf.Empty);
-  rpc ListByPeriod(DataListByPeriod) returns (DataAuditInstances);
-  rpc ListByInstance(DataListByInstance) returns (DataAuditInstances);
+  rpc ListByPeriod(ListByPeriodRequest) returns (DataAuditInstances);
+  rpc ListByInstance(ListByInstanceRequest) returns (DataAuditInstances);
 }
 
 message DataAuditRequest {
   DataAudit data = 1;
 }
 
-message DataListByPeriod {
-  google.protobuf.Timestamp from = 1;
-  google.protobuf.Timestamp till = 2;
-  uint32 limit = 3;
-  uint32 offset = 4;
-}
-
 message DataAuditInstances {
   repeated DataAudit instances = 1;
 }
 
-message DataListByInstance {
+message ListByInstanceRequest {
   string type_name = 1;
   string instance_id = 2;
   uint32 limit = 3;
