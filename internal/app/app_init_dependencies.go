@@ -1,8 +1,6 @@
 package app
 
 import (
-	"time"
-
 	"github.com/ElfAstAhe/go-service-template/pkg/db"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/domain"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/facade"
@@ -89,7 +87,7 @@ func (app *App) initDependencies() error {
 		app.authAuditTailCutter = worker.NewTailCutter(
 			"auth",
 			app.ctx,
-			5*time.Minute,
+			app.config.App.AuthTailJobRepeatDuration,
 			app.config.App.AuthTailCut,
 			app.config.App.AuthTailDuration,
 			authAuditTailGetUC,
@@ -99,7 +97,7 @@ func (app *App) initDependencies() error {
 		app.dataAuditTailCutter = worker.NewTailCutter(
 			"data",
 			app.ctx,
-			5*time.Minute,
+			app.config.App.DataTailJobRepeatDuration,
 			app.config.App.DataTailCut,
 			app.config.App.DataTailDuration,
 			dataAuditTailGetUC,

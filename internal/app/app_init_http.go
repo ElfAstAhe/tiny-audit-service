@@ -1,20 +1,24 @@
 package app
 
-import "net/http"
+import (
+	"net/http"
+
+	"github.com/ElfAstAhe/tiny-audit-service/internal/transport/rest"
+)
 
 func (app *App) initHTTPRouter() error {
-	//app.httpRouter = rest.NewAppChiRouter(
-	//    app.config,
-	//    app.logger,
-	//    app.authHelper,
-	//    app.health,
-	//    nil,
-	//    nil,
-	//    app.authFacade,
-	//    app.userFacade,
-	//    app.userAdminFacade,
-	//    app.roleAdminFacade,
-	//)
+	app.httpRouter = rest.NewAppChiRouter(
+		app.config,
+		app.logger,
+		app.jwtHelper,
+		app.jwtHTTPHelper,
+		app.authHelper,
+		app.health,
+		nil,
+		nil,
+		app.authFacade,
+		app.dataFacade,
+	)
 
 	return nil
 }

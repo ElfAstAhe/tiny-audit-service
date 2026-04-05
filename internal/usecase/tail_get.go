@@ -16,6 +16,8 @@ type TailGetInteractor[ID comparable] struct {
 	tailRepo domain.TailRepository[ID]
 }
 
+var _ TailGetUseCase[string] = (*TailGetInteractor[string])(nil)
+
 func NewTailGetUseCase[ID comparable](tailRepo domain.TailRepository[ID]) *TailGetInteractor[ID] {
 	return &TailGetInteractor[ID]{
 		tailRepo: tailRepo,

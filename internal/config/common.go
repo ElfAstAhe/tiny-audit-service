@@ -5,15 +5,17 @@ const FlagConfig = "config-path"
 
 // App config flags
 const (
-	FlagAppEnv                string = "env"
-	FlagAppMaxListLimit       string = "app-max-list-limit"
-	FlagAppTokenIssuer        string = "app-token-issuer"
-	FlagAppCipherKey          string = "app-cipher-key"
-	FlagAppAcceptTokenIssuers string = "app-accept-token-issuers"
-	FlagAuthTailCut           string = "app-auth-tail-cut"
-	FlagAuthTailDuration      string = "app-auth-tail-duration"
-	FlagDataTailCut           string = "app-data-tail-cut"
-	FlagDataTailDuration      string = "app-data-tail-duration"
+	FlagAppEnv                       string = "env"
+	FlagAppMaxListLimit              string = "app-max-list-limit"
+	FlagAppTokenIssuer               string = "app-token-issuer"
+	FlagAppCipherKey                 string = "app-cipher-key"
+	FlagAppAcceptTokenIssuers        string = "app-accept-token-issuers"
+	FlagAppAuthTailJobRepeatDuration string = "app-auth-tail-job-repeat-duration"
+	FlagAppAuthTailCut               string = "app-auth-tail-cut"
+	FlagAppAuthTailDuration          string = "app-auth-tail-duration"
+	FlagAppDataTailJobRepeatDuration string = "app-data-tail-job-repeat-duration"
+	FlagAppDataTailCut               string = "app-data-tail-cut"
+	FlagAppDataTailDuration          string = "app-data-tail-duration"
 )
 
 // Auth config flags

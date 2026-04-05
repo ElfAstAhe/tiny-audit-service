@@ -17,6 +17,12 @@ func applyDefaults(v *viper.Viper) {
 	v.SetDefault(keyAppEnv, defaultAppEnv)
 	v.SetDefault(keyAppMaxListLimit, defaultMaxListLimit)
 	v.SetDefault(keyAppTokenIssuer, defaultTokenIssuer)
+	v.SetDefault(keyAppAuthTailJobRepeatDuration, defaultAuthTailJobRepeatDuration)
+	v.SetDefault(keyAppAuthTailCut, defaultAuthTailCut)
+	v.SetDefault(keyAppAuthTailDuration, defaultAuthTailDuration)
+	v.SetDefault(keyAppDataTailJobRepeatDuration, defaultDataTailJobRepeatDuration)
+	v.SetDefault(keyAppDataTailCut, defaultDataTailCut)
+	v.SetDefault(keyAppDataTailDuration, defaultDataTailDuration)
 
 	// Auth
 	v.SetDefault(config.KeyAuthJWTSigningMethod, config.DefaultAuthSigningMethod)
@@ -85,7 +91,13 @@ func initFLags() (res *pflag.FlagSet, err error) {
 		res.Int(FlagAppMaxListLimit, usecase.DefaultMaxLimit, "max list limit")
 		res.String(FlagAppCipherKey, "", "cipher key")
 		res.String(FlagAppTokenIssuer, "", "token issuer")
-		res.StringSlice(FlagAppAcceptTokenIssuers, []string{}, `accept token issuers like: "issuer1 issuer2 issuer3"`)
+		res.StringSlice(FlagAppAcceptTokenIssuers, []string{}, `accept token issuers separated by comma, like: "issuer1,issuer2,issuer3"`)
+		res.Duration(FlagAppAuthTailJobRepeatDuration, defaultAuthTailJobRepeatDuration, "auth tail job repeat duration")
+		res.Bool(FlagAppAuthTailCut, false, "auth audit tail cut")
+		res.Duration(FlagAppAuthTailDuration, defaultAuthTailDuration, "auth audit tail duration")
+		res.Duration(FlagAppDataTailJobRepeatDuration, defaultDataTailJobRepeatDuration, "data tail job repeat duration")
+		res.Bool(FlagAppDataTailCut, false, "data audit tail cut")
+		res.Duration(FlagAppDataTailDuration, defaultDataTailDuration, "data audit tail duration")
 
 		// Auth
 		res.String(FlagAuthJWTSecret, "", "JWT secret")
@@ -153,6 +165,12 @@ func bindFlags(flags *pflag.FlagSet, v *viper.Viper) error {
 		v.BindPFlag(keyAppTokenIssuer, flags.Lookup(FlagAppTokenIssuer)),
 		v.BindPFlag(keyAppCipherKey, flags.Lookup(FlagAppCipherKey)),
 		v.BindPFlag(keyAppAcceptTokenIssuers, flags.Lookup(FlagAppAcceptTokenIssuers)),
+		v.BindPFlag(keyAppAuthTailJobRepeatDuration, flags.Lookup(FlagAppAuthTailJobRepeatDuration)),
+		v.BindPFlag(keyAppAuthTailCut, flags.Lookup(FlagAppAuthTailCut)),
+		v.BindPFlag(keyAppAuthTailDuration, flags.Lookup(FlagAppAuthTailDuration)),
+		v.BindPFlag(keyAppDataTailJobRepeatDuration, flags.Lookup(FlagAppDataTailJobRepeatDuration)),
+		v.BindPFlag(keyAppDataTailCut, flags.Lookup(FlagAppDataTailCut)),
+		v.BindPFlag(keyAppDataTailDuration, flags.Lookup(FlagAppDataTailDuration)),
 		// Auth
 		v.BindPFlag(config.KeyAuthJWTSecret, flags.Lookup(FlagAuthJWTSecret)),
 		v.BindPFlag(config.KeyAuthJWTSigningMethod, flags.Lookup(FlagAuthJWTSigningMethod)),
