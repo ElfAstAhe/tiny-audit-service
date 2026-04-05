@@ -20,6 +20,7 @@ type DataAuditPgRepository struct {
 
 var _ libdomain.CRUDRepository[*domain.DataAudit, string] = (*DataAuditPgRepository)(nil)
 var _ domain.DataAuditRepository = (*DataAuditPgRepository)(nil)
+var _ domain.TailRepository[string] = (*DataAuditPgRepository)(nil)
 
 func NewDataAuditPgRepository(executor db.Executor, errDecipher db.ErrorDecipher) (*DataAuditPgRepository, error) {
 	res := &DataAuditPgRepository{}
@@ -69,6 +70,15 @@ func NewDataAuditPgRepository(executor db.Executor, errDecipher db.ErrorDecipher
 	res.BaseCRUDRepository = base
 
 	return res, nil
+}
+
+func (da *DataAuditPgRepository) GetTail(ctx context.Context, tailDate time.Time) ([]string, error) {
+	res, err := da.GetHelper().List(ctx, apprepo.SourceLabelTailList, sqlDataAuditTailList, tailDate)
+	if err != nil {
+		return nil, err
+	}
+
+	return libdomain.EntitiesToIDList(res), err
 }
 
 func (da *DataAuditPgRepository) ListByPeriod(ctx context.Context, from, till time.Time, limit, offset int) ([]*domain.DataAudit, error) {
@@ -142,33 +152,38 @@ func (da *DataAuditPgRepository) validateListByInstance(typeName, instanceID str
 }
 
 func (da *DataAuditPgRepository) entityScanner(scanner repository.Scannable, sourceLabel string, entity *domain.DataAudit, params ...any) error {
-	var valuesRaw []byte
-	if err := scanner.Scan(
-		&entity.ID,
-		&entity.Source,
-		&entity.EventDate,
-		&entity.Event,
-		&entity.Status,
-		&entity.RequestID,
-		&entity.Username,
-		&entity.TypeName,
-		&entity.TypeDescription,
-		&entity.InstanceID,
-		&entity.InstanceName,
-		&valuesRaw,
-		&entity.CreatedAt,
-		&entity.UpdatedAt,
-	); err != nil {
-		return errs.NewDalError("DataAuditPgRepository.entityScanner", "scan row", err)
-	}
-
-	if len(valuesRaw) > 0 {
-		if err := json.Unmarshal(valuesRaw, &entity.Values); err != nil {
-			return errs.NewDalError("DataAuditPgRepository.entityScanner", "unmarshal values json", err)
+	switch sourceLabel {
+	case apprepo.SourceLabelTailList:
+		return scanner.Scan(&entity.ID)
+	default:
+		var valuesRaw []byte
+		if err := scanner.Scan(
+			&entity.ID,
+			&entity.Source,
+			&entity.EventDate,
+			&entity.Event,
+			&entity.Status,
+			&entity.RequestID,
+			&entity.Username,
+			&entity.TypeName,
+			&entity.TypeDescription,
+			&entity.InstanceID,
+			&entity.InstanceName,
+			&valuesRaw,
+			&entity.CreatedAt,
+			&entity.UpdatedAt,
+		); err != nil {
+			return errs.NewDalError("DataAuditPgRepository.entityScanner", "scan row", err)
 		}
-	}
 
-	return nil
+		if len(valuesRaw) > 0 {
+			if err := json.Unmarshal(valuesRaw, &entity.Values); err != nil {
+				return errs.NewDalError("DataAuditPgRepository.entityScanner", "unmarshal values json", err)
+			}
+		}
+
+		return nil
+	}
 }
 
 func (da *DataAuditPgRepository) afterListYield(entity *domain.DataAudit, params ...any) (*domain.DataAudit, bool, error) {

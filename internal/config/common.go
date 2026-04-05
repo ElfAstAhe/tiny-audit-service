@@ -10,6 +10,10 @@ const (
 	FlagAppTokenIssuer        string = "app-token-issuer"
 	FlagAppCipherKey          string = "app-cipher-key"
 	FlagAppAcceptTokenIssuers string = "app-accept-token-issuers"
+	FlagAuthTailCut           string = "app-auth-tail-cut"
+	FlagAuthTailDuration      string = "app-auth-tail-duration"
+	FlagDataTailCut           string = "app-data-tail-cut"
+	FlagDataTailDuration      string = "app-data-tail-duration"
 )
 
 // Auth config flags

@@ -1,12 +1,15 @@
 package app
 
 import (
+	"time"
+
 	"github.com/ElfAstAhe/go-service-template/pkg/db"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/domain"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/facade"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/repository/metrics"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/repository/postgres"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/repository/trace"
+	"github.com/ElfAstAhe/tiny-audit-service/internal/transport/worker"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/usecase"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/usecase/telemetry"
 )
@@ -17,6 +20,9 @@ func (app *App) initDependencies() error {
 	// transaction manager
 	app.tm = db.NewTxManager(app.db)
 	var (
+		authAuditRepository *postgres.AuthAuditPgRepository
+		dataAuditRepository *postgres.DataAuditPgRepository
+
 		authAuditRepo domain.AuthAuditRepository
 		dataAuditRepo domain.DataAuditRepository
 
@@ -27,20 +33,25 @@ func (app *App) initDependencies() error {
 		dataAuditUC          usecase.DataAuditUseCase
 		dataListByPeriodUC   usecase.DataListByPeriodUseCase
 		dataListByInstanceUC usecase.DataListByInstanceUseCase
+
+		authAuditTailGetUC usecase.TailListUseCase[string]
+		authAuditTailCutUC usecase.TailCutUseCase[string]
+		dataAuditTailGetUC usecase.TailListUseCase[string]
+		dataAuditTailCutUC usecase.TailCutUseCase[string]
 	)
 	// repositories
 	{
-		authAuditRepo, err = postgres.NewAuthAuditPgRepository(app.db, app.db)
+		authAuditRepository, err = postgres.NewAuthAuditPgRepository(app.db, app.db)
 		if err != nil {
 			return err
 		}
-		authAuditRepo = trace.NewAuthAuditTraceRepository(metrics.NewAuthAuditMetricsRepository(authAuditRepo))
+		authAuditRepo = trace.NewAuthAuditTraceRepository(metrics.NewAuthAuditMetricsRepository(authAuditRepository))
 
-		dataAuditRepo, err = postgres.NewDataAuditPgRepository(app.db, app.db)
+		dataAuditRepository, err = postgres.NewDataAuditPgRepository(app.db, app.db)
 		if err != nil {
 			return err
 		}
-		dataAuditRepo = trace.NewDataAuditTraceRepository(metrics.NewDataAuditMetricsRepository(dataAuditRepo))
+		dataAuditRepo = trace.NewDataAuditTraceRepository(metrics.NewDataAuditMetricsRepository(dataAuditRepository))
 	}
 	// use cases
 	{
@@ -51,6 +62,12 @@ func (app *App) initDependencies() error {
 		dataAuditUC = telemetry.NewDataAuditUseCase("DataAuditUseCase", usecase.NewDataAuditUseCase(app.tm, dataAuditRepo))
 		dataListByPeriodUC = telemetry.NewDataListByPeriodUseCase("DataListByPeriodUseCase", usecase.NewDataListByPeriodUseCase(dataAuditRepo))
 		dataListByInstanceUC = telemetry.NewDataListByInstanceUseCase("", usecase.NewDataListByInstanceUseCase(dataAuditRepo))
+
+		authAuditTailGetUC = usecase.NewTailListUseCase[string](authAuditRepository)
+		authAuditTailCutUC = usecase.NewTailCutUseCase[string](authAuditRepository)
+
+		dataAuditTailGetUC = usecase.NewTailListUseCase[string](dataAuditRepository)
+		dataAuditTailCutUC = usecase.NewTailCutUseCase[string](dataAuditRepository)
 	}
 	// facade
 	{
@@ -65,6 +82,29 @@ func (app *App) initDependencies() error {
 			dataAuditUC,
 			dataListByPeriodUC,
 			dataListByInstanceUC,
+		)
+	}
+	// workers, observers, etc
+	{
+		app.authAuditTailCutter = worker.NewTailCutter(
+			"auth",
+			app.ctx,
+			5*time.Minute,
+			app.config.App.AuthTailCut,
+			app.config.App.AuthTailDuration,
+			authAuditTailGetUC,
+			authAuditTailCutUC,
+			app.logger,
+		)
+		app.dataAuditTailCutter = worker.NewTailCutter(
+			"data",
+			app.ctx,
+			5*time.Minute,
+			app.config.App.DataTailCut,
+			app.config.App.DataTailDuration,
+			dataAuditTailGetUC,
+			dataAuditTailCutUC,
+			app.logger,
 		)
 	}
 

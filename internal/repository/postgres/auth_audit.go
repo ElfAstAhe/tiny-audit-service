@@ -19,6 +19,7 @@ type AuthAuditPgRepository struct {
 
 var _ libdomain.CRUDRepository[*domain.AuthAudit, string] = (*AuthAuditPgRepository)(nil)
 var _ domain.AuthAuditRepository = (*AuthAuditPgRepository)(nil)
+var _ domain.TailRepository[string] = (*AuthAuditPgRepository)(nil)
 
 func NewAuthAuditPgRepository(executor db.Executor, errDecipher db.ErrorDecipher) (*AuthAuditPgRepository, error) {
 	res := &AuthAuditPgRepository{}
@@ -68,6 +69,15 @@ func NewAuthAuditPgRepository(executor db.Executor, errDecipher db.ErrorDecipher
 	res.BaseCRUDRepository = base
 
 	return res, nil
+}
+
+func (aa *AuthAuditPgRepository) GetTail(ctx context.Context, tailDate time.Time) ([]string, error) {
+	res, err := aa.GetHelper().List(ctx, apprepo.SourceLabelTailList, sqlAuthAuditTailList, tailDate)
+	if err != nil {
+		return nil, err
+	}
+
+	return libdomain.EntitiesToIDList(res), err
 }
 
 func (aa *AuthAuditPgRepository) ListByPeriod(ctx context.Context, from, till time.Time, limit, offset int) ([]*domain.AuthAudit, error) {
@@ -137,19 +147,24 @@ func (aa *AuthAuditPgRepository) validateListByUsername(username string, offset,
 }
 
 func (aa *AuthAuditPgRepository) entityScanner(scanner repository.Scannable, sourceLabel string, entity *domain.AuthAudit, params ...any) error {
-	return scanner.Scan(
-		&entity.ID,
-		&entity.Source,
-		&entity.EventDate,
-		&entity.Event,
-		&entity.Status,
-		&entity.RequestID,
-		&entity.Username,
-		&entity.AccessToken,
-		&entity.RefreshToken,
-		&entity.CreatedAt,
-		&entity.UpdatedAt,
-	)
+	switch sourceLabel {
+	case apprepo.SourceLabelTailList:
+		return scanner.Scan(&entity.ID)
+	default:
+		return scanner.Scan(
+			&entity.ID,
+			&entity.Source,
+			&entity.EventDate,
+			&entity.Event,
+			&entity.Status,
+			&entity.RequestID,
+			&entity.Username,
+			&entity.AccessToken,
+			&entity.RefreshToken,
+			&entity.CreatedAt,
+			&entity.UpdatedAt,
+		)
+	}
 }
 
 func (aa *AuthAuditPgRepository) afterListYield(entity *domain.AuthAudit, params ...any) (*domain.AuthAudit, bool, error) {

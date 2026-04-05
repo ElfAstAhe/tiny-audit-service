@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+	"sync"
 	"time"
 )
 
@@ -14,6 +15,9 @@ import (
 //	}
 func (app *App) Close() {
 	log := app.logger.GetLogger("App.Close")
+
+	log.Info("stop tail cutters")
+	app.stopTailCutters()
 
 	log.Info("close db connection")
 	if app.db != nil {
@@ -35,4 +39,19 @@ func (app *App) Close() {
 			log.Info("telemetry flushed and closed")
 		}
 	}
+}
+
+func (app *App) stopTailCutters() {
+	var tailCutterWG sync.WaitGroup
+	tailCutterWG.Add(1)
+	go func() {
+		app.authAuditTailCutter.Stop()
+		tailCutterWG.Done()
+	}()
+	tailCutterWG.Add(1)
+	go func() {
+		app.dataAuditTailCutter.Stop()
+		tailCutterWG.Done()
+	}()
+	tailCutterWG.Wait()
 }
