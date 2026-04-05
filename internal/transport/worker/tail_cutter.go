@@ -21,7 +21,7 @@ type TailCutter struct {
 	timer         *time.Timer
 	tailQueue     chan string
 	// get tail use case
-	tailListUC usecase.TailListUseCase[string]
+	tailListUC usecase.TailGetUseCase[string]
 	// cut tail use case
 	tailCutUC usecase.TailCutUseCase[string]
 	// config
@@ -37,7 +37,7 @@ func NewTailCutter(
 	timerDuration time.Duration,
 	tailCut bool,
 	tailCutDuration time.Duration,
-	tailListUC usecase.TailListUseCase[string],
+	tailListUC usecase.TailGetUseCase[string],
 	tailCutUC usecase.TailCutUseCase[string],
 	logger logger.Logger,
 ) *TailCutter {

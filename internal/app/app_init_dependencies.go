@@ -34,9 +34,9 @@ func (app *App) initDependencies() error {
 		dataListByPeriodUC   usecase.DataListByPeriodUseCase
 		dataListByInstanceUC usecase.DataListByInstanceUseCase
 
-		authAuditTailGetUC usecase.TailListUseCase[string]
+		authAuditTailGetUC usecase.TailGetUseCase[string]
 		authAuditTailCutUC usecase.TailCutUseCase[string]
-		dataAuditTailGetUC usecase.TailListUseCase[string]
+		dataAuditTailGetUC usecase.TailGetUseCase[string]
 		dataAuditTailCutUC usecase.TailCutUseCase[string]
 	)
 	// repositories
@@ -63,10 +63,10 @@ func (app *App) initDependencies() error {
 		dataListByPeriodUC = telemetry.NewDataListByPeriodUseCase("DataListByPeriodUseCase", usecase.NewDataListByPeriodUseCase(dataAuditRepo))
 		dataListByInstanceUC = telemetry.NewDataListByInstanceUseCase("", usecase.NewDataListByInstanceUseCase(dataAuditRepo))
 
-		authAuditTailGetUC = usecase.NewTailListUseCase[string](authAuditRepository)
+		authAuditTailGetUC = usecase.NewTailGetUseCase[string](authAuditRepository)
 		authAuditTailCutUC = usecase.NewTailCutUseCase[string](authAuditRepository)
 
-		dataAuditTailGetUC = usecase.NewTailListUseCase[string](dataAuditRepository)
+		dataAuditTailGetUC = usecase.NewTailGetUseCase[string](dataAuditRepository)
 		dataAuditTailCutUC = usecase.NewTailCutUseCase[string](dataAuditRepository)
 	}
 	// facade

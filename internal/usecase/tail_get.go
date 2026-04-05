@@ -8,21 +8,21 @@ import (
 	"github.com/ElfAstAhe/tiny-audit-service/internal/domain"
 )
 
-type TailListUseCase[ID comparable] interface {
+type TailGetUseCase[ID comparable] interface {
 	GetTail(ctx context.Context, tail time.Time) ([]ID, error)
 }
 
-type TailListInteractor[ID comparable] struct {
+type TailGetInteractor[ID comparable] struct {
 	tailRepo domain.TailRepository[ID]
 }
 
-func NewTailListUseCase[ID comparable](tailRepo domain.TailRepository[ID]) *TailListInteractor[ID] {
-	return &TailListInteractor[ID]{
+func NewTailGetUseCase[ID comparable](tailRepo domain.TailRepository[ID]) *TailGetInteractor[ID] {
+	return &TailGetInteractor[ID]{
 		tailRepo: tailRepo,
 	}
 }
 
-func (tl *TailListInteractor[ID]) GetTail(ctx context.Context, tail time.Time) ([]ID, error) {
+func (tl *TailGetInteractor[ID]) GetTail(ctx context.Context, tail time.Time) ([]ID, error) {
 	if tail.IsZero() {
 		return nil, errs.NewInvalidArgumentError("tail", "must not be zero")
 	}
