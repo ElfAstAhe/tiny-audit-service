@@ -8,6 +8,7 @@ import (
 	"github.com/ElfAstAhe/go-service-template/pkg/logger"
 	"github.com/ElfAstAhe/go-service-template/pkg/transport"
 	libmware "github.com/ElfAstAhe/go-service-template/pkg/transport/middleware"
+	_ "github.com/ElfAstAhe/tiny-audit-service/docs"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/config"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/facade"
 	trmware "github.com/ElfAstAhe/tiny-audit-service/internal/transport/rest/middleware"
@@ -113,12 +114,12 @@ func (cr *AppChiRouter) setupMiddleware(
 		authHelper,
 		logger,
 		transport.NewHTTPPathMatchers([]*transport.HTTPPathMatcher{
-			transport.NewHTTPPathMatcher(http.MethodGet, "/metrics", "^/metrics*$"),
-			transport.NewHTTPPathMatcher(http.MethodGet, "/swagger", "^/swagger*$"),
-			transport.NewHTTPPathMatcher(http.MethodGet, "/status", "^/status*$"),
-			transport.NewHTTPPathMatcher(http.MethodGet, "/healthz", "^/healthz*$"),
-			transport.NewHTTPPathMatcher(http.MethodGet, "/readyz", "^/readyz*$"),
-			transport.NewHTTPPathMatcher(http.MethodGet, "/debug", "^/debug*$"),
+			transport.NewHTTPPathMatcher(http.MethodGet, "/metrics", "^/metrics.*$"),
+			transport.NewHTTPPathMatcher(http.MethodGet, "/swagger", "^/swagger.*$"),
+			transport.NewHTTPPathMatcher(http.MethodGet, "/status", "^/status.*$"),
+			transport.NewHTTPPathMatcher(http.MethodGet, "/healthz", "^/healthz.*$"),
+			transport.NewHTTPPathMatcher(http.MethodGet, "/readyz", "^/readyz.*$"),
+			transport.NewHTTPPathMatcher(http.MethodGet, "/debug", "^/debug.*$"),
 		}),
 		cr.config.App.AcceptTokenIssuers,
 	).Handle)
