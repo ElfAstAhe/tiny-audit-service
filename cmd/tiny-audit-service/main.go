@@ -10,9 +10,9 @@ import (
 	"github.com/ElfAstAhe/tiny-audit-service/internal/config"
 )
 
-// @title           Auth Service API
+// @title           Audit Service API
 // @version         1.0
-// @description     Сервис аутентификации
+// @description     Сервис аудита
 // @termsOfService  Free use
 
 // @contact.name   API Support

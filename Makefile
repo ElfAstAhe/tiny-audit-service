@@ -44,16 +44,10 @@ gen-mocks:
 	mockery
 
 # Сборка проекта с прокидыванием переменных
-#build: gen-proto gen-swagger gen-http-client
-build: gen-proto
+build: gen-proto gen-swagger gen-http-client
 	go build -ldflags "-X '$(MODULE_NAME)/internal/config.AppVersion=$(VERSION)' \
 	-X '$(MODULE_NAME)/internal/config.AppBuildTime=$(BUILD_TIME)'" \
 	-o ./bin/$(SERVER_BINARY_NAME) $(SERVER_BUILD_DIR)/main.go
-
-#	go build -ldflags "-X '$(MODULE_NAME)/internal/app/client/config.Version=$(VERSION)' \
-#    -X '$(MODULE_NAME)/internal/app/client/config.Stage=$(STAGE)' \
-#	-X '$(MODULE_NAME)/internal/app/client/config.BuildTime=$(BUILD_TIME)'" \
-#	-o ./bin/$(CLIENT_BINARY_NAME) $(CLIENT_BUILD_DIR)/main.go
 
 # Запуск проекта (сначала соберет, потом запустит)
 run: build

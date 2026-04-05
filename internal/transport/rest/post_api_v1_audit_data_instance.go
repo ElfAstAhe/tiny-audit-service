@@ -10,6 +10,20 @@ import (
 	_ "github.com/ElfAstAhe/tiny-audit-service/internal/transport"
 )
 
+// postAPIV1AuditAuthUsername godoc
+// @Summary      Список аудита данных в разрезе инстанса данных
+// @Description  Получить список аудита данных в разрезе инстанса данных
+// @Tags         audit
+// @Accept       json
+// @Produce      json
+// @Param        input  body      AuditInstanceDTO  true  "инстанс данных"
+// @Success      200    {array}   DataAuditDTO "список данных аудита"
+// @Failure      400    {object}  ErrorDTO "Кривые данные"
+// @Failure      401    {object}  ErrorDTO "Не авторизован"
+// @Failure      403    {object}  ErrorDTO "В доступе отказано"
+// @Failure      409    {object}  ErrorDTO "Уже существует"
+// @Failure      500    "Внутренняя ошибка сервера (пустое тело)"
+// @Router       /api/v1/audit/data/instance [post]
 func (cr *AppChiRouter) postAPIV1AuditDataInstance(rw http.ResponseWriter, r *http.Request) {
 	cr.log.Debugf("postAPIV1AuditDataInstance start, requestID [%s]", middleware.GetReqID(r.Context()))
 	defer cr.log.Debugf("postAPIV1AuditDataInstance finish, requestID [%s]", middleware.GetReqID(r.Context()))

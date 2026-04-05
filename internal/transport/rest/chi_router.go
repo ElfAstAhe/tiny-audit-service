@@ -112,7 +112,14 @@ func (cr *AppChiRouter) setupMiddleware(
 		jwtHTTPHelper,
 		authHelper,
 		logger,
-		transport.NewHTTPPathMatchers([]*transport.HTTPPathMatcher{}),
+		transport.NewHTTPPathMatchers([]*transport.HTTPPathMatcher{
+			transport.NewHTTPPathMatcher(http.MethodGet, "/metrics", "^/metrics*$"),
+			transport.NewHTTPPathMatcher(http.MethodGet, "/swagger", "^/swagger*$"),
+			transport.NewHTTPPathMatcher(http.MethodGet, "/status", "^/status*$"),
+			transport.NewHTTPPathMatcher(http.MethodGet, "/healthz", "^/healthz*$"),
+			transport.NewHTTPPathMatcher(http.MethodGet, "/readyz", "^/readyz*$"),
+			transport.NewHTTPPathMatcher(http.MethodGet, "/debug", "^/debug*$"),
+		}),
 		cr.config.App.AcceptTokenIssuers,
 	).Handle)
 	// income/outcome logger
