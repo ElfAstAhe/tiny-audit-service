@@ -1,0 +1,42 @@
+### POST create data audit
+POST http://localhost:8081/api/v1/audit/data
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0aW55LWF1dGgtc2VydmljZSIsInN1YiI6InN2Y19hdXRoIiwiZXhwIjoxNzc1NDg5MzE1LCJpYXQiOjE3NzU0ODg0MTUsImp0aSI6InRhcy1hZTcxOGE4Ni0wNTA2LTQ5YzAtOWE4Mi05MjEwOTg3MTBkNTIiLCJzdWJqZWN0X2lkIjoiNjY0MzViNWMtNThkOC00MDQ2LWFkNDctZmZiNmIxYmZmNDYxIiwic3ViamVjdF90eXBlIjoic2VydmljZSIsInJvbGVzIjpbImF1ZGl0LXdyaXRlciIsInVzZXIiXX0.fkKN3mRVuE-bIwVemcTiVa4r_ueUwhPff82TPFHswl0
+Content-Type: application/json
+
+{
+  "source": "tiny-auth-service",
+  "event_date": "2026-04-06T15:34:55.026509+03:00",
+  "event": "create",
+  "status": "success",
+  "request_id": "test_request_0003",
+  "username": "admin",
+  "type_name": "User",
+  "type_description": "пользователь",
+  "instance_id": "1",
+  "instance_name": "test",
+  "values": []
+}
+
+### POST data audit by period
+POST http://localhost:8081/api/v1/audit/data/period
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0aW55LWF1dGgtc2VydmljZSIsInN1YiI6InRlc3QiLCJleHAiOjE3NzU0ODk2ODMsImlhdCI6MTc3NTQ4ODc4MywianRpIjoidGFzLTk4ZTA5NzAxLTc1M2MtNGE5ZS05ODNjLWYwNDg2NWQ5Y2RjMSIsInN1YmplY3RfaWQiOiI1OTMzNGY1NS04MzMxLTRmZTItOTY5My1iY2RkZjgxYzc5NWMiLCJzdWJqZWN0X3R5cGUiOiJndWVzdCIsInJvbGVzIjpbInVzZXIiLCJhdWRpdC13cml0ZXIiLCJhdWRpdC1yZWFkZXIiXX0.Ado-32kc0si_q-GptWSrJnkuMnLTfyxAVI9E5CHm0LI
+Content-Type: application/json
+
+{
+  "from": "2026-04-04T15:33:55.026509+03:00",
+  "till": "2026-04-15T15:33:55.026509+03:00",
+  "limit": 100,
+  "offset": 0
+}
+
+### POST data audit by instance
+POST http://localhost:8081/api/v1/audit/data/instance
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0aW55LWF1dGgtc2VydmljZSIsInN1YiI6InRlc3QiLCJleHAiOjE3NzU0ODk2ODMsImlhdCI6MTc3NTQ4ODc4MywianRpIjoidGFzLTk4ZTA5NzAxLTc1M2MtNGE5ZS05ODNjLWYwNDg2NWQ5Y2RjMSIsInN1YmplY3RfaWQiOiI1OTMzNGY1NS04MzMxLTRmZTItOTY5My1iY2RkZjgxYzc5NWMiLCJzdWJqZWN0X3R5cGUiOiJndWVzdCIsInJvbGVzIjpbInVzZXIiLCJhdWRpdC13cml0ZXIiLCJhdWRpdC1yZWFkZXIiXX0.Ado-32kc0si_q-GptWSrJnkuMnLTfyxAVI9E5CHm0LI
+Content-Type: application/json
+
+{
+  "type_name": "User",
+  "instance_id": "1",
+  "limit": 100,
+  "offset": 0
+}
