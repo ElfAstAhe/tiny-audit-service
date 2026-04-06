@@ -1,0 +1,50 @@
+### POST auth audit
+POST http://localhost:8081/api/v1/audit/auth
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0aW55LWF1dGgtc2VydmljZSIsInN1YiI6InN2Y19hdXRoIiwiZXhwIjoxNzc1NDgyODc1LCJpYXQiOjE3NzU0ODE5NzUsImp0aSI6InRhcy0yZmVkYTNmMS01MTY3LTRjNjYtYWVlNi1mN2I5YmJlNDEwNGQiLCJzdWJqZWN0X2lkIjoiNjY0MzViNWMtNThkOC00MDQ2LWFkNDctZmZiNmIxYmZmNDYxIiwic3ViamVjdF90eXBlIjoic2VydmljZSIsInJvbGVzIjpbInVzZXIiLCJhdWRpdC13cml0ZXIiXX0.4LjvCAJqhMlUgzTbuSVli6awAIrFvafczQwmgm-wQqk
+Content-Type: application/json
+#	ID           string    `json:"id,omitempty"`
+#	Source       string    `json:"source,omitempty"`
+#	EventDate    time.Time `json:"event_date,omitempty"`
+#	Event        string    `json:"event,omitempty"`
+#	Status       string    `json:"status,omitempty"`
+#	RequestID    string    `json:"request_id,omitempty"`
+#	Username     string    `json:"username,omitempty"`
+#	AccessToken  string    `json:"access_token,omitempty"`
+#	RefreshToken string    `json:"refresh_token,omitempty"`
+#	CreatedAt    time.Time `json:"created_at,omitempty"`
+#	UpdatedAt    time.Time `json:"updated_at,omitempty"`
+
+{
+  "source": "tiny-auth-service",
+  "event_date": "2026-04-06T15:34:55.026509+03:00",
+  "event": "login",
+  "status": "success",
+  "request_id": "test_request_id_001",
+  "username": "elf",
+  "access_token": "test token"
+}
+
+### POST audit by period
+POST http://localhost:8081/api/v1/audit/auth/period
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0aW55LWF1dGgtc2VydmljZSIsInN1YiI6InRlc3QiLCJleHAiOjE3NzU0ODIyMzksImlhdCI6MTc3NTQ4MTMzOSwianRpIjoidGFzLTUwOTc2YjYxLTgxYzYtNDkzNy04YzczLWM1MjQ3ZDQyZjAwOSIsInN1YmplY3RfaWQiOiI1OTMzNGY1NS04MzMxLTRmZTItOTY5My1iY2RkZjgxYzc5NWMiLCJzdWJqZWN0X3R5cGUiOiJndWVzdCIsInJvbGVzIjpbImF1ZGl0LXdyaXRlciIsImF1ZGl0LXJlYWRlciIsInVzZXIiXX0._D5LWMKN36XA4tXhmUGXcI0gsDApux5-ghLzzEycxF0
+Content-Type: application/json
+
+{
+  "from": "2026-04-04T15:33:55.026509+03:00",
+  "till": "2026-04-15T15:33:55.026509+03:00",
+  "limit": 100,
+  "offset": 0
+}
+
+### POST audit by username
+POST http://localhost:8081/api/v1/audit/auth/username
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0aW55LWF1dGgtc2VydmljZSIsInN1YiI6InRlc3QiLCJleHAiOjE3NzU0ODIyMzksImlhdCI6MTc3NTQ4MTMzOSwianRpIjoidGFzLTUwOTc2YjYxLTgxYzYtNDkzNy04YzczLWM1MjQ3ZDQyZjAwOSIsInN1YmplY3RfaWQiOiI1OTMzNGY1NS04MzMxLTRmZTItOTY5My1iY2RkZjgxYzc5NWMiLCJzdWJqZWN0X3R5cGUiOiJndWVzdCIsInJvbGVzIjpbImF1ZGl0LXdyaXRlciIsImF1ZGl0LXJlYWRlciIsInVzZXIiXX0._D5LWMKN36XA4tXhmUGXcI0gsDApux5-ghLzzEycxF0
+Content-Type: application/json
+
+{
+  "username": "test",
+  "limit": 100,
+  "offset": 0
+}
+
+###

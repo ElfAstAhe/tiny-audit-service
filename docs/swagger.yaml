@@ -1,0 +1,356 @@
+basePath: /
+definitions:
+  AuditInstanceDTO:
+    properties:
+      instance_id:
+        type: string
+      limit:
+        type: integer
+      offset:
+        type: integer
+      type_name:
+        type: string
+    type: object
+  AuditPeriodDTO:
+    properties:
+      from:
+        type: string
+      limit:
+        type: integer
+      offset:
+        type: integer
+      till:
+        type: string
+    type: object
+  AuditUserDTO:
+    properties:
+      limit:
+        type: integer
+      offset:
+        type: integer
+      username:
+        type: string
+    type: object
+  AuthAuditDTO:
+    properties:
+      access_token:
+        type: string
+      created_at:
+        type: string
+      event:
+        type: string
+      event_date:
+        type: string
+      id:
+        type: string
+      refresh_token:
+        type: string
+      request_id:
+        type: string
+      source:
+        type: string
+      status:
+        type: string
+      updated_at:
+        type: string
+      username:
+        type: string
+    type: object
+  DataAuditDTO:
+    properties:
+      created_at:
+        type: string
+      event:
+        type: string
+      event_date:
+        type: string
+      id:
+        type: string
+      instance_id:
+        type: string
+      instance_name:
+        type: string
+      request_id:
+        type: string
+      source:
+        type: string
+      status:
+        type: string
+      type_description:
+        type: string
+      type_name:
+        type: string
+      updated_at:
+        type: string
+      username:
+        type: string
+      values:
+        items:
+          $ref: '#/definitions/DataAuditValueDTO'
+        type: array
+    type: object
+  DataAuditValueDTO:
+    properties:
+      after:
+        type: string
+      before:
+        type: string
+      description:
+        type: string
+      name:
+        type: string
+    type: object
+  ErrorDTO:
+    description: Error dto
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+    type: object
+info:
+  contact:
+    email: elf.ast.ahe@gmail.com
+    name: API Support
+    url: https://github.com/ElfAstAhe/tiny-audit-service
+  description: Сервис аудита
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org
+  termsOfService: Free use
+  title: Audit Service API
+  version: "1.0"
+paths:
+  /api/v1/audit/auth:
+    post:
+      consumes:
+      - application/json
+      description: Создание новой записи аудита
+      parameters:
+      - description: Аудит аутентификации
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/AuthAuditDTO'
+      responses:
+        "201":
+          description: Всё хорошо (пустое тело)
+        "400":
+          description: Кривые данные
+          schema:
+            $ref: '#/definitions/ErrorDTO'
+        "401":
+          description: Не авторизован
+          schema:
+            $ref: '#/definitions/ErrorDTO'
+        "403":
+          description: В доступе отказано
+          schema:
+            $ref: '#/definitions/ErrorDTO'
+        "500":
+          description: Внутренняя ошибка сервера (пустое тело)
+      summary: Аудит аутентификации и авторизации
+      tags:
+      - audit
+  /api/v1/audit/auth/period:
+    post:
+      consumes:
+      - application/json
+      description: Получить список аудита аутентификации в разрезе периода
+      parameters:
+      - description: Период аудита
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/AuditPeriodDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: список данных аудита
+          schema:
+            items:
+              $ref: '#/definitions/AuthAuditDTO'
+            type: array
+        "400":
+          description: Кривые данные
+          schema:
+            $ref: '#/definitions/ErrorDTO'
+        "401":
+          description: Не авторизован
+          schema:
+            $ref: '#/definitions/ErrorDTO'
+        "403":
+          description: В доступе отказано
+          schema:
+            $ref: '#/definitions/ErrorDTO'
+        "409":
+          description: Уже существует
+          schema:
+            $ref: '#/definitions/ErrorDTO'
+        "500":
+          description: Внутренняя ошибка сервера (пустое тело)
+      summary: Список аудита аутентификации в разрезе периода
+      tags:
+      - audit
+  /api/v1/audit/data:
+    post:
+      consumes:
+      - application/json
+      description: Создание новой записи аудита
+      parameters:
+      - description: Аудит данных
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/DataAuditDTO'
+      responses:
+        "201":
+          description: Всё хорошо (пустое тело)
+        "400":
+          description: Кривые данные
+          schema:
+            $ref: '#/definitions/ErrorDTO'
+        "401":
+          description: Не авторизован
+          schema:
+            $ref: '#/definitions/ErrorDTO'
+        "403":
+          description: В доступе отказано
+          schema:
+            $ref: '#/definitions/ErrorDTO'
+        "500":
+          description: Внутренняя ошибка сервера (пустое тело)
+      summary: Аудит данных
+      tags:
+      - audit
+  /api/v1/audit/data/instance:
+    post:
+      consumes:
+      - application/json
+      description: Получить список аудита данных в разрезе инстанса данных
+      parameters:
+      - description: инстанс данных
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/AuditInstanceDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: список данных аудита
+          schema:
+            items:
+              $ref: '#/definitions/DataAuditDTO'
+            type: array
+        "400":
+          description: Кривые данные
+          schema:
+            $ref: '#/definitions/ErrorDTO'
+        "401":
+          description: Не авторизован
+          schema:
+            $ref: '#/definitions/ErrorDTO'
+        "403":
+          description: В доступе отказано
+          schema:
+            $ref: '#/definitions/ErrorDTO'
+        "409":
+          description: Уже существует
+          schema:
+            $ref: '#/definitions/ErrorDTO'
+        "500":
+          description: Внутренняя ошибка сервера (пустое тело)
+      summary: Список аудита данных в разрезе инстанса данных
+      tags:
+      - audit
+  /api/v1/audit/data/period:
+    post:
+      consumes:
+      - application/json
+      description: Получить список аудита данных в разрезе периода
+      parameters:
+      - description: Период аудита
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/AuditPeriodDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: список данных аудита
+          schema:
+            items:
+              $ref: '#/definitions/DataAuditDTO'
+            type: array
+        "400":
+          description: Кривые данные
+          schema:
+            $ref: '#/definitions/ErrorDTO'
+        "401":
+          description: Не авторизован
+          schema:
+            $ref: '#/definitions/ErrorDTO'
+        "403":
+          description: В доступе отказано
+          schema:
+            $ref: '#/definitions/ErrorDTO'
+        "409":
+          description: Уже существует
+          schema:
+            $ref: '#/definitions/ErrorDTO'
+        "500":
+          description: Внутренняя ошибка сервера (пустое тело)
+      summary: Список аудита данных в разрезе периода
+      tags:
+      - audit
+  /api/v1/audit/data/username:
+    post:
+      consumes:
+      - application/json
+      description: Получить список аудита данных в разрезе пользователя
+      parameters:
+      - description: Пользователь
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/AuditUserDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: список данных аудита
+          schema:
+            items:
+              $ref: '#/definitions/AuthAuditDTO'
+            type: array
+        "400":
+          description: Кривые данные
+          schema:
+            $ref: '#/definitions/ErrorDTO'
+        "401":
+          description: Не авторизован
+          schema:
+            $ref: '#/definitions/ErrorDTO'
+        "403":
+          description: В доступе отказано
+          schema:
+            $ref: '#/definitions/ErrorDTO'
+        "409":
+          description: Уже существует
+          schema:
+            $ref: '#/definitions/ErrorDTO'
+        "500":
+          description: Внутренняя ошибка сервера (пустое тело)
+      summary: Список аудита данных в разрезе пользователя
+      tags:
+      - audit
+swagger: "2.0"

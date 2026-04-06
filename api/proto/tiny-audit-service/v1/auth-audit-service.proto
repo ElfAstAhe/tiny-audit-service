@@ -1,0 +1,28 @@
+edition = "2023";
+
+package audit.service;
+
+option go_package = "tiny-audit-service/grpc/tiny-audit-service";
+
+import "google/protobuf/empty.proto";
+import "tiny-audit-service/v1/messages.proto";
+
+service AuthAuditService {
+  rpc Audit(AuthAuditRequest) returns (google.protobuf.Empty);
+  rpc ListByPeriod(ListByPeriodRequest) returns (AuthAuditInstances);
+  rpc ListByUsername(AuthListByUsernameRequest) returns (AuthAuditInstances);
+}
+
+message AuthAuditRequest {
+  AuthAudit data = 1;
+}
+
+message AuthAuditInstances {
+  repeated AuthAudit instances = 1;
+}
+
+message AuthListByUsernameRequest {
+  string username = 1;
+  uint32 limit = 2;
+  uint32 offset = 3;
+}
