@@ -61,7 +61,7 @@ func (app *App) initDependencies() error {
 
 		dataAuditUC = telemetry.NewDataAuditUseCase("DataAuditUseCase", usecase.NewDataAuditUseCase(app.tm, dataAuditRepo))
 		dataListByPeriodUC = telemetry.NewDataListByPeriodUseCase("DataListByPeriodUseCase", usecase.NewDataListByPeriodUseCase(dataAuditRepo))
-		dataListByInstanceUC = telemetry.NewDataListByInstanceUseCase("", usecase.NewDataListByInstanceUseCase(dataAuditRepo))
+		dataListByInstanceUC = telemetry.NewDataListByInstanceUseCase("DataListByInstanceUseCase", usecase.NewDataListByInstanceUseCase(dataAuditRepo))
 
 		authAuditTailGetUC = usecase.NewTailGetUseCase[string](authAuditRepository)
 		authAuditTailCutUC = usecase.NewTailCutUseCase[string](authAuditRepository)
