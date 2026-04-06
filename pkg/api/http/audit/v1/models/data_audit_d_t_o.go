@@ -44,6 +44,9 @@ type DataAuditDTO struct {
 	// status
 	Status string `json:"status,omitempty"`
 
+	// trace id
+	TraceID string `json:"trace_id,omitempty"`
+
 	// type description
 	TypeDescription string `json:"type_description,omitempty"`
 

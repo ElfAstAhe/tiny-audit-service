@@ -51,6 +51,8 @@ definitions:
         type: string
       status:
         type: string
+      trace_id:
+        type: string
       updated_at:
         type: string
       username:
@@ -75,6 +77,8 @@ definitions:
       source:
         type: string
       status:
+        type: string
+      trace_id:
         type: string
       type_description:
         type: string

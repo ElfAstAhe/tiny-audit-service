@@ -184,11 +184,12 @@ type AuthAudit struct {
 	xxx_hidden_Event        *string                `protobuf:"bytes,4,opt,name=event"`
 	xxx_hidden_Status       *string                `protobuf:"bytes,5,opt,name=status"`
 	xxx_hidden_RequestId    *string                `protobuf:"bytes,6,opt,name=request_id,json=requestId"`
-	xxx_hidden_Username     *string                `protobuf:"bytes,7,opt,name=username"`
-	xxx_hidden_AccessToken  *string                `protobuf:"bytes,8,opt,name=access_token,json=accessToken"`
-	xxx_hidden_RefreshToken *string                `protobuf:"bytes,9,opt,name=refresh_token,json=refreshToken"`
-	xxx_hidden_CreateAt     *timestamppb.Timestamp `protobuf:"bytes,10,opt,name=create_at,json=createAt"`
-	xxx_hidden_UpdateAt     *timestamppb.Timestamp `protobuf:"bytes,11,opt,name=update_at,json=updateAt"`
+	xxx_hidden_TraceId      *string                `protobuf:"bytes,7,opt,name=trace_id,json=traceId"`
+	xxx_hidden_Username     *string                `protobuf:"bytes,8,opt,name=username"`
+	xxx_hidden_AccessToken  *string                `protobuf:"bytes,9,opt,name=access_token,json=accessToken"`
+	xxx_hidden_RefreshToken *string                `protobuf:"bytes,10,opt,name=refresh_token,json=refreshToken"`
+	xxx_hidden_CreateAt     *timestamppb.Timestamp `protobuf:"bytes,11,opt,name=create_at,json=createAt"`
+	xxx_hidden_UpdateAt     *timestamppb.Timestamp `protobuf:"bytes,12,opt,name=update_at,json=updateAt"`
 	XXX_raceDetectHookData  protoimpl.RaceDetectHookData
 	XXX_presence            [1]uint32
 	unknownFields           protoimpl.UnknownFields
@@ -277,6 +278,16 @@ func (x *AuthAudit) GetRequestId() string {
 	return ""
 }
 
+func (x *AuthAudit) GetTraceId() string {
+	if x != nil {
+		if x.xxx_hidden_TraceId != nil {
+			return *x.xxx_hidden_TraceId
+		}
+		return ""
+	}
+	return ""
+}
+
 func (x *AuthAudit) GetUsername() string {
 	if x != nil {
 		if x.xxx_hidden_Username != nil {
@@ -323,12 +334,12 @@ func (x *AuthAudit) GetUpdateAt() *timestamppb.Timestamp {
 
 func (x *AuthAudit) SetId(v string) {
 	x.xxx_hidden_Id = &v
-	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 0, 11)
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 0, 12)
 }
 
 func (x *AuthAudit) SetSource(v string) {
 	x.xxx_hidden_Source = &v
-	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 1, 11)
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 1, 12)
 }
 
 func (x *AuthAudit) SetEventDate(v *timestamppb.Timestamp) {
@@ -337,32 +348,37 @@ func (x *AuthAudit) SetEventDate(v *timestamppb.Timestamp) {
 
 func (x *AuthAudit) SetEvent(v string) {
 	x.xxx_hidden_Event = &v
-	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 3, 11)
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 3, 12)
 }
 
 func (x *AuthAudit) SetStatus(v string) {
 	x.xxx_hidden_Status = &v
-	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 4, 11)
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 4, 12)
 }
 
 func (x *AuthAudit) SetRequestId(v string) {
 	x.xxx_hidden_RequestId = &v
-	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 5, 11)
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 5, 12)
+}
+
+func (x *AuthAudit) SetTraceId(v string) {
+	x.xxx_hidden_TraceId = &v
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 6, 12)
 }
 
 func (x *AuthAudit) SetUsername(v string) {
 	x.xxx_hidden_Username = &v
-	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 6, 11)
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 7, 12)
 }
 
 func (x *AuthAudit) SetAccessToken(v string) {
 	x.xxx_hidden_AccessToken = &v
-	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 7, 11)
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 8, 12)
 }
 
 func (x *AuthAudit) SetRefreshToken(v string) {
 	x.xxx_hidden_RefreshToken = &v
-	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 8, 11)
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 9, 12)
 }
 
 func (x *AuthAudit) SetCreateAt(v *timestamppb.Timestamp) {
@@ -415,25 +431,32 @@ func (x *AuthAudit) HasRequestId() bool {
 	return protoimpl.X.Present(&(x.XXX_presence[0]), 5)
 }
 
-func (x *AuthAudit) HasUsername() bool {
+func (x *AuthAudit) HasTraceId() bool {
 	if x == nil {
 		return false
 	}
 	return protoimpl.X.Present(&(x.XXX_presence[0]), 6)
 }
 
-func (x *AuthAudit) HasAccessToken() bool {
+func (x *AuthAudit) HasUsername() bool {
 	if x == nil {
 		return false
 	}
 	return protoimpl.X.Present(&(x.XXX_presence[0]), 7)
 }
 
-func (x *AuthAudit) HasRefreshToken() bool {
+func (x *AuthAudit) HasAccessToken() bool {
 	if x == nil {
 		return false
 	}
 	return protoimpl.X.Present(&(x.XXX_presence[0]), 8)
+}
+
+func (x *AuthAudit) HasRefreshToken() bool {
+	if x == nil {
+		return false
+	}
+	return protoimpl.X.Present(&(x.XXX_presence[0]), 9)
 }
 
 func (x *AuthAudit) HasCreateAt() bool {
@@ -479,18 +502,23 @@ func (x *AuthAudit) ClearRequestId() {
 	x.xxx_hidden_RequestId = nil
 }
 
-func (x *AuthAudit) ClearUsername() {
+func (x *AuthAudit) ClearTraceId() {
 	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 6)
+	x.xxx_hidden_TraceId = nil
+}
+
+func (x *AuthAudit) ClearUsername() {
+	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 7)
 	x.xxx_hidden_Username = nil
 }
 
 func (x *AuthAudit) ClearAccessToken() {
-	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 7)
+	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 8)
 	x.xxx_hidden_AccessToken = nil
 }
 
 func (x *AuthAudit) ClearRefreshToken() {
-	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 8)
+	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 9)
 	x.xxx_hidden_RefreshToken = nil
 }
 
@@ -511,6 +539,7 @@ type AuthAudit_builder struct {
 	Event        *string
 	Status       *string
 	RequestId    *string
+	TraceId      *string
 	Username     *string
 	AccessToken  *string
 	RefreshToken *string
@@ -523,36 +552,40 @@ func (b0 AuthAudit_builder) Build() *AuthAudit {
 	b, x := &b0, m0
 	_, _ = b, x
 	if b.Id != nil {
-		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 0, 11)
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 0, 12)
 		x.xxx_hidden_Id = b.Id
 	}
 	if b.Source != nil {
-		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 1, 11)
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 1, 12)
 		x.xxx_hidden_Source = b.Source
 	}
 	x.xxx_hidden_EventDate = b.EventDate
 	if b.Event != nil {
-		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 3, 11)
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 3, 12)
 		x.xxx_hidden_Event = b.Event
 	}
 	if b.Status != nil {
-		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 4, 11)
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 4, 12)
 		x.xxx_hidden_Status = b.Status
 	}
 	if b.RequestId != nil {
-		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 5, 11)
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 5, 12)
 		x.xxx_hidden_RequestId = b.RequestId
 	}
+	if b.TraceId != nil {
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 6, 12)
+		x.xxx_hidden_TraceId = b.TraceId
+	}
 	if b.Username != nil {
-		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 6, 11)
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 7, 12)
 		x.xxx_hidden_Username = b.Username
 	}
 	if b.AccessToken != nil {
-		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 7, 11)
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 8, 12)
 		x.xxx_hidden_AccessToken = b.AccessToken
 	}
 	if b.RefreshToken != nil {
-		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 8, 11)
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 9, 12)
 		x.xxx_hidden_RefreshToken = b.RefreshToken
 	}
 	x.xxx_hidden_CreateAt = b.CreateAt
@@ -745,14 +778,15 @@ type DataAudit struct {
 	xxx_hidden_Event           *string                `protobuf:"bytes,4,opt,name=event"`
 	xxx_hidden_Status          *string                `protobuf:"bytes,5,opt,name=status"`
 	xxx_hidden_RequestId       *string                `protobuf:"bytes,6,opt,name=request_id,json=requestId"`
-	xxx_hidden_Username        *string                `protobuf:"bytes,7,opt,name=username"`
-	xxx_hidden_TypeName        *string                `protobuf:"bytes,8,opt,name=type_name,json=typeName"`
-	xxx_hidden_TypeDescription *string                `protobuf:"bytes,9,opt,name=type_description,json=typeDescription"`
-	xxx_hidden_InstanceId      *string                `protobuf:"bytes,10,opt,name=instance_id,json=instanceId"`
-	xxx_hidden_InstanceName    *string                `protobuf:"bytes,11,opt,name=instance_name,json=instanceName"`
-	xxx_hidden_Values          *[]*DataAuditValue     `protobuf:"bytes,12,rep,name=values"`
-	xxx_hidden_CreateAt        *timestamppb.Timestamp `protobuf:"bytes,13,opt,name=create_at,json=createAt"`
-	xxx_hidden_UpdateAt        *timestamppb.Timestamp `protobuf:"bytes,14,opt,name=update_at,json=updateAt"`
+	xxx_hidden_TraceId         *string                `protobuf:"bytes,7,opt,name=trace_id,json=traceId"`
+	xxx_hidden_Username        *string                `protobuf:"bytes,8,opt,name=username"`
+	xxx_hidden_TypeName        *string                `protobuf:"bytes,9,opt,name=type_name,json=typeName"`
+	xxx_hidden_TypeDescription *string                `protobuf:"bytes,10,opt,name=type_description,json=typeDescription"`
+	xxx_hidden_InstanceId      *string                `protobuf:"bytes,11,opt,name=instance_id,json=instanceId"`
+	xxx_hidden_InstanceName    *string                `protobuf:"bytes,12,opt,name=instance_name,json=instanceName"`
+	xxx_hidden_Values          *[]*DataAuditValue     `protobuf:"bytes,13,rep,name=values"`
+	xxx_hidden_CreateAt        *timestamppb.Timestamp `protobuf:"bytes,14,opt,name=create_at,json=createAt"`
+	xxx_hidden_UpdateAt        *timestamppb.Timestamp `protobuf:"bytes,15,opt,name=update_at,json=updateAt"`
 	XXX_raceDetectHookData     protoimpl.RaceDetectHookData
 	XXX_presence               [1]uint32
 	unknownFields              protoimpl.UnknownFields
@@ -841,6 +875,16 @@ func (x *DataAudit) GetRequestId() string {
 	return ""
 }
 
+func (x *DataAudit) GetTraceId() string {
+	if x != nil {
+		if x.xxx_hidden_TraceId != nil {
+			return *x.xxx_hidden_TraceId
+		}
+		return ""
+	}
+	return ""
+}
+
 func (x *DataAudit) GetUsername() string {
 	if x != nil {
 		if x.xxx_hidden_Username != nil {
@@ -916,12 +960,12 @@ func (x *DataAudit) GetUpdateAt() *timestamppb.Timestamp {
 
 func (x *DataAudit) SetId(v string) {
 	x.xxx_hidden_Id = &v
-	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 0, 14)
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 0, 15)
 }
 
 func (x *DataAudit) SetSource(v string) {
 	x.xxx_hidden_Source = &v
-	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 1, 14)
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 1, 15)
 }
 
 func (x *DataAudit) SetEventDate(v *timestamppb.Timestamp) {
@@ -930,42 +974,47 @@ func (x *DataAudit) SetEventDate(v *timestamppb.Timestamp) {
 
 func (x *DataAudit) SetEvent(v string) {
 	x.xxx_hidden_Event = &v
-	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 3, 14)
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 3, 15)
 }
 
 func (x *DataAudit) SetStatus(v string) {
 	x.xxx_hidden_Status = &v
-	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 4, 14)
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 4, 15)
 }
 
 func (x *DataAudit) SetRequestId(v string) {
 	x.xxx_hidden_RequestId = &v
-	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 5, 14)
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 5, 15)
+}
+
+func (x *DataAudit) SetTraceId(v string) {
+	x.xxx_hidden_TraceId = &v
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 6, 15)
 }
 
 func (x *DataAudit) SetUsername(v string) {
 	x.xxx_hidden_Username = &v
-	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 6, 14)
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 7, 15)
 }
 
 func (x *DataAudit) SetTypeName(v string) {
 	x.xxx_hidden_TypeName = &v
-	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 7, 14)
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 8, 15)
 }
 
 func (x *DataAudit) SetTypeDescription(v string) {
 	x.xxx_hidden_TypeDescription = &v
-	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 8, 14)
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 9, 15)
 }
 
 func (x *DataAudit) SetInstanceId(v string) {
 	x.xxx_hidden_InstanceId = &v
-	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 9, 14)
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 10, 15)
 }
 
 func (x *DataAudit) SetInstanceName(v string) {
 	x.xxx_hidden_InstanceName = &v
-	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 10, 14)
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 11, 15)
 }
 
 func (x *DataAudit) SetValues(v []*DataAuditValue) {
@@ -1022,39 +1071,46 @@ func (x *DataAudit) HasRequestId() bool {
 	return protoimpl.X.Present(&(x.XXX_presence[0]), 5)
 }
 
-func (x *DataAudit) HasUsername() bool {
+func (x *DataAudit) HasTraceId() bool {
 	if x == nil {
 		return false
 	}
 	return protoimpl.X.Present(&(x.XXX_presence[0]), 6)
 }
 
-func (x *DataAudit) HasTypeName() bool {
+func (x *DataAudit) HasUsername() bool {
 	if x == nil {
 		return false
 	}
 	return protoimpl.X.Present(&(x.XXX_presence[0]), 7)
 }
 
-func (x *DataAudit) HasTypeDescription() bool {
+func (x *DataAudit) HasTypeName() bool {
 	if x == nil {
 		return false
 	}
 	return protoimpl.X.Present(&(x.XXX_presence[0]), 8)
 }
 
-func (x *DataAudit) HasInstanceId() bool {
+func (x *DataAudit) HasTypeDescription() bool {
 	if x == nil {
 		return false
 	}
 	return protoimpl.X.Present(&(x.XXX_presence[0]), 9)
 }
 
-func (x *DataAudit) HasInstanceName() bool {
+func (x *DataAudit) HasInstanceId() bool {
 	if x == nil {
 		return false
 	}
 	return protoimpl.X.Present(&(x.XXX_presence[0]), 10)
+}
+
+func (x *DataAudit) HasInstanceName() bool {
+	if x == nil {
+		return false
+	}
+	return protoimpl.X.Present(&(x.XXX_presence[0]), 11)
 }
 
 func (x *DataAudit) HasCreateAt() bool {
@@ -1100,28 +1156,33 @@ func (x *DataAudit) ClearRequestId() {
 	x.xxx_hidden_RequestId = nil
 }
 
-func (x *DataAudit) ClearUsername() {
+func (x *DataAudit) ClearTraceId() {
 	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 6)
+	x.xxx_hidden_TraceId = nil
+}
+
+func (x *DataAudit) ClearUsername() {
+	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 7)
 	x.xxx_hidden_Username = nil
 }
 
 func (x *DataAudit) ClearTypeName() {
-	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 7)
+	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 8)
 	x.xxx_hidden_TypeName = nil
 }
 
 func (x *DataAudit) ClearTypeDescription() {
-	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 8)
+	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 9)
 	x.xxx_hidden_TypeDescription = nil
 }
 
 func (x *DataAudit) ClearInstanceId() {
-	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 9)
+	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 10)
 	x.xxx_hidden_InstanceId = nil
 }
 
 func (x *DataAudit) ClearInstanceName() {
-	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 10)
+	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 11)
 	x.xxx_hidden_InstanceName = nil
 }
 
@@ -1142,6 +1203,7 @@ type DataAudit_builder struct {
 	Event           *string
 	Status          *string
 	RequestId       *string
+	TraceId         *string
 	Username        *string
 	TypeName        *string
 	TypeDescription *string
@@ -1157,44 +1219,48 @@ func (b0 DataAudit_builder) Build() *DataAudit {
 	b, x := &b0, m0
 	_, _ = b, x
 	if b.Id != nil {
-		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 0, 14)
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 0, 15)
 		x.xxx_hidden_Id = b.Id
 	}
 	if b.Source != nil {
-		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 1, 14)
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 1, 15)
 		x.xxx_hidden_Source = b.Source
 	}
 	x.xxx_hidden_EventDate = b.EventDate
 	if b.Event != nil {
-		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 3, 14)
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 3, 15)
 		x.xxx_hidden_Event = b.Event
 	}
 	if b.Status != nil {
-		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 4, 14)
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 4, 15)
 		x.xxx_hidden_Status = b.Status
 	}
 	if b.RequestId != nil {
-		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 5, 14)
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 5, 15)
 		x.xxx_hidden_RequestId = b.RequestId
 	}
+	if b.TraceId != nil {
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 6, 15)
+		x.xxx_hidden_TraceId = b.TraceId
+	}
 	if b.Username != nil {
-		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 6, 14)
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 7, 15)
 		x.xxx_hidden_Username = b.Username
 	}
 	if b.TypeName != nil {
-		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 7, 14)
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 8, 15)
 		x.xxx_hidden_TypeName = b.TypeName
 	}
 	if b.TypeDescription != nil {
-		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 8, 14)
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 9, 15)
 		x.xxx_hidden_TypeDescription = b.TypeDescription
 	}
 	if b.InstanceId != nil {
-		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 9, 14)
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 10, 15)
 		x.xxx_hidden_InstanceId = b.InstanceId
 	}
 	if b.InstanceName != nil {
-		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 10, 14)
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 11, 15)
 		x.xxx_hidden_InstanceName = b.InstanceName
 	}
 	x.xxx_hidden_Values = &b.Values
@@ -1212,7 +1278,7 @@ const file_tiny_audit_service_v1_messages_proto_rawDesc = "" +
 	"\x04from\x18\x01 \x01(\v2\x1a.google.protobuf.TimestampR\x04from\x12.\n" +
 	"\x04till\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\x04till\x12\x14\n" +
 	"\x05limit\x18\x03 \x01(\rR\x05limit\x12\x16\n" +
-	"\x06offset\x18\x04 \x01(\rR\x06offset\"\x91\x03\n" +
+	"\x06offset\x18\x04 \x01(\rR\x06offset\"\xac\x03\n" +
 	"\tAuthAudit\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x16\n" +
 	"\x06source\x18\x02 \x01(\tR\x06source\x129\n" +
@@ -1221,18 +1287,19 @@ const file_tiny_audit_service_v1_messages_proto_rawDesc = "" +
 	"\x05event\x18\x04 \x01(\tR\x05event\x12\x16\n" +
 	"\x06status\x18\x05 \x01(\tR\x06status\x12\x1d\n" +
 	"\n" +
-	"request_id\x18\x06 \x01(\tR\trequestId\x12\x1a\n" +
-	"\busername\x18\a \x01(\tR\busername\x12!\n" +
-	"\faccess_token\x18\b \x01(\tR\vaccessToken\x12#\n" +
-	"\rrefresh_token\x18\t \x01(\tR\frefreshToken\x127\n" +
-	"\tcreate_at\x18\n" +
-	" \x01(\v2\x1a.google.protobuf.TimestampR\bcreateAt\x127\n" +
-	"\tupdate_at\x18\v \x01(\v2\x1a.google.protobuf.TimestampR\bupdateAt\"t\n" +
+	"request_id\x18\x06 \x01(\tR\trequestId\x12\x19\n" +
+	"\btrace_id\x18\a \x01(\tR\atraceId\x12\x1a\n" +
+	"\busername\x18\b \x01(\tR\busername\x12!\n" +
+	"\faccess_token\x18\t \x01(\tR\vaccessToken\x12#\n" +
+	"\rrefresh_token\x18\n" +
+	" \x01(\tR\frefreshToken\x127\n" +
+	"\tcreate_at\x18\v \x01(\v2\x1a.google.protobuf.TimestampR\bcreateAt\x127\n" +
+	"\tupdate_at\x18\f \x01(\v2\x1a.google.protobuf.TimestampR\bupdateAt\"t\n" +
 	"\x0eDataAuditValue\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12 \n" +
 	"\vdescription\x18\x02 \x01(\tR\vdescription\x12\x16\n" +
 	"\x06before\x18\x03 \x01(\tR\x06before\x12\x14\n" +
-	"\x05after\x18\x04 \x01(\tR\x05after\"\x8e\x04\n" +
+	"\x05after\x18\x04 \x01(\tR\x05after\"\xa9\x04\n" +
 	"\tDataAudit\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x16\n" +
 	"\x06source\x18\x02 \x01(\tR\x06source\x129\n" +
@@ -1241,17 +1308,18 @@ const file_tiny_audit_service_v1_messages_proto_rawDesc = "" +
 	"\x05event\x18\x04 \x01(\tR\x05event\x12\x16\n" +
 	"\x06status\x18\x05 \x01(\tR\x06status\x12\x1d\n" +
 	"\n" +
-	"request_id\x18\x06 \x01(\tR\trequestId\x12\x1a\n" +
-	"\busername\x18\a \x01(\tR\busername\x12\x1b\n" +
-	"\ttype_name\x18\b \x01(\tR\btypeName\x12)\n" +
-	"\x10type_description\x18\t \x01(\tR\x0ftypeDescription\x12\x1f\n" +
-	"\vinstance_id\x18\n" +
-	" \x01(\tR\n" +
+	"request_id\x18\x06 \x01(\tR\trequestId\x12\x19\n" +
+	"\btrace_id\x18\a \x01(\tR\atraceId\x12\x1a\n" +
+	"\busername\x18\b \x01(\tR\busername\x12\x1b\n" +
+	"\ttype_name\x18\t \x01(\tR\btypeName\x12)\n" +
+	"\x10type_description\x18\n" +
+	" \x01(\tR\x0ftypeDescription\x12\x1f\n" +
+	"\vinstance_id\x18\v \x01(\tR\n" +
 	"instanceId\x12#\n" +
-	"\rinstance_name\x18\v \x01(\tR\finstanceName\x125\n" +
-	"\x06values\x18\f \x03(\v2\x1d.audit.service.DataAuditValueR\x06values\x127\n" +
-	"\tcreate_at\x18\r \x01(\v2\x1a.google.protobuf.TimestampR\bcreateAt\x127\n" +
-	"\tupdate_at\x18\x0e \x01(\v2\x1a.google.protobuf.TimestampR\bupdateAtB,Z*tiny-audit-service/grpc/tiny-audit-serviceb\beditionsp\xe8\a"
+	"\rinstance_name\x18\f \x01(\tR\finstanceName\x125\n" +
+	"\x06values\x18\r \x03(\v2\x1d.audit.service.DataAuditValueR\x06values\x127\n" +
+	"\tcreate_at\x18\x0e \x01(\v2\x1a.google.protobuf.TimestampR\bcreateAt\x127\n" +
+	"\tupdate_at\x18\x0f \x01(\v2\x1a.google.protobuf.TimestampR\bupdateAtB,Z*tiny-audit-service/grpc/tiny-audit-serviceb\beditionsp\xe8\a"
 
 var file_tiny_audit_service_v1_messages_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_tiny_audit_service_v1_messages_proto_goTypes = []any{

@@ -458,6 +458,9 @@ const docTemplate = `{
                 "status": {
                     "type": "string"
                 },
+                "trace_id": {
+                    "type": "string"
+                },
                 "updated_at": {
                     "type": "string"
                 },
@@ -494,6 +497,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "status": {
+                    "type": "string"
+                },
+                "trace_id": {
                     "type": "string"
                 },
                 "type_description": {
