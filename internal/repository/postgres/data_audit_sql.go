@@ -9,6 +9,7 @@ select
     event,
     status,
     request_id,
+    trace_id,
     username,
     type_name,
     type_description,
@@ -30,6 +31,7 @@ select
     event,
     status,
     request_id,
+    trace_id,
     username,
     type_name,
     type_description,
@@ -55,6 +57,7 @@ select
     event,
     status,
     request_id,
+    trace_id,
     username,
     type_name,
     type_description,
@@ -83,6 +86,7 @@ select
     event,
     status,
     request_id,
+    trace_id,
     username,
     type_name,
     type_description,
@@ -109,6 +113,7 @@ insert into data_audit_1 (
     event,
     status,
     request_id,
+    trace_id,
     username,
     type_name,
     type_description,
@@ -118,7 +123,7 @@ insert into data_audit_1 (
     created_at
 )
 values (
-    $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13
+    $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14
 )
 returning
     id,
@@ -127,6 +132,7 @@ returning
     event,
     status,
     request_id,
+    trace_id,
     username,
     type_name,
     type_description,
@@ -145,13 +151,14 @@ set
     event = $4,
     status = $5,
     request_id = $6,
-    username = $7,
-    type_name = $8,
-    type_description = $9,
-    instance_id = $10,
-    instance_name = $11,
-    values = $12,
-    updated_at = $13
+    trace_id = $7,
+    username = $8,
+    type_name = $9,
+    type_description = $10,
+    instance_id = $11,
+    instance_name = $12,
+    values = $13,
+    updated_at = $14
 where
     id = $1
 returning
@@ -161,6 +168,7 @@ returning
     event,
     status,
     request_id,
+    trace_id,
     username,
     type_name,
     type_description,

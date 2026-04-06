@@ -15,6 +15,7 @@ type commonAudit interface {
 	GetEvent() string
 	GetStatus() string
 	GetRequestID() string
+	GetTraceID() string
 	GetUsername() string
 }
 

@@ -14,6 +14,7 @@ type AuthAudit struct {
 	Event        string
 	Status       string
 	RequestID    string
+	TraceID      string
 	Username     string
 	AccessToken  string
 	RefreshToken string
@@ -108,6 +109,10 @@ func (aa *AuthAudit) GetStatus() string {
 
 func (aa *AuthAudit) GetRequestID() string {
 	return aa.RequestID
+}
+
+func (aa *AuthAudit) GetTraceID() string {
+	return aa.TraceID
 }
 
 func (aa *AuthAudit) GetUsername() string {

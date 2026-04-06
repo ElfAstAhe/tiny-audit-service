@@ -72,6 +72,7 @@ select
     event,
     status,
     request_id,
+    trace_id,
     username,
     access_token,
     refresh_token,
@@ -94,13 +95,14 @@ insert into auth_audit_1 (
     event,
     status,
     request_id,
+    trace_id,
     username,
     access_token,
     refresh_token,
     created_at
 )
 values (
-    $1, $2, $3, $4, $5, $6, $7, $8, $9, $10
+    $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11
 )
 returning
     id,
@@ -109,6 +111,7 @@ returning
     event,
     status,
     request_id,
+    trace_id,
     username,
     access_token,
     refresh_token,
@@ -124,10 +127,11 @@ set
     event = $4,
     status = $5,
     request_id = $6,
-    username = $7,
-    access_token = $8,
-    refresh_token = $9,
-    updated_at = $10
+    trace_id = $7,
+    username = $8,
+    access_token = $9,
+    refresh_token = $10,
+    updated_at = $11
 where
     id = $1
 returning
@@ -137,6 +141,7 @@ returning
     event,
     status,
     request_id,
+    trace_id,
     username,
     access_token,
     refresh_token,
