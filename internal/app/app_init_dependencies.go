@@ -92,8 +92,8 @@ func (app *App) initDependencies() error {
 			worker.NewTailCutterConfig(
 				3*time.Second,
 				app.config.App.AuthTailJobRepeatDuration,
-				128,
 				2,
+				128,
 				app.config.App.AuthTailDuration,
 				app.config.App.AuthTailCut,
 			),
@@ -107,8 +107,8 @@ func (app *App) initDependencies() error {
 			worker.NewTailCutterConfig(
 				3*time.Second,
 				app.config.App.DataTailJobRepeatDuration,
-				128,
 				2,
+				128,
 				app.config.App.DataTailDuration,
 				app.config.App.DataTailCut,
 			),

@@ -41,6 +41,8 @@ type TailCutter struct {
 	tailCutUC usecase.TailCutUseCase[string]
 }
 
+var _ worker.Scheduler = (*TailCutter)(nil)
+
 func NewTailCutter(
 	parentCtx context.Context,
 	name string,
@@ -82,7 +84,14 @@ func (tc *TailCutter) dataProvider(ctx context.Context, eventTime time.Time) ([]
 		return []string{}, nil
 	}
 
-	return tc.tailGetUC.GetTail(ctx, tailCutTime)
+	res, err := tc.tailGetUC.GetTail(ctx, tailCutTime)
+	if err != nil {
+		return nil, err
+	}
+
+	tc.GetLogger().Debugf("tail cut %s total data records to dispatch [%v]", tc.GetName(), len(res))
+
+	return res, nil
 }
 
 func (tc *TailCutter) cutTail(ctx context.Context, workerIndex int, data string) error {

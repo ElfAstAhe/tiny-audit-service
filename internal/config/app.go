@@ -13,10 +13,10 @@ type AppConfig struct {
 	TokenIssuer               string        `mapstructure:"token_issuer" json:"token_issuer,omitempty" yaml:"token_issuer,omitempty"`
 	AcceptTokenIssuers        []string      `mapstructure:"accept_token_issuers" json:"accept_token_issuers,omitempty" yaml:"accept_token_issuers,omitempty"`
 	CipherKey                 string        `mapstructure:"cipher_key" json:"cipher_key,omitempty" yaml:"cipher_key,omitempty"`
-	AuthTailJobRepeatDuration time.Duration `mapstructure:"auth-tail-job-repeat-duration" json:"auth-tail-job-repeat-duration,omitempty" yaml:"auth-tail-job-repeat-duration,omitempty"`
+	AuthTailJobRepeatDuration time.Duration `mapstructure:"auth_tail_job_repeat_duration" json:"auth_tail_job_repeat_duration,omitempty" yaml:"auth_tail_job_repeat_duration,omitempty"`
 	AuthTailDuration          time.Duration `mapstructure:"auth_tail_duration" json:"auth_tail_duration,omitempty" yaml:"auth_tail_duration,omitempty"`
 	AuthTailCut               bool          `mapstructure:"auth_tail_cut" json:"auth_tail_cut,omitempty" yaml:"auth_tail_cut,omitempty"`
-	DataTailJobRepeatDuration time.Duration `mapstructure:"data-tail-job-repeat-duration" json:"data-tail-job-repeat-duration,omitempty" yaml:"data-tail-job-repeat-duration,omitempty"`
+	DataTailJobRepeatDuration time.Duration `mapstructure:"data_tail_job_repeat_duration" json:"data_tail_job_repeat_duration,omitempty" yaml:"data_tail_job_repeat_duration,omitempty"`
 	DataTailDuration          time.Duration `mapstructure:"data_tail_duration" json:"data_tail_duration,omitempty" yaml:"data_tail_duration,omitempty"`
 	DataTailCut               bool          `mapstructure:"data_tail_cut" json:"data_tail_cut,omitempty" yaml:"data_tail_cut,omitempty"`
 }

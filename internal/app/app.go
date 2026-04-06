@@ -10,11 +10,11 @@ import (
 	"github.com/ElfAstAhe/go-service-template/pkg/helper"
 	"github.com/ElfAstAhe/go-service-template/pkg/logger"
 	"github.com/ElfAstAhe/go-service-template/pkg/transport"
+	"github.com/ElfAstAhe/go-service-template/pkg/transport/worker"
 	"github.com/ElfAstAhe/go-service-template/pkg/utils"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/config"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/facade"
 	grpcsvc "github.com/ElfAstAhe/tiny-audit-service/internal/transport/grpc"
-	"github.com/ElfAstAhe/tiny-audit-service/internal/transport/worker"
 	"github.com/hellofresh/health-go/v5"
 	"google.golang.org/grpc"
 )
@@ -62,8 +62,8 @@ type App struct {
 	grpcDataAuditService *grpcsvc.DataAuditGRPCService
 
 	// worker
-	authAuditTailCutter *worker.TailCutter
-	dataAuditTailCutter *worker.TailCutter
+	authAuditTailCutter worker.Scheduler
+	dataAuditTailCutter worker.Scheduler
 
 	// facade
 	authFacade facade.AuthAuditFacade
