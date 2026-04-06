@@ -9,6 +9,7 @@ Content-Type: application/json
   "event": "create",
   "status": "success",
   "request_id": "test_request_0003",
+  "trace_id": "test_trace_id_000003",
   "username": "admin",
   "type_name": "User",
   "type_description": "пользователь",
