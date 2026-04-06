@@ -48,7 +48,7 @@ func (aat *AuthAuditTraceRepository) ListByPeriod(ctx context.Context, from, til
 	return res, err
 }
 
-func (aat *AuthAuditTraceRepository) ListByUsername(ctx context.Context, username string, limit, offset int) ([]*domain.AuthAudit, error) {
+func (aat *AuthAuditTraceRepository) ListByUsername(ctx context.Context, username string, offset, limit int) ([]*domain.AuthAudit, error) {
 	ctx, span := aat.StartSpan(ctx, fmt.Sprintf("%s.ListByUsername", aat.BaseCRUDTraceRepository.GetRepositoryName()))
 	defer span.End()
 
@@ -58,7 +58,7 @@ func (aat *AuthAuditTraceRepository) ListByUsername(ctx context.Context, usernam
 		attribute.Int("param.offset", offset),
 	)
 
-	res, err := aat.next.ListByUsername(ctx, username, limit, offset)
+	res, err := aat.next.ListByUsername(ctx, username, offset, limit)
 	if err != nil {
 		span.AddEvent("ListByUsername_failed")
 		span.RecordError(err)

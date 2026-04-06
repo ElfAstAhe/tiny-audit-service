@@ -116,7 +116,7 @@ func (aa *AuthAuditPgRepository) validateListByPeriod(from, till time.Time, limi
 }
 
 func (aa *AuthAuditPgRepository) ListByUsername(ctx context.Context, username string, offset, limit int) ([]*domain.AuthAudit, error) {
-	if err := aa.validateListByUsername(username, limit, offset); err != nil {
+	if err := aa.validateListByUsername(username, offset, limit); err != nil {
 		return nil, err
 	}
 

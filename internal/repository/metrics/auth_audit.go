@@ -38,5 +38,5 @@ func (aam *AuthAuditMetricsRepository) ListByUsername(ctx context.Context, usern
 		metrics.ObserveRepositoryOp(aam.BaseCRUDMetricsRepository.GetRepositoryName(), "ListByUsername", err, start)
 	}(time.Now())
 
-	return aam.next.ListByUsername(ctx, username, limit, offset)
+	return aam.next.ListByUsername(ctx, username, offset, limit)
 }

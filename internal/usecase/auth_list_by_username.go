@@ -30,7 +30,7 @@ func (alu *AuthListByUsernameInteractor) List(ctx context.Context, username stri
 		return nil, domerrs.NewBllValidateError("AuthListByUsernameInteractor.List", "validate income failed", err)
 	}
 
-	res, err := alu.authAuditRepo.ListByUsername(ctx, username, limit, offset)
+	res, err := alu.authAuditRepo.ListByUsername(ctx, username, offset, limit)
 	if err != nil {
 		return nil, domerrs.NewBllError("AuthListByUsernameInteractor.List", fmt.Sprintf("list auth audit data for user [%s] with limit [%v] and offset [%v] failed", username, limit, offset), err)
 	}
