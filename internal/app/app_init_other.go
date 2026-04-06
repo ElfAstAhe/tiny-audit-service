@@ -134,12 +134,12 @@ func (app *App) initMetrics() error {
 func (app *App) initStartupServices() error {
 	// here start any startup services (workers, observers, etc.)
 	// auth audit tail cutter
-	if err := app.authAuditTailCutter.Start(2); err != nil {
-		return errs.NewCommonError("startup audit tail cutter", err)
+	if err := app.authAuditTailCutter.Start(); err != nil {
+		return errs.NewCommonError("startup auth audit tail cutter", err)
 	}
 	// data audit tail cutter
-	if err := app.dataAuditTailCutter.Start(2); err != nil {
-		return errs.NewCommonError("startup audit tail cutter", err)
+	if err := app.dataAuditTailCutter.Start(); err != nil {
+		return errs.NewCommonError("startup data audit tail cutter", err)
 	}
 
 	return nil

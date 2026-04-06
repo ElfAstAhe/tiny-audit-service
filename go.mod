@@ -1,9 +1,9 @@
 module github.com/ElfAstAhe/tiny-audit-service
 
-go 1.26.1
+go 1.26.0
 
 require (
-	github.com/ElfAstAhe/go-service-template v0.0.35
+	github.com/ElfAstAhe/go-service-template v0.0.37
 	github.com/XSAM/otelsql v0.42.0
 	github.com/go-chi/chi/v5 v5.2.5
 	github.com/go-openapi/errors v0.22.7
