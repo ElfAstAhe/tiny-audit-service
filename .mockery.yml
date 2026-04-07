@@ -22,3 +22,18 @@ packages:
   github.com/ElfAstAhe/tiny-audit-service/internal/facade:
     config:
       all: true
+  github.com/ElfAstAhe/tiny-audit-service/pkg/api/http/audit/v1/client/models:
+    config:
+      all: true
+  github.com/ElfAstAhe/tiny-audit-service/pkg/api/http/audit/v1/client/audit:
+    config:
+      all: true
+  github.com/ElfAstAhe/tiny-audit-service/pkg/api/http/audit/v1/client:
+    config:
+      all: true
+  github.com/ElfAstAhe/tiny-audit-service/pkg/domain:
+    config:
+      all: true
+  github.com/ElfAstAhe/tiny-audit-service/pkg/client/rest:
+    config:
+      all: true
