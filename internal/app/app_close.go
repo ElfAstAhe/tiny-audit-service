@@ -45,12 +45,12 @@ func (app *App) stopTailCutters() {
 	var tailCutterWG sync.WaitGroup
 	tailCutterWG.Add(1)
 	go func() {
-		app.authAuditTailCutter.Stop()
+		app.authAuditTailCutter.Stop(app.config.HTTP.ShutdownTimeout)
 		tailCutterWG.Done()
 	}()
 	tailCutterWG.Add(1)
 	go func() {
-		app.dataAuditTailCutter.Stop()
+		app.dataAuditTailCutter.Stop(app.config.HTTP.ShutdownTimeout)
 		tailCutterWG.Done()
 	}()
 	tailCutterWG.Wait()

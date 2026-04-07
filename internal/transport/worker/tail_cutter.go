@@ -16,18 +16,14 @@ type TailCutterConfig struct {
 }
 
 func NewTailCutterConfig(
-	startInterval time.Duration,
-	scheduleInterval time.Duration,
-	workerCount int,
-	dataCapacity int,
+	schedulerDispatcherConf *worker.BaseSchedulerDispatcherConfig,
 	dataInterval time.Duration,
 	cutEnabled bool,
 ) *TailCutterConfig {
 	return &TailCutterConfig{
 		BaseSchedulerDispatcherConfig: worker.NewBaseSchedulerDispatcherConfig(
-			worker.NewBaseSchedulerConfig(startInterval, scheduleInterval),
-			workerCount,
-			dataCapacity,
+			schedulerDispatcherConf.SchedulerConfig,
+			schedulerDispatcherConf.PoolConfig,
 		),
 		dataInterval: dataInterval,
 		cutEnabled:   cutEnabled,
@@ -42,9 +38,9 @@ type TailCutter struct {
 }
 
 var _ worker.Scheduler = (*TailCutter)(nil)
+var _ worker.CommonWorker = (*TailCutter)(nil)
 
 func NewTailCutter(
-	parentCtx context.Context,
 	name string,
 	config *TailCutterConfig,
 	tailGetUC usecase.TailGetUseCase[string],
@@ -59,7 +55,6 @@ func NewTailCutter(
 
 	base := worker.NewBaseSchedulerDispatcher[string](
 		name,
-		parentCtx,
 		config.BaseSchedulerDispatcherConfig,
 		res.dataProvider,
 		res.cutTail,
@@ -72,14 +67,14 @@ func NewTailCutter(
 }
 
 func (tc *TailCutter) dataProvider(ctx context.Context, eventTime time.Time) ([]string, error) {
-	tc.GetLogger().Debugf("start %s tail cutter data provider", tc.GetName())
-	defer tc.GetLogger().Debugf("finish %s tail cutter data provider", tc.GetName())
+	tc.GetLogger().Debugf("tail cutter %s time event %s data provider start", tc.GetName(), eventTime.Format(time.DateTime))
+	defer tc.GetLogger().Debugf("tail cutter %s time event %s data provider finish", tc.GetName(), eventTime.Format(time.DateTime))
 
 	tailCutTime := eventTime.Add(-tc.config.dataInterval)
-	tc.GetLogger().Debugf("tail cut time %s tail cutter data provider [%s]", tc.GetName(), tailCutTime.Format(time.DateTime))
+	tc.GetLogger().Debugf("tail cutter %s time event %s data provider tail time %s ", tc.GetName(), eventTime.Format(time.DateTime), tailCutTime.Format(time.DateTime))
 
 	if !tc.config.cutEnabled {
-		tc.GetLogger().Debugf("tail cut %s tail cut enabled [%v] pass iteration", tc.GetName(), tc.config.cutEnabled)
+		tc.GetLogger().Debugf("tail cutter %s time event %s tail cut enabled [%v] pass iteration", tc.GetName(), eventTime.Format(time.DateTime), tc.config.cutEnabled)
 
 		return []string{}, nil
 	}
@@ -89,14 +84,14 @@ func (tc *TailCutter) dataProvider(ctx context.Context, eventTime time.Time) ([]
 		return nil, err
 	}
 
-	tc.GetLogger().Debugf("tail cut %s total data records to dispatch [%v]", tc.GetName(), len(res))
+	tc.GetLogger().Debugf("tail cutter %s time event %s total data records to dispatch [%v]", tc.GetName(), eventTime.Format(time.DateTime), len(res))
 
 	return res, nil
 }
 
 func (tc *TailCutter) cutTail(ctx context.Context, workerIndex int, data string) error {
-	tc.GetLogger().Debugf("start %s tail cutter cutter worker %v job handler", tc.GetName(), workerIndex)
-	defer tc.GetLogger().Debugf("finish %s tail cutter worker %v cutter job handler", tc.GetName(), workerIndex)
+	tc.GetLogger().Debugf("tail cutter %s worker %v cut tail start", tc.GetName(), workerIndex)
+	defer tc.GetLogger().Debugf("tail cutter %s worker %v cut tail finish", tc.GetName(), workerIndex)
 
 	return tc.tailCutUC.Cut(ctx, data)
 }
