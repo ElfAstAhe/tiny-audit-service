@@ -32,24 +32,24 @@ gen-swagger:
 		--exclude ./pkg/api \
 		-o docs \
 		--parseDepth 3
-#	swag init -g cmd/server/main.go
 
+# Генерация http client
 gen-http-client:
 #	oapi-codegen -package client -generate client docs/swagger.json > pkg/client/rest/api_client.gen.go
 	mkdir -p $(OPEN_API_OUT)
 	swagger generate client -f ./docs/swagger.json -A tiny-audit-service -t $(OPEN_API_OUT)
 
-gen-mocks:
 # Генерирует моки для всех интерфейсов в указанной папке
+gen-mocks:
 	mockery
 
 # Сборка проекта с прокидыванием переменных
-build: gen-proto gen-swagger gen-http-client
+build: gen-proto gen-swagger gen-http-client gen-mocks
 	go build -ldflags "-X '$(MODULE_NAME)/internal/config.AppVersion=$(VERSION)' \
 	-X '$(MODULE_NAME)/internal/config.AppBuildTime=$(BUILD_TIME)'" \
 	-o ./bin/$(SERVER_BINARY_NAME) $(SERVER_BUILD_DIR)/main.go
 
-# Запуск проекта (сначала соберет, потом запустит)
+# Запуск проекта (сборка, затем запуск)
 run: build
 	./bin/$(SERVER_BINARY_NAME) --http-address "localhost:8081" --grpc-address "localhost:51052" --log-level "debug" --db-driver "postgres" --db-dsn "postgres://svc_audit:password@localhost:5432/test?sslmode=disable&search_path=audit_db" --auth-jwt-secret "jwt-key" --app-cipher-key "12345" --app-max-list-limit 500 --app-accept-token-issuers "tiny-auth-service,test-issuer" --app-auth-tail-job-repeat-duration "90s" --app-auth-tail-cut --app-auth-tail-duration "48h" --app-data-tail-job-repeat-duration "85s" --app-data-tail-cut --app-data-tail-duration "48h"
 

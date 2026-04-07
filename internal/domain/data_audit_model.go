@@ -15,6 +15,7 @@ type DataAudit struct {
 	Event           string
 	Status          string
 	RequestID       string
+	TraceID         string
 	Username        string
 	TypeName        string
 	TypeDescription string
@@ -127,6 +128,10 @@ func (da *DataAudit) GetStatus() string {
 
 func (da *DataAudit) GetRequestID() string {
 	return da.RequestID
+}
+
+func (da *DataAudit) GetTraceID() string {
+	return da.TraceID
 }
 
 func (da *DataAudit) GetUsername() string {

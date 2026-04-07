@@ -11,6 +11,7 @@ type DataAuditDTO struct {
 	Event           string               `json:"event,omitempty"`
 	Status          string               `json:"status,omitempty"`
 	RequestID       string               `json:"request_id,omitempty"`
+	TraceID         string               `json:"trace_id,omitempty"`
 	Username        string               `json:"username,omitempty"`
 	TypeName        string               `json:"type_name,omitempty"`
 	TypeDescription string               `json:"type_description,omitempty"`

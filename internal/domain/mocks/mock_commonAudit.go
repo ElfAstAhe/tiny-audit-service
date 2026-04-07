@@ -257,6 +257,50 @@ func (_c *mockcommonAudit_GetStatus_Call) RunAndReturn(run func() string) *mockc
 	return _c
 }
 
+// GetTraceID provides a mock function for the type mockcommonAudit
+func (_mock *mockcommonAudit) GetTraceID() string {
+	ret := _mock.Called()
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetTraceID")
+	}
+
+	var r0 string
+	if returnFunc, ok := ret.Get(0).(func() string); ok {
+		r0 = returnFunc()
+	} else {
+		r0 = ret.Get(0).(string)
+	}
+	return r0
+}
+
+// mockcommonAudit_GetTraceID_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetTraceID'
+type mockcommonAudit_GetTraceID_Call struct {
+	*mock.Call
+}
+
+// GetTraceID is a helper method to define mock.On call
+func (_e *mockcommonAudit_Expecter) GetTraceID() *mockcommonAudit_GetTraceID_Call {
+	return &mockcommonAudit_GetTraceID_Call{Call: _e.mock.On("GetTraceID")}
+}
+
+func (_c *mockcommonAudit_GetTraceID_Call) Run(run func()) *mockcommonAudit_GetTraceID_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run()
+	})
+	return _c
+}
+
+func (_c *mockcommonAudit_GetTraceID_Call) Return(s string) *mockcommonAudit_GetTraceID_Call {
+	_c.Call.Return(s)
+	return _c
+}
+
+func (_c *mockcommonAudit_GetTraceID_Call) RunAndReturn(run func() string) *mockcommonAudit_GetTraceID_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // GetUsername provides a mock function for the type mockcommonAudit
 func (_mock *mockcommonAudit) GetUsername() string {
 	ret := _mock.Called()

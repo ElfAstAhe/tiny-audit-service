@@ -2,17 +2,6 @@
 POST http://localhost:8081/api/v1/audit/auth
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0aW55LWF1dGgtc2VydmljZSIsInN1YiI6InN2Y19hdXRoIiwiZXhwIjoxNzc1NDgyODc1LCJpYXQiOjE3NzU0ODE5NzUsImp0aSI6InRhcy0yZmVkYTNmMS01MTY3LTRjNjYtYWVlNi1mN2I5YmJlNDEwNGQiLCJzdWJqZWN0X2lkIjoiNjY0MzViNWMtNThkOC00MDQ2LWFkNDctZmZiNmIxYmZmNDYxIiwic3ViamVjdF90eXBlIjoic2VydmljZSIsInJvbGVzIjpbInVzZXIiLCJhdWRpdC13cml0ZXIiXX0.4LjvCAJqhMlUgzTbuSVli6awAIrFvafczQwmgm-wQqk
 Content-Type: application/json
-#	ID           string    `json:"id,omitempty"`
-#	Source       string    `json:"source,omitempty"`
-#	EventDate    time.Time `json:"event_date,omitempty"`
-#	Event        string    `json:"event,omitempty"`
-#	Status       string    `json:"status,omitempty"`
-#	RequestID    string    `json:"request_id,omitempty"`
-#	Username     string    `json:"username,omitempty"`
-#	AccessToken  string    `json:"access_token,omitempty"`
-#	RefreshToken string    `json:"refresh_token,omitempty"`
-#	CreatedAt    time.Time `json:"created_at,omitempty"`
-#	UpdatedAt    time.Time `json:"updated_at,omitempty"`
 
 {
   "source": "tiny-auth-service",
@@ -20,6 +9,7 @@ Content-Type: application/json
   "event": "login",
   "status": "success",
   "request_id": "test_request_id_001",
+  "trace_id": "test_trace_id_00001",
   "username": "elf",
   "access_token": "test token"
 }

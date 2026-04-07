@@ -41,6 +41,9 @@ type AuthAuditDTO struct {
 	// status
 	Status string `json:"status,omitempty"`
 
+	// trace id
+	TraceID string `json:"trace_id,omitempty"`
+
 	// updated at
 	UpdatedAt string `json:"updated_at,omitempty"`
 
