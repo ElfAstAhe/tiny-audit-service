@@ -1,8 +1,6 @@
 package app
 
 import (
-	"time"
-
 	"github.com/ElfAstAhe/go-service-template/pkg/db"
 	libworker "github.com/ElfAstAhe/go-service-template/pkg/transport/worker"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/domain"
@@ -92,17 +90,17 @@ func (app *App) initDependencies() error {
 			worker.NewTailCutterConfig(
 				libworker.NewBaseSchedulerDispatcherConfig(
 					libworker.NewBaseSchedulerConfig(
-						3*time.Second,
-						app.config.App.AuthTailJobRepeatDuration,
+						app.config.AuthTC.StartInterval,
+						app.config.AuthTC.ScheduleInterval,
 					),
 					libworker.NewBasePoolConfig(
-						2,
-						128,
-						false,
+						app.config.AuthTC.WorkerCount,
+						app.config.AuthTC.WorkerCount,
+						app.config.AuthTC.CompleteProcessing,
 					),
 				),
-				app.config.App.AuthTailDuration,
-				app.config.App.AuthTailCut,
+				app.config.AuthTC.TailInterval,
+				app.config.AuthTC.TailCut,
 			),
 			authAuditTailGetUC,
 			authAuditTailCutUC,
@@ -113,17 +111,17 @@ func (app *App) initDependencies() error {
 			worker.NewTailCutterConfig(
 				libworker.NewBaseSchedulerDispatcherConfig(
 					libworker.NewBaseSchedulerConfig(
-						3*time.Second,
-						app.config.App.DataTailJobRepeatDuration,
+						app.config.DataTC.StartInterval,
+						app.config.DataTC.ScheduleInterval,
 					),
 					libworker.NewBasePoolConfig(
-						2,
-						128,
-						false,
+						app.config.DataTC.WorkerCount,
+						app.config.DataTC.WorkerCount,
+						app.config.DataTC.CompleteProcessing,
 					),
 				),
-				app.config.App.DataTailDuration,
-				app.config.App.DataTailCut,
+				app.config.DataTC.TailInterval,
+				app.config.DataTC.TailCut,
 			),
 			dataAuditTailGetUC,
 			dataAuditTailCutUC,

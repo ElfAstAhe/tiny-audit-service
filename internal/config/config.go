@@ -11,6 +11,8 @@ import (
 
 type Config struct {
 	App       *AppConfig              `mapstructure:"app" json:"app,omitempty" yaml:"app,omitempty"`
+	AuthTC    *TailCutterConfig       `mapstructure:"auth_tc" json:"auth_tc,omitempty" yaml:"auth_tc,omitempty"`
+	DataTC    *TailCutterConfig       `mapstructure:"data_tc" json:"data_tc,omitempty" yaml:"data_tc,omitempty"`
 	Auth      *config.AuthConfig      `mapstructure:"auth" json:"auth,omitempty" yaml:"auth,omitempty"`
 	HTTP      *config.HTTPConfig      `mapstructure:"http" json:"http,omitempty" yaml:"http,omitempty"`
 	GRPC      *config.GRPCConfig      `mapstructure:"grpc" json:"grpc,omitempty" yaml:"grpc,omitempty"`
@@ -26,9 +28,21 @@ var (
 	AppBuildTime string
 )
 
-func NewConfig(app *AppConfig, auth *config.AuthConfig, HTTP *config.HTTPConfig, GRPC *config.GRPCConfig, log *config.LogConfig, db *config.DBConfig, telemetry *config.TelemetryConfig) *Config {
+func NewConfig(
+	app *AppConfig,
+	authTC *TailCutterConfig,
+	dataTC *TailCutterConfig,
+	auth *config.AuthConfig,
+	HTTP *config.HTTPConfig,
+	GRPC *config.GRPCConfig,
+	log *config.LogConfig,
+	db *config.DBConfig,
+	telemetry *config.TelemetryConfig,
+) *Config {
 	return &Config{
 		App:       app,
+		AuthTC:    authTC,
+		DataTC:    dataTC,
 		Auth:      auth,
 		HTTP:      HTTP,
 		GRPC:      GRPC,
@@ -41,6 +55,8 @@ func NewConfig(app *AppConfig, auth *config.AuthConfig, HTTP *config.HTTPConfig,
 func NewDefaultConfig() *Config {
 	return NewConfig(
 		NewDefaultAppConfig(),
+		NewDefaultTailCutterConfig(),
+		NewDefaultTailCutterConfig(),
 		config.NewDefaultAuthConfig(),
 		config.NewDefaultHTTPConfig(),
 		config.NewDefaultGRPCConfig(),
@@ -53,6 +69,8 @@ func NewDefaultConfig() *Config {
 func NewEmptyConfig() *Config {
 	return &Config{
 		App:       &AppConfig{},
+		AuthTC:    &TailCutterConfig{},
+		DataTC:    &TailCutterConfig{},
 		Auth:      &config.AuthConfig{},
 		HTTP:      &config.HTTPConfig{},
 		GRPC:      &config.GRPCConfig{},
@@ -67,6 +85,8 @@ func (c *Config) Validate() error {
 		Validate() error
 	}{
 		c.App,
+		c.AuthTC,
+		c.DataTC,
 		c.Auth,
 		c.HTTP,
 		c.GRPC,

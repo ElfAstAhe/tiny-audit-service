@@ -17,18 +17,28 @@ func applyDefaults(v *viper.Viper) {
 	v.SetDefault(keyAppEnv, defaultAppEnv)
 	v.SetDefault(keyAppMaxListLimit, defaultMaxListLimit)
 	v.SetDefault(keyAppTokenIssuer, defaultTokenIssuer)
-	v.SetDefault(keyAppAuthTailJobRepeatDuration, defaultAuthTailJobRepeatDuration)
-	v.SetDefault(keyAppAuthTailCut, defaultAuthTailCut)
-	v.SetDefault(keyAppAuthTailDuration, defaultAuthTailDuration)
-	v.SetDefault(keyAppDataTailJobRepeatDuration, defaultDataTailJobRepeatDuration)
-	v.SetDefault(keyAppDataTailCut, defaultDataTailCut)
-	v.SetDefault(keyAppDataTailDuration, defaultDataTailDuration)
-
+	// auth tc
+	v.SetDefault(keyAuthTCStartInterval, defaultAuthTCStartInterval)
+	v.SetDefault(keyAuthTCScheduleInterval, defaultAuthTCScheduleInterval)
+	v.SetDefault(keyAuthTCWorkerCount, defaultAuthTCWorkerCount)
+	v.SetDefault(keyAuthTCDataCapacity, defaultAuthTCDataCapacity)
+	v.SetDefault(keyAuthTCCompleteProcessing, defaultAuthTCCompleteProcessing)
+	v.SetDefault(keyAuthTCShutdownTimeout, defaultAuthTCShutdownTimeout)
+	v.SetDefault(keyAuthTCTailInterval, defaultAuthTCTailInterval)
+	v.SetDefault(keyAuthTCTailCut, defaultAuthTCTailCut)
+	// data tc
+	v.SetDefault(keyDataTCStartInterval, defaultDataTCStartInterval)
+	v.SetDefault(keyDataTCScheduleInterval, defaultDataTCScheduleInterval)
+	v.SetDefault(keyDataTCWorkerCount, defaultDataTCWorkerCount)
+	v.SetDefault(keyDataTCDataCapacity, defaultDataTCDataCapacity)
+	v.SetDefault(keyDataTCCompleteProcessing, defaultDataTCCompleteProcessing)
+	v.SetDefault(keyDataTCShutdownTimeout, defaultDataTCShutdownTimeout)
+	v.SetDefault(keyDataTCTailInterval, defaultDataTCTailInterval)
+	v.SetDefault(keyDataTCTailCut, defaultDataTCTailCut)
 	// Auth
 	v.SetDefault(config.KeyAuthJWTSigningMethod, config.DefaultAuthSigningMethod)
 	v.SetDefault(config.KeyAuthAccessTokenTTL, config.DefaultAuthAccessTokenTTL)
 	v.SetDefault(config.KeyAuthRefreshTokenTTL, config.DefaultAuthRefreshTokenTTL)
-
 	// HTTP
 	v.SetDefault(config.KeyHTTPAddress, config.DefaultHTTPAddress)
 	v.SetDefault(config.KeyHTTPReadTimeout, config.DefaultHTTPReadTimeout)
@@ -37,7 +47,6 @@ func applyDefaults(v *viper.Viper) {
 	v.SetDefault(config.KeyHTTPShutdownTimeout, config.DefaultHTTPShutdownTimeout)
 	v.SetDefault(config.KeyHTTPSecure, config.DefaultHTTPSecure)
 	v.SetDefault(config.KeyHTTPMaxRequestBodySize, config.DefaultHTTPMaxRequestBodySize)
-
 	// gRPC
 	v.SetDefault(config.KeyGRPCAddress, config.DefaultGRPCAddress)
 	v.SetDefault(config.KeyGRPCMaxConnIdle, config.DefaultGRPCMaxConnIdle)
@@ -47,7 +56,6 @@ func applyDefaults(v *viper.Viper) {
 	v.SetDefault(config.KeyGRPCKeepAliveTime, config.DefaultGRPCKeepAliveTime)
 	v.SetDefault(config.KeyGRPCKeepAliveTimeout, config.DefaultGRPCKeepAliveTimeout)
 	v.SetDefault(config.KeyGRPCShutdownTimeout, config.DefaultGRPCShutdownTimeout)
-
 	// DB
 	v.SetDefault(config.KeyDBDriver, config.DefaultDBDriver)
 	v.SetDefault(config.KeyDBDSN, config.DefaultDBDSN)
@@ -55,11 +63,9 @@ func applyDefaults(v *viper.Viper) {
 	v.SetDefault(config.KeyDBMaxIdleConns, config.DefaultDBMaxIdleConns)
 	v.SetDefault(config.KeyDBConnMaxIdleLifetime, config.DefaultDBConnMaxIdleLifetime)
 	v.SetDefault(config.KeyDBConnTimeout, config.DefaultDBConnTimeout)
-
 	// Log
 	v.SetDefault(config.KeyLogLevel, config.DefaultLogLevel)
 	v.SetDefault(config.KeyLogFormat, config.DefaultLogFormat)
-
 	// Telemetry
 	v.SetDefault(config.KeyTelemetryEnabled, config.DefaultTelemetryEnabled)
 	v.SetDefault(config.KeyTelemetryExporterEndpoint, config.DefaultTelemetryExporterEndpoint)
@@ -92,13 +98,24 @@ func initFLags() (res *pflag.FlagSet, err error) {
 		res.String(FlagAppCipherKey, "", "cipher key")
 		res.String(FlagAppTokenIssuer, "", "token issuer")
 		res.StringSlice(FlagAppAcceptTokenIssuers, []string{}, `accept token issuers separated by comma, like: "issuer1,issuer2,issuer3"`)
-		res.Duration(FlagAppAuthTailJobRepeatDuration, defaultAuthTailJobRepeatDuration, "auth tail job repeat duration")
-		res.Bool(FlagAppAuthTailCut, false, "auth audit tail cut")
-		res.Duration(FlagAppAuthTailDuration, defaultAuthTailDuration, "auth audit tail duration")
-		res.Duration(FlagAppDataTailJobRepeatDuration, defaultDataTailJobRepeatDuration, "data tail job repeat duration")
-		res.Bool(FlagAppDataTailCut, false, "data audit tail cut")
-		res.Duration(FlagAppDataTailDuration, defaultDataTailDuration, "data audit tail duration")
-
+		// auth tc
+		res.Duration(FlagAuthTCStartInterval, defaultAuthTCStartInterval, "auth tail cutter worker start interval")
+		res.Duration(FlagAuthTCScheduleInterval, defaultAuthTCScheduleInterval, "auth tail cutter worker schedule interval")
+		res.Int(FlagAuthTCWorkerCount, defaultAuthTCWorkerCount, "auth tail cutter workers count")
+		res.Int(FlagAuthTCDataCapacity, defaultAuthTCDataCapacity, "auth tail cutter data capacity")
+		res.Bool(FlagAuthTCCompleteProcessing, defaultAuthTCCompleteProcessing, "auth tail cutter try complete data queue on shutdown")
+		res.Duration(FlagAuthTCShutdownTimeout, defaultAuthTCShutdownTimeout, "auth tail cutter shutdown timeout")
+		res.Duration(FlagAuthTCTailInterval, defaultAuthTCTailInterval, "auth tail cutter tail interval")
+		res.Bool(FlagAuthTCTailCut, defaultAuthTCTailCut, "auth tail cutter enabler")
+		// data tc
+		res.Duration(FlagDataTCStartInterval, defaultDataTCStartInterval, "data tail cutter worker start interval")
+		res.Duration(FlagDataTCScheduleInterval, defaultDataTCScheduleInterval, "data tail cutter worker schedule interval")
+		res.Int(FlagDataTCWorkerCount, defaultDataTCWorkerCount, "data tail cutter workers count")
+		res.Int(FlagDataTCDataCapacity, defaultDataTCDataCapacity, "data tail cutter data capacity")
+		res.Bool(FlagDataTCCompleteProcessing, defaultDataTCCompleteProcessing, "data tail cutter try complete data queue on shutdown")
+		res.Duration(FlagDataTCShutdownTimeout, defaultDataTCShutdownTimeout, "data tail cutter shutdown timeout")
+		res.Duration(FlagDataTCTailInterval, defaultDataTCTailInterval, "data tail cutter tail interval")
+		res.Bool(FlagDataTCTailCut, defaultDataTCTailCut, "data tail cutter enabler")
 		// Auth
 		res.String(FlagAuthJWTSecret, "", "JWT secret")
 		res.String(FlagAuthJWTSigningMethod, config.DefaultAuthSigningMethod, "JWT signing method")
@@ -106,7 +123,6 @@ func initFLags() (res *pflag.FlagSet, err error) {
 		res.Duration(FlagAuthRefreshTokenTTL, config.DefaultAuthRefreshTokenTTL, "JWT refresh token TTL")
 		res.String(FlagAuthRSAPrivateKeyPath, "", "RSA private key path")
 		res.String(FlagAuthMasterPasswordSalt, "", "master password salt")
-
 		// HTTP
 		res.String(FlagHTTPAddress, config.DefaultHTTPAddress, "http address")
 		res.Duration(FlagHTTPReadTimeout, config.DefaultHTTPReadTimeout, "http read timeout")
@@ -117,7 +133,6 @@ func initFLags() (res *pflag.FlagSet, err error) {
 		res.String(FlagHTTPCertificatePath, "", "http certificate path")
 		res.Bool(FlagHTTPSecure, config.DefaultHTTPSecure, "http secure mode")
 		res.Int(FlagHTTPMaxRequestBodySize, config.DefaultHTTPMaxRequestBodySize, "http max request body size")
-
 		// gRPC
 		res.String(FlagGRPCAddress, config.DefaultGRPCAddress, "gRPC address")
 		res.Duration(FlagGRPCMaxConnIdle, config.DefaultGRPCMaxConnIdle, "gRPC max connection idle timeout")
@@ -127,7 +142,6 @@ func initFLags() (res *pflag.FlagSet, err error) {
 		res.Duration(FlagGRPCKeepAliveTime, config.DefaultGRPCKeepAliveTime, "gRPC keep alive timeout")
 		res.Duration(FlagGRPCKeepAliveTimeout, config.DefaultGRPCKeepAliveTimeout, "gRPC keep alive timeout")
 		res.Duration(FlagGRPCShutdownTimeout, config.DefaultGRPCShutdownTimeout, "gRPC shutdown timeout")
-
 		// DB
 		res.String(FlagDBDSN, config.DefaultDBDSN, "database dsn")
 		res.String(FlagDBDriver, config.DefaultDBDriver, "database driver name/alias")
@@ -135,11 +149,9 @@ func initFLags() (res *pflag.FlagSet, err error) {
 		res.Int(FlagDBMaxIdleConns, config.DefaultDBMaxIdleConns, "db max idle connections")
 		res.Duration(FlagDBMaxIdleLifetime, config.DefaultDBConnMaxIdleLifetime, "db max idle connection lifetime")
 		res.Duration(FlagDBConnTimeout, config.DefaultDBConnTimeout, "db connection timeout)")
-
 		// Log
 		res.String(FlagLogLevel, config.DefaultLogLevel, "log level")
 		res.String(FlagLogFormat, config.DefaultLogFormat, "log format")
-
 		// Telemetry
 		res.Bool(FlagTelemetryEnabled, config.DefaultTelemetryEnabled, "telemetry enabled")
 		res.String(FlagTelemetryServiceName, "", "telemetry service name")
@@ -165,12 +177,24 @@ func bindFlags(flags *pflag.FlagSet, v *viper.Viper) error {
 		v.BindPFlag(keyAppTokenIssuer, flags.Lookup(FlagAppTokenIssuer)),
 		v.BindPFlag(keyAppCipherKey, flags.Lookup(FlagAppCipherKey)),
 		v.BindPFlag(keyAppAcceptTokenIssuers, flags.Lookup(FlagAppAcceptTokenIssuers)),
-		v.BindPFlag(keyAppAuthTailJobRepeatDuration, flags.Lookup(FlagAppAuthTailJobRepeatDuration)),
-		v.BindPFlag(keyAppAuthTailCut, flags.Lookup(FlagAppAuthTailCut)),
-		v.BindPFlag(keyAppAuthTailDuration, flags.Lookup(FlagAppAuthTailDuration)),
-		v.BindPFlag(keyAppDataTailJobRepeatDuration, flags.Lookup(FlagAppDataTailJobRepeatDuration)),
-		v.BindPFlag(keyAppDataTailCut, flags.Lookup(FlagAppDataTailCut)),
-		v.BindPFlag(keyAppDataTailDuration, flags.Lookup(FlagAppDataTailDuration)),
+		// auth tc
+		v.BindPFlag(keyAuthTCStartInterval, flags.Lookup(FlagAuthTCStartInterval)),
+		v.BindPFlag(keyAuthTCScheduleInterval, flags.Lookup(FlagAuthTCScheduleInterval)),
+		v.BindPFlag(keyAuthTCWorkerCount, flags.Lookup(FlagAuthTCWorkerCount)),
+		v.BindPFlag(keyAuthTCDataCapacity, flags.Lookup(FlagAuthTCDataCapacity)),
+		v.BindPFlag(keyAuthTCCompleteProcessing, flags.Lookup(FlagAuthTCCompleteProcessing)),
+		v.BindPFlag(keyAuthTCShutdownTimeout, flags.Lookup(FlagAuthTCShutdownTimeout)),
+		v.BindPFlag(keyAuthTCTailInterval, flags.Lookup(FlagAuthTCTailInterval)),
+		v.BindPFlag(keyAuthTCTailCut, flags.Lookup(FlagAuthTCTailCut)),
+		// data tc
+		v.BindPFlag(keyDataTCStartInterval, flags.Lookup(FlagDataTCStartInterval)),
+		v.BindPFlag(keyDataTCScheduleInterval, flags.Lookup(FlagDataTCScheduleInterval)),
+		v.BindPFlag(keyDataTCWorkerCount, flags.Lookup(FlagDataTCWorkerCount)),
+		v.BindPFlag(keyDataTCDataCapacity, flags.Lookup(FlagDataTCDataCapacity)),
+		v.BindPFlag(keyDataTCCompleteProcessing, flags.Lookup(FlagDataTCCompleteProcessing)),
+		v.BindPFlag(keyDataTCShutdownTimeout, flags.Lookup(FlagDataTCShutdownTimeout)),
+		v.BindPFlag(keyDataTCTailInterval, flags.Lookup(FlagDataTCTailInterval)),
+		v.BindPFlag(keyDataTCTailCut, flags.Lookup(FlagDataTCTailCut)),
 		// Auth
 		v.BindPFlag(config.KeyAuthJWTSecret, flags.Lookup(FlagAuthJWTSecret)),
 		v.BindPFlag(config.KeyAuthJWTSigningMethod, flags.Lookup(FlagAuthJWTSigningMethod)),
