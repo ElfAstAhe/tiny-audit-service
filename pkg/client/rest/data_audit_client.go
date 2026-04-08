@@ -34,7 +34,7 @@ func NewDataAuditClient(
 	return res
 }
 
-func (dac *DataAuditClient) AuditAction(
+func (dac *DataAuditClient) auditAction(
 	ctx context.Context,
 	workerIndex int,
 	data *models.DataAuditDTO,
