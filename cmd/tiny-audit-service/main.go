@@ -76,7 +76,11 @@ func main() {
 	// 6. Ожидание завершения приложения
 	application.WaitForStop()
 
-	// 7. Освобождение ресурсов
+	// 7.Остановка
+	startupLogger.Info("stop application")
+	application.Stop()
+
+	// 8. Освобождение ресурсов
 	startupLogger.Info("close application")
 	application.Close()
 

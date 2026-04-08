@@ -120,6 +120,7 @@ func (cr *AppChiRouter) setupMiddleware(
 			transport.NewHTTPPathMatcher(http.MethodGet, "/healthz", "^/healthz.*$"),
 			transport.NewHTTPPathMatcher(http.MethodGet, "/readyz", "^/readyz.*$"),
 			transport.NewHTTPPathMatcher(http.MethodGet, "/debug", "^/debug.*$"),
+			transport.NewHTTPPathMatcher(http.MethodGet, "/config", "^/config.*$"),
 		}),
 		cr.config.App.AcceptTokenIssuers,
 	).Handle)

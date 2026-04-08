@@ -51,7 +51,22 @@ build: gen-proto gen-swagger gen-http-client gen-mocks
 
 # Запуск проекта (сборка, затем запуск)
 run: build
-	./bin/$(SERVER_BINARY_NAME) --http-address "localhost:8081" --grpc-address "localhost:51052" --log-level "debug" --db-driver "postgres" --db-dsn "postgres://svc_audit:password@localhost:5432/test?sslmode=disable&search_path=audit_db" --auth-jwt-secret "jwt-key" --app-cipher-key "12345" --app-max-list-limit 500 --app-accept-token-issuers "tiny-auth-service,test-issuer" --app-auth-tail-job-repeat-duration "90s" --app-auth-tail-cut --app-auth-tail-duration "48h" --app-data-tail-job-repeat-duration "85s" --app-data-tail-cut --app-data-tail-duration "48h"
+	./bin/$(SERVER_BINARY_NAME) \
+		--http-address "localhost:8081" \
+		--grpc-address "localhost:51052" \
+		--log-level "debug" \
+		--db-driver "postgres" \
+		--db-dsn "postgres://svc_audit:password@localhost:5432/test?sslmode=disable&search_path=audit_db" \
+		--auth-jwt-secret "jwt-key" \
+		--app-cipher-key "12345" \
+		--app-max-list-limit 500 \
+		--app-accept-token-issuers "tiny-auth-service,test-issuer" \
+		--app-auth-tail-job-repeat-duration "90s" \
+		--app-auth-tail-cut \
+		--app-auth-tail-duration "48h" \
+		--app-data-tail-job-repeat-duration "85s" \
+		--app-data-tail-cut \
+		--app-data-tail-duration "48h"
 
 # Запуск тестов
 test:
