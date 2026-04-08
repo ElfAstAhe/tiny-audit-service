@@ -1,24 +1,16 @@
 package config
 
 import (
-	"time"
-
 	"github.com/ElfAstAhe/go-service-template/pkg/errs"
 )
 
 // AppConfig — метаданные сервиса
 type AppConfig struct {
-	Env                       AppEnv        `mapstructure:"env" json:"env,omitempty" yaml:"env,omitempty"` // dev, prod, test
-	MaxListLimit              int           `mapstructure:"max_list_limit" json:"max_list_limit,omitempty" yaml:"max_list_limit,omitempty"`
-	TokenIssuer               string        `mapstructure:"token_issuer" json:"token_issuer,omitempty" yaml:"token_issuer,omitempty"`
-	AcceptTokenIssuers        []string      `mapstructure:"accept_token_issuers" json:"accept_token_issuers,omitempty" yaml:"accept_token_issuers,omitempty"`
-	CipherKey                 string        `mapstructure:"cipher_key" json:"cipher_key,omitempty" yaml:"cipher_key,omitempty"`
-	AuthTailJobRepeatDuration time.Duration `mapstructure:"auth_tail_job_repeat_duration" json:"auth_tail_job_repeat_duration,omitempty" yaml:"auth_tail_job_repeat_duration,omitempty"`
-	AuthTailDuration          time.Duration `mapstructure:"auth_tail_duration" json:"auth_tail_duration,omitempty" yaml:"auth_tail_duration,omitempty"`
-	AuthTailCut               bool          `mapstructure:"auth_tail_cut" json:"auth_tail_cut,omitempty" yaml:"auth_tail_cut,omitempty"`
-	DataTailJobRepeatDuration time.Duration `mapstructure:"data_tail_job_repeat_duration" json:"data_tail_job_repeat_duration,omitempty" yaml:"data_tail_job_repeat_duration,omitempty"`
-	DataTailDuration          time.Duration `mapstructure:"data_tail_duration" json:"data_tail_duration,omitempty" yaml:"data_tail_duration,omitempty"`
-	DataTailCut               bool          `mapstructure:"data_tail_cut" json:"data_tail_cut,omitempty" yaml:"data_tail_cut,omitempty"`
+	Env                AppEnv   `mapstructure:"env" json:"env,omitempty" yaml:"env,omitempty"` // dev, prod, test
+	MaxListLimit       int      `mapstructure:"max_list_limit" json:"max_list_limit,omitempty" yaml:"max_list_limit,omitempty"`
+	TokenIssuer        string   `mapstructure:"token_issuer" json:"token_issuer,omitempty" yaml:"token_issuer,omitempty"`
+	AcceptTokenIssuers []string `mapstructure:"accept_token_issuers" json:"accept_token_issuers,omitempty" yaml:"accept_token_issuers,omitempty"`
+	CipherKey          string   `mapstructure:"cipher_key" json:"cipher_key,omitempty" yaml:"cipher_key,omitempty"`
 }
 
 func NewAppConfig(
@@ -26,20 +18,12 @@ func NewAppConfig(
 	maxListLimit int,
 	acceptTokenIssuers []string,
 	cipherKey string,
-	authTailCut bool,
-	authTailDuration time.Duration,
-	dataTailCut bool,
-	dataTailDuration time.Duration,
 ) *AppConfig {
 	return &AppConfig{
 		Env:                env,
 		MaxListLimit:       maxListLimit,
 		AcceptTokenIssuers: acceptTokenIssuers,
 		CipherKey:          cipherKey,
-		AuthTailCut:        authTailCut,
-		AuthTailDuration:   authTailDuration,
-		DataTailCut:        dataTailCut,
-		DataTailDuration:   dataTailDuration,
 	}
 }
 
@@ -49,10 +33,6 @@ func NewDefaultAppConfig() *AppConfig {
 		defaultMaxListLimit,
 		[]string{},
 		"",
-		defaultAuthTailCut,
-		defaultAuthTailDuration,
-		defaultDataTailCut,
-		defaultDataTailDuration,
 	)
 }
 

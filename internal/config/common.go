@@ -5,17 +5,35 @@ const FlagConfig = "config-path"
 
 // App config flags
 const (
-	FlagAppEnv                       string = "env"
-	FlagAppMaxListLimit              string = "app-max-list-limit"
-	FlagAppTokenIssuer               string = "app-token-issuer"
-	FlagAppCipherKey                 string = "app-cipher-key"
-	FlagAppAcceptTokenIssuers        string = "app-accept-token-issuers"
-	FlagAppAuthTailJobRepeatDuration string = "app-auth-tail-job-repeat-duration"
-	FlagAppAuthTailCut               string = "app-auth-tail-cut"
-	FlagAppAuthTailDuration          string = "app-auth-tail-duration"
-	FlagAppDataTailJobRepeatDuration string = "app-data-tail-job-repeat-duration"
-	FlagAppDataTailCut               string = "app-data-tail-cut"
-	FlagAppDataTailDuration          string = "app-data-tail-duration"
+	FlagAppEnv                string = "env"
+	FlagAppMaxListLimit       string = "app-max-list-limit"
+	FlagAppTokenIssuer        string = "app-token-issuer"
+	FlagAppCipherKey          string = "app-cipher-key"
+	FlagAppAcceptTokenIssuers string = "app-accept-token-issuers"
+)
+
+// auth tc config flags
+const (
+	FlagAuthTCStartInterval      string = "auth-tc-start-interval"
+	FlagAuthTCScheduleInterval   string = "auth-tc-schedule-interval"
+	FlagAuthTCWorkerCount        string = "auth-tc-worker-count"
+	FlagAuthTCDataCapacity       string = "auth-tc-data-capacity"
+	FlagAuthTCCompleteProcessing string = "auth-tc-complete-processing"
+	FlagAuthTCShutdownTimeout    string = "auth-tc-shutdown-timeout"
+	FlagAuthTCTailInterval       string = "auth-tc-tail-interval"
+	FlagAuthTCTailCut            string = "auth-tc-tail-cut"
+)
+
+// data tc config flags
+const (
+	FlagDataTCStartInterval      string = "data-tc-start-interval"
+	FlagDataTCScheduleInterval   string = "data-tc-schedule-interval"
+	FlagDataTCWorkerCount        string = "data-tc-worker-count"
+	FlagDataTCDataCapacity       string = "data-tc-data-capacity"
+	FlagDataTCCompleteProcessing string = "data-tc-complete-processing"
+	FlagDataTCShutdownTimeout    string = "data-tc-shutdown-timeout"
+	FlagDataTCTailInterval       string = "data-tc-tail-interval"
+	FlagDataTCTailCut            string = "data-tc-tail-cut"
 )
 
 // Auth config flags
