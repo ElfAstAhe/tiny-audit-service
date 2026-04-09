@@ -20,7 +20,7 @@ select
     created_at,
     updated_at
 from
-    data_audit_1
+    data_audit
 where
     id = $1
 `
@@ -43,7 +43,7 @@ select
     created_at,
     updated_at
 from
-    data_audit_1
+    data_audit
 order by
     event_date desc,
     type_name asc,
@@ -70,7 +70,7 @@ select
     created_at,
     updated_at
 from
-    data_audit_1
+    data_audit
 where
     event_date >= $1
 and event_date < $2
@@ -100,7 +100,7 @@ select
     created_at,
     updated_at
 from
-    data_audit_1
+    data_audit
 where
     type_name = $1
 and instance_id = $2
@@ -110,7 +110,7 @@ offset $4
 limit $3
 `
 	sqlDataAuditCreate string = `
-insert into data_audit_1 (
+insert into data_audit (
     id,
     source,
     event_date,
@@ -150,7 +150,7 @@ returning
 `
 	sqlDataAuditChange string = `
 update
-    data_audit_1
+    data_audit
 set
     source = $2,
     event_date = $3,
@@ -189,7 +189,7 @@ returning
 	sqlDataAuditDelete string = `
 delete
 from
-    data_audit_1
+    data_audit
 where
     id = $1
 `
@@ -197,7 +197,7 @@ where
 select
     id
 from
-    data_audit_1
+    data_audit
 where
     event_date < $1
 order by
