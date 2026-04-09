@@ -35,6 +35,9 @@ type DataAuditDTO struct {
 	// instance name
 	InstanceName string `json:"instance_name,omitempty"`
 
+	// internal type name
+	InternalTypeName string `json:"internal_type_name,omitempty"`
+
 	// request id
 	RequestID string `json:"request_id,omitempty"`
 

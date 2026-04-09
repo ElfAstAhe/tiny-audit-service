@@ -15,7 +15,7 @@ select
     created_at,
     updated_at
 from
-    auth_audit_1
+    auth_audit
 where
     id = $1
 `
@@ -33,7 +33,7 @@ select
     created_at,
     updated_at
 from
-    auth_audit_1
+    auth_audit
 order by
     event_date desc,
     username asc
@@ -54,7 +54,7 @@ select
     created_at,
     updated_at
 from
-    auth_audit_1
+    auth_audit
 where
     event_date >= $1
 and event_date < $2
@@ -79,7 +79,7 @@ select
     created_at,
     updated_at
 from
-    auth_audit_1
+    auth_audit
 where
     username = $1
 order by
@@ -88,7 +88,7 @@ offset $3
 limit $2
 `
 	sqlAuthAuditCreate string = `
-insert into auth_audit_1 (
+insert into auth_audit (
     id,
     source,
     event_date,
@@ -120,7 +120,7 @@ returning
 `
 	sqlAuthAuditChange string = `
 update
-    auth_audit_1
+    auth_audit
 set
     source = $2,
     event_date = $3,
@@ -151,7 +151,7 @@ returning
 	sqlAuthAuditDelete string = `
 delete
 from
-    auth_audit_1
+    auth_audit
 where
     id = $1
 `
@@ -159,7 +159,7 @@ where
 select
     id
 from
-    auth_audit_1
+    auth_audit
 where
     event_date < $1
 order by

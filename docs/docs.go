@@ -490,6 +490,9 @@ const docTemplate = `{
                 "instance_name": {
                     "type": "string"
                 },
+                "internal_type_name": {
+                    "type": "string"
+                },
                 "request_id": {
                     "type": "string"
                 },

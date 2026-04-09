@@ -771,26 +771,27 @@ func (b0 DataAuditValue_builder) Build() *DataAuditValue {
 }
 
 type DataAudit struct {
-	state                      protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_Id              *string                `protobuf:"bytes,1,opt,name=id"`
-	xxx_hidden_Source          *string                `protobuf:"bytes,2,opt,name=source"`
-	xxx_hidden_EventDate       *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=event_date,json=eventDate"`
-	xxx_hidden_Event           *string                `protobuf:"bytes,4,opt,name=event"`
-	xxx_hidden_Status          *string                `protobuf:"bytes,5,opt,name=status"`
-	xxx_hidden_RequestId       *string                `protobuf:"bytes,6,opt,name=request_id,json=requestId"`
-	xxx_hidden_TraceId         *string                `protobuf:"bytes,7,opt,name=trace_id,json=traceId"`
-	xxx_hidden_Username        *string                `protobuf:"bytes,8,opt,name=username"`
-	xxx_hidden_TypeName        *string                `protobuf:"bytes,9,opt,name=type_name,json=typeName"`
-	xxx_hidden_TypeDescription *string                `protobuf:"bytes,10,opt,name=type_description,json=typeDescription"`
-	xxx_hidden_InstanceId      *string                `protobuf:"bytes,11,opt,name=instance_id,json=instanceId"`
-	xxx_hidden_InstanceName    *string                `protobuf:"bytes,12,opt,name=instance_name,json=instanceName"`
-	xxx_hidden_Values          *[]*DataAuditValue     `protobuf:"bytes,13,rep,name=values"`
-	xxx_hidden_CreateAt        *timestamppb.Timestamp `protobuf:"bytes,14,opt,name=create_at,json=createAt"`
-	xxx_hidden_UpdateAt        *timestamppb.Timestamp `protobuf:"bytes,15,opt,name=update_at,json=updateAt"`
-	XXX_raceDetectHookData     protoimpl.RaceDetectHookData
-	XXX_presence               [1]uint32
-	unknownFields              protoimpl.UnknownFields
-	sizeCache                  protoimpl.SizeCache
+	state                       protoimpl.MessageState `protogen:"opaque.v1"`
+	xxx_hidden_Id               *string                `protobuf:"bytes,1,opt,name=id"`
+	xxx_hidden_Source           *string                `protobuf:"bytes,2,opt,name=source"`
+	xxx_hidden_EventDate        *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=event_date,json=eventDate"`
+	xxx_hidden_Event            *string                `protobuf:"bytes,4,opt,name=event"`
+	xxx_hidden_Status           *string                `protobuf:"bytes,5,opt,name=status"`
+	xxx_hidden_RequestId        *string                `protobuf:"bytes,6,opt,name=request_id,json=requestId"`
+	xxx_hidden_TraceId          *string                `protobuf:"bytes,7,opt,name=trace_id,json=traceId"`
+	xxx_hidden_Username         *string                `protobuf:"bytes,8,opt,name=username"`
+	xxx_hidden_InternalTypeName *string                `protobuf:"bytes,9,opt,name=internal_type_name,json=internalTypeName"`
+	xxx_hidden_TypeName         *string                `protobuf:"bytes,10,opt,name=type_name,json=typeName"`
+	xxx_hidden_TypeDescription  *string                `protobuf:"bytes,11,opt,name=type_description,json=typeDescription"`
+	xxx_hidden_InstanceId       *string                `protobuf:"bytes,12,opt,name=instance_id,json=instanceId"`
+	xxx_hidden_InstanceName     *string                `protobuf:"bytes,13,opt,name=instance_name,json=instanceName"`
+	xxx_hidden_Values           *[]*DataAuditValue     `protobuf:"bytes,14,rep,name=values"`
+	xxx_hidden_CreateAt         *timestamppb.Timestamp `protobuf:"bytes,15,opt,name=create_at,json=createAt"`
+	xxx_hidden_UpdateAt         *timestamppb.Timestamp `protobuf:"bytes,16,opt,name=update_at,json=updateAt"`
+	XXX_raceDetectHookData      protoimpl.RaceDetectHookData
+	XXX_presence                [1]uint32
+	unknownFields               protoimpl.UnknownFields
+	sizeCache                   protoimpl.SizeCache
 }
 
 func (x *DataAudit) Reset() {
@@ -895,6 +896,16 @@ func (x *DataAudit) GetUsername() string {
 	return ""
 }
 
+func (x *DataAudit) GetInternalTypeName() string {
+	if x != nil {
+		if x.xxx_hidden_InternalTypeName != nil {
+			return *x.xxx_hidden_InternalTypeName
+		}
+		return ""
+	}
+	return ""
+}
+
 func (x *DataAudit) GetTypeName() string {
 	if x != nil {
 		if x.xxx_hidden_TypeName != nil {
@@ -960,12 +971,12 @@ func (x *DataAudit) GetUpdateAt() *timestamppb.Timestamp {
 
 func (x *DataAudit) SetId(v string) {
 	x.xxx_hidden_Id = &v
-	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 0, 15)
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 0, 16)
 }
 
 func (x *DataAudit) SetSource(v string) {
 	x.xxx_hidden_Source = &v
-	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 1, 15)
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 1, 16)
 }
 
 func (x *DataAudit) SetEventDate(v *timestamppb.Timestamp) {
@@ -974,47 +985,52 @@ func (x *DataAudit) SetEventDate(v *timestamppb.Timestamp) {
 
 func (x *DataAudit) SetEvent(v string) {
 	x.xxx_hidden_Event = &v
-	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 3, 15)
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 3, 16)
 }
 
 func (x *DataAudit) SetStatus(v string) {
 	x.xxx_hidden_Status = &v
-	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 4, 15)
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 4, 16)
 }
 
 func (x *DataAudit) SetRequestId(v string) {
 	x.xxx_hidden_RequestId = &v
-	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 5, 15)
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 5, 16)
 }
 
 func (x *DataAudit) SetTraceId(v string) {
 	x.xxx_hidden_TraceId = &v
-	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 6, 15)
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 6, 16)
 }
 
 func (x *DataAudit) SetUsername(v string) {
 	x.xxx_hidden_Username = &v
-	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 7, 15)
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 7, 16)
+}
+
+func (x *DataAudit) SetInternalTypeName(v string) {
+	x.xxx_hidden_InternalTypeName = &v
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 8, 16)
 }
 
 func (x *DataAudit) SetTypeName(v string) {
 	x.xxx_hidden_TypeName = &v
-	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 8, 15)
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 9, 16)
 }
 
 func (x *DataAudit) SetTypeDescription(v string) {
 	x.xxx_hidden_TypeDescription = &v
-	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 9, 15)
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 10, 16)
 }
 
 func (x *DataAudit) SetInstanceId(v string) {
 	x.xxx_hidden_InstanceId = &v
-	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 10, 15)
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 11, 16)
 }
 
 func (x *DataAudit) SetInstanceName(v string) {
 	x.xxx_hidden_InstanceName = &v
-	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 11, 15)
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 12, 16)
 }
 
 func (x *DataAudit) SetValues(v []*DataAuditValue) {
@@ -1085,32 +1101,39 @@ func (x *DataAudit) HasUsername() bool {
 	return protoimpl.X.Present(&(x.XXX_presence[0]), 7)
 }
 
-func (x *DataAudit) HasTypeName() bool {
+func (x *DataAudit) HasInternalTypeName() bool {
 	if x == nil {
 		return false
 	}
 	return protoimpl.X.Present(&(x.XXX_presence[0]), 8)
 }
 
-func (x *DataAudit) HasTypeDescription() bool {
+func (x *DataAudit) HasTypeName() bool {
 	if x == nil {
 		return false
 	}
 	return protoimpl.X.Present(&(x.XXX_presence[0]), 9)
 }
 
-func (x *DataAudit) HasInstanceId() bool {
+func (x *DataAudit) HasTypeDescription() bool {
 	if x == nil {
 		return false
 	}
 	return protoimpl.X.Present(&(x.XXX_presence[0]), 10)
 }
 
-func (x *DataAudit) HasInstanceName() bool {
+func (x *DataAudit) HasInstanceId() bool {
 	if x == nil {
 		return false
 	}
 	return protoimpl.X.Present(&(x.XXX_presence[0]), 11)
+}
+
+func (x *DataAudit) HasInstanceName() bool {
+	if x == nil {
+		return false
+	}
+	return protoimpl.X.Present(&(x.XXX_presence[0]), 12)
 }
 
 func (x *DataAudit) HasCreateAt() bool {
@@ -1166,23 +1189,28 @@ func (x *DataAudit) ClearUsername() {
 	x.xxx_hidden_Username = nil
 }
 
-func (x *DataAudit) ClearTypeName() {
+func (x *DataAudit) ClearInternalTypeName() {
 	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 8)
+	x.xxx_hidden_InternalTypeName = nil
+}
+
+func (x *DataAudit) ClearTypeName() {
+	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 9)
 	x.xxx_hidden_TypeName = nil
 }
 
 func (x *DataAudit) ClearTypeDescription() {
-	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 9)
+	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 10)
 	x.xxx_hidden_TypeDescription = nil
 }
 
 func (x *DataAudit) ClearInstanceId() {
-	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 10)
+	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 11)
 	x.xxx_hidden_InstanceId = nil
 }
 
 func (x *DataAudit) ClearInstanceName() {
-	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 11)
+	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 12)
 	x.xxx_hidden_InstanceName = nil
 }
 
@@ -1197,21 +1225,22 @@ func (x *DataAudit) ClearUpdateAt() {
 type DataAudit_builder struct {
 	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
 
-	Id              *string
-	Source          *string
-	EventDate       *timestamppb.Timestamp
-	Event           *string
-	Status          *string
-	RequestId       *string
-	TraceId         *string
-	Username        *string
-	TypeName        *string
-	TypeDescription *string
-	InstanceId      *string
-	InstanceName    *string
-	Values          []*DataAuditValue
-	CreateAt        *timestamppb.Timestamp
-	UpdateAt        *timestamppb.Timestamp
+	Id               *string
+	Source           *string
+	EventDate        *timestamppb.Timestamp
+	Event            *string
+	Status           *string
+	RequestId        *string
+	TraceId          *string
+	Username         *string
+	InternalTypeName *string
+	TypeName         *string
+	TypeDescription  *string
+	InstanceId       *string
+	InstanceName     *string
+	Values           []*DataAuditValue
+	CreateAt         *timestamppb.Timestamp
+	UpdateAt         *timestamppb.Timestamp
 }
 
 func (b0 DataAudit_builder) Build() *DataAudit {
@@ -1219,48 +1248,52 @@ func (b0 DataAudit_builder) Build() *DataAudit {
 	b, x := &b0, m0
 	_, _ = b, x
 	if b.Id != nil {
-		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 0, 15)
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 0, 16)
 		x.xxx_hidden_Id = b.Id
 	}
 	if b.Source != nil {
-		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 1, 15)
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 1, 16)
 		x.xxx_hidden_Source = b.Source
 	}
 	x.xxx_hidden_EventDate = b.EventDate
 	if b.Event != nil {
-		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 3, 15)
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 3, 16)
 		x.xxx_hidden_Event = b.Event
 	}
 	if b.Status != nil {
-		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 4, 15)
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 4, 16)
 		x.xxx_hidden_Status = b.Status
 	}
 	if b.RequestId != nil {
-		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 5, 15)
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 5, 16)
 		x.xxx_hidden_RequestId = b.RequestId
 	}
 	if b.TraceId != nil {
-		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 6, 15)
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 6, 16)
 		x.xxx_hidden_TraceId = b.TraceId
 	}
 	if b.Username != nil {
-		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 7, 15)
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 7, 16)
 		x.xxx_hidden_Username = b.Username
 	}
+	if b.InternalTypeName != nil {
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 8, 16)
+		x.xxx_hidden_InternalTypeName = b.InternalTypeName
+	}
 	if b.TypeName != nil {
-		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 8, 15)
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 9, 16)
 		x.xxx_hidden_TypeName = b.TypeName
 	}
 	if b.TypeDescription != nil {
-		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 9, 15)
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 10, 16)
 		x.xxx_hidden_TypeDescription = b.TypeDescription
 	}
 	if b.InstanceId != nil {
-		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 10, 15)
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 11, 16)
 		x.xxx_hidden_InstanceId = b.InstanceId
 	}
 	if b.InstanceName != nil {
-		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 11, 15)
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 12, 16)
 		x.xxx_hidden_InstanceName = b.InstanceName
 	}
 	x.xxx_hidden_Values = &b.Values
@@ -1299,7 +1332,7 @@ const file_tiny_audit_service_v1_messages_proto_rawDesc = "" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12 \n" +
 	"\vdescription\x18\x02 \x01(\tR\vdescription\x12\x16\n" +
 	"\x06before\x18\x03 \x01(\tR\x06before\x12\x14\n" +
-	"\x05after\x18\x04 \x01(\tR\x05after\"\xa9\x04\n" +
+	"\x05after\x18\x04 \x01(\tR\x05after\"\xd7\x04\n" +
 	"\tDataAudit\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x16\n" +
 	"\x06source\x18\x02 \x01(\tR\x06source\x129\n" +
@@ -1310,16 +1343,17 @@ const file_tiny_audit_service_v1_messages_proto_rawDesc = "" +
 	"\n" +
 	"request_id\x18\x06 \x01(\tR\trequestId\x12\x19\n" +
 	"\btrace_id\x18\a \x01(\tR\atraceId\x12\x1a\n" +
-	"\busername\x18\b \x01(\tR\busername\x12\x1b\n" +
-	"\ttype_name\x18\t \x01(\tR\btypeName\x12)\n" +
-	"\x10type_description\x18\n" +
-	" \x01(\tR\x0ftypeDescription\x12\x1f\n" +
-	"\vinstance_id\x18\v \x01(\tR\n" +
+	"\busername\x18\b \x01(\tR\busername\x12,\n" +
+	"\x12internal_type_name\x18\t \x01(\tR\x10internalTypeName\x12\x1b\n" +
+	"\ttype_name\x18\n" +
+	" \x01(\tR\btypeName\x12)\n" +
+	"\x10type_description\x18\v \x01(\tR\x0ftypeDescription\x12\x1f\n" +
+	"\vinstance_id\x18\f \x01(\tR\n" +
 	"instanceId\x12#\n" +
-	"\rinstance_name\x18\f \x01(\tR\finstanceName\x125\n" +
-	"\x06values\x18\r \x03(\v2\x1d.audit.service.DataAuditValueR\x06values\x127\n" +
-	"\tcreate_at\x18\x0e \x01(\v2\x1a.google.protobuf.TimestampR\bcreateAt\x127\n" +
-	"\tupdate_at\x18\x0f \x01(\v2\x1a.google.protobuf.TimestampR\bupdateAtB,Z*tiny-audit-service/grpc/tiny-audit-serviceb\beditionsp\xe8\a"
+	"\rinstance_name\x18\r \x01(\tR\finstanceName\x125\n" +
+	"\x06values\x18\x0e \x03(\v2\x1d.audit.service.DataAuditValueR\x06values\x127\n" +
+	"\tcreate_at\x18\x0f \x01(\v2\x1a.google.protobuf.TimestampR\bcreateAt\x127\n" +
+	"\tupdate_at\x18\x10 \x01(\v2\x1a.google.protobuf.TimestampR\bupdateAtB,Z*tiny-audit-service/grpc/tiny-audit-serviceb\beditionsp\xe8\a"
 
 var file_tiny_audit_service_v1_messages_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_tiny_audit_service_v1_messages_proto_goTypes = []any{
