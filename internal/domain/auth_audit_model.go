@@ -71,7 +71,7 @@ func (aa *AuthAudit) ValidateCreate() error {
 		return errs.NewBllValidateError("AuthAudit.ValidateCreate", "event validate", err)
 	}
 	if err := validateCommon(aa); err != nil {
-		return errs.NewBllValidateError("AuthAudit.ValidateCreate", "common.go audit validate", err)
+		return errs.NewBllValidateError("AuthAudit.ValidateCreate", "common audit validate", err)
 	}
 
 	return nil
@@ -85,7 +85,7 @@ func (aa *AuthAudit) ValidateChange() error {
 		return errs.NewBllValidateError("AuthAudit.ValidateChange", "event validate", err)
 	}
 	if err := validateCommon(aa); err != nil {
-		return errs.NewBllValidateError("AuthAudit.ValidateChange", "common.go audit validate", err)
+		return errs.NewBllValidateError("AuthAudit.ValidateChange", "common audit validate", err)
 	}
 
 	return nil
