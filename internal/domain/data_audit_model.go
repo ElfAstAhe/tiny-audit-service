@@ -54,7 +54,7 @@ func (da *DataAudit) ValidateCreate() error {
 		return errs.NewBllValidateError("DataAudit.ValidateCreate", "id must be empty", nil)
 	}
 	if err := validateCommon(da); err != nil {
-		return errs.NewBllValidateError("DataAudit.ValidateCreate", "common audit validate", err)
+		return errs.NewBllValidateError("DataAudit.ValidateCreate", "common.go audit validate", err)
 	}
 	if err := validateDataEvent(da.Event); err != nil {
 		return errs.NewBllValidateError("DataAudit.ValidateCreate", "event validate", err)
@@ -75,7 +75,7 @@ func (da *DataAudit) ValidateChange() error {
 		return errs.NewBllValidateError("DataAudit.ValidateChange", "id must not be empty", nil)
 	}
 	if err := validateCommon(da); err != nil {
-		return errs.NewBllValidateError("DataAudit.ValidateChange", "common audit validate", err)
+		return errs.NewBllValidateError("DataAudit.ValidateChange", "common.go audit validate", err)
 	}
 	if err := validateDataEvent(da.Event); err != nil {
 		return errs.NewBllValidateError("DataAudit.ValidateChange", "event validate", err)
