@@ -45,11 +45,12 @@ message DataAudit {
   string request_id = 6;
   string trace_id = 7;
   string username = 8;
-  string type_name = 9;
-  string type_description = 10;
-  string instance_id = 11;
-  string instance_name = 12;
-  repeated DataAuditValue values = 13;
-  google.protobuf.Timestamp create_at = 14;
-  google.protobuf.Timestamp update_at = 15;
+  string internal_type_name = 9;
+  string type_name = 10;
+  string type_description = 11;
+  string instance_id = 12;
+  string instance_name = 13;
+  repeated DataAuditValue values = 14;
+  google.protobuf.Timestamp create_at = 15;
+  google.protobuf.Timestamp update_at = 16;
 }

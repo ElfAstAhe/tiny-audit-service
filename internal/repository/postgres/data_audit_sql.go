@@ -11,6 +11,7 @@ select
     request_id,
     trace_id,
     username,
+    internal_type_name,
     type_name,
     type_description,
     instance_id,
@@ -33,6 +34,7 @@ select
     request_id,
     trace_id,
     username,
+    internal_type_name,
     type_name,
     type_description,
     instance_id,
@@ -59,6 +61,7 @@ select
     request_id,
     trace_id,
     username,
+    internal_type_name,
     type_name,
     type_description,
     instance_id,
@@ -88,6 +91,7 @@ select
     request_id,
     trace_id,
     username,
+    internal_type_name,
     type_name,
     type_description,
     instance_id,
@@ -115,6 +119,7 @@ insert into data_audit_1 (
     request_id,
     trace_id,
     username,
+    internal_type_name,
     type_name,
     type_description,
     instance_id,
@@ -123,7 +128,7 @@ insert into data_audit_1 (
     created_at
 )
 values (
-    $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14
+    $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15
 )
 returning
     id,
@@ -134,6 +139,7 @@ returning
     request_id,
     trace_id,
     username,
+    internal_type_name,
     type_name,
     type_description,
     instance_id,
@@ -153,12 +159,13 @@ set
     request_id = $6,
     trace_id = $7,
     username = $8,
-    type_name = $9,
-    type_description = $10,
-    instance_id = $11,
-    instance_name = $12,
-    values = $13,
-    updated_at = $14
+    internal_type_name = $9,
+    type_name = $10,
+    type_description = $11,
+    instance_id = $12,
+    instance_name = $13,
+    values = $14,
+    updated_at = $15
 where
     id = $1
 returning
@@ -170,6 +177,7 @@ returning
     request_id,
     trace_id,
     username,
+    internal_type_name,
     type_name,
     type_description,
     instance_id,

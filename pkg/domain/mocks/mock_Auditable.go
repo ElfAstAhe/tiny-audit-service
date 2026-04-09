@@ -123,6 +123,50 @@ func (_c *MockAuditable_GetInstanceName_Call) RunAndReturn(run func() string) *M
 	return _c
 }
 
+// GetInternalTypeName provides a mock function for the type MockAuditable
+func (_mock *MockAuditable) GetInternalTypeName() string {
+	ret := _mock.Called()
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetInternalTypeName")
+	}
+
+	var r0 string
+	if returnFunc, ok := ret.Get(0).(func() string); ok {
+		r0 = returnFunc()
+	} else {
+		r0 = ret.Get(0).(string)
+	}
+	return r0
+}
+
+// MockAuditable_GetInternalTypeName_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetInternalTypeName'
+type MockAuditable_GetInternalTypeName_Call struct {
+	*mock.Call
+}
+
+// GetInternalTypeName is a helper method to define mock.On call
+func (_e *MockAuditable_Expecter) GetInternalTypeName() *MockAuditable_GetInternalTypeName_Call {
+	return &MockAuditable_GetInternalTypeName_Call{Call: _e.mock.On("GetInternalTypeName")}
+}
+
+func (_c *MockAuditable_GetInternalTypeName_Call) Run(run func()) *MockAuditable_GetInternalTypeName_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run()
+	})
+	return _c
+}
+
+func (_c *MockAuditable_GetInternalTypeName_Call) Return(s string) *MockAuditable_GetInternalTypeName_Call {
+	_c.Call.Return(s)
+	return _c
+}
+
+func (_c *MockAuditable_GetInternalTypeName_Call) RunAndReturn(run func() string) *MockAuditable_GetInternalTypeName_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // GetTypeDescription provides a mock function for the type MockAuditable
 func (_mock *MockAuditable) GetTypeDescription() string {
 	ret := _mock.Called()

@@ -9,21 +9,22 @@ import (
 )
 
 type DataAudit struct {
-	ID              string
-	Source          string
-	EventDate       time.Time
-	Event           string
-	Status          string
-	RequestID       string
-	TraceID         string
-	Username        string
-	TypeName        string
-	TypeDescription string
-	InstanceID      string
-	InstanceName    string
-	Values          []*DataAuditValue
-	CreatedAt       time.Time
-	UpdatedAt       time.Time
+	ID               string
+	Source           string
+	EventDate        time.Time
+	Event            string
+	Status           string
+	RequestID        string
+	TraceID          string
+	Username         string
+	InternalTypeName string
+	TypeName         string
+	TypeDescription  string
+	InstanceID       string
+	InstanceName     string
+	Values           []*DataAuditValue
+	CreatedAt        time.Time
+	UpdatedAt        time.Time
 }
 
 var _ domain.Entity[string] = (*DataAudit)(nil)

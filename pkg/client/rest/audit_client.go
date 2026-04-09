@@ -117,6 +117,11 @@ func (bac *BaseAuditClient[D]) jobHandler(ctx context.Context, workerIndex int, 
 	// request
 	err = bac.auditAction(ctx, workerIndex, data, token)
 	if err != nil {
+		// try push for retry audit
+		if pushErr := bac.pool.TryPush(data); pushErr {
+			bac.pool.GetLogger().Error("retry push audit data to worker failed", err)
+		}
+
 		return errs.NewCommonError("audit failed", err)
 	}
 
