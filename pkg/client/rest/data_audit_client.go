@@ -7,6 +7,7 @@ import (
 	"github.com/ElfAstAhe/go-service-template/pkg/logger"
 	"github.com/ElfAstAhe/tiny-audit-service/pkg/api/http/audit/v1/client/audit"
 	"github.com/ElfAstAhe/tiny-audit-service/pkg/api/http/audit/v1/models"
+	"github.com/ElfAstAhe/tiny-auth-service/pkg/transport/auth"
 	"github.com/go-openapi/runtime"
 	oapirtcli "github.com/go-openapi/runtime/client"
 )
@@ -19,7 +20,7 @@ var _ AuditClient[*models.DataAuditDTO] = (*DataAuditClient)(nil)
 
 func NewDataAuditClient(
 	conf *AuditClientConfig,
-	tokenProvider func() (string, error),
+	tokenProvider auth.TokenProvider,
 	log logger.Logger,
 ) *DataAuditClient {
 	res := &DataAuditClient{}

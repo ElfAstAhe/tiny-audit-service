@@ -10,6 +10,7 @@ import (
 	"github.com/ElfAstAhe/go-service-template/pkg/logger"
 	"github.com/ElfAstAhe/go-service-template/pkg/transport/worker"
 	"github.com/ElfAstAhe/tiny-audit-service/pkg/api/http/audit/v1/client/audit"
+	"github.com/ElfAstAhe/tiny-auth-service/pkg/transport/auth"
 )
 
 type AuditAction[D any] func(ctx context.Context, workerIndex int, data D, token string) error
@@ -54,7 +55,7 @@ type BaseAuditClient[D any] struct {
 	pool          worker.Pool[D]
 	conf          *AuditClientConfig
 	totalLost     *atomic.Int32
-	tokenProvider func() (string, error)
+	tokenProvider auth.TokenProvider
 	auditAction   AuditAction[D]
 }
 
@@ -62,7 +63,7 @@ func NewBaseAuditClient[D any](
 	name string,
 	conf *AuditClientConfig,
 	auditAction AuditAction[D],
-	tokenProvider func() (string, error),
+	tokenProvider auth.TokenProvider,
 	log logger.Logger,
 ) *BaseAuditClient[D] {
 	res := &BaseAuditClient[D]{
@@ -107,7 +108,7 @@ func (bac *BaseAuditClient[D]) TotalLost() int32 {
 
 func (bac *BaseAuditClient[D]) jobHandler(ctx context.Context, workerIndex int, data D) error {
 	// token acquire
-	token, err := bac.tokenProvider()
+	token, err := bac.tokenProvider.GetAccessToken()
 	if err != nil {
 		bac.totalLost.Add(1)
 
