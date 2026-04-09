@@ -3,7 +3,7 @@ module github.com/ElfAstAhe/tiny-audit-service
 go 1.26.0
 
 require (
-	github.com/ElfAstAhe/go-service-template v0.0.42
+	github.com/ElfAstAhe/go-service-template v0.0.43
 	github.com/ElfAstAhe/tiny-auth-service v0.0.5
 	github.com/XSAM/otelsql v0.42.0
 	github.com/go-chi/chi/v5 v5.2.5
@@ -93,11 +93,11 @@ require (
 	go.uber.org/zap v1.27.1 // indirect
 	go.yaml.in/yaml/v2 v2.4.4 // indirect
 	go.yaml.in/yaml/v3 v3.0.4 // indirect
-	golang.org/x/crypto v0.49.0 // indirect
-	golang.org/x/mod v0.34.0 // indirect
+	golang.org/x/crypto v0.50.0 // indirect
+	golang.org/x/mod v0.35.0 // indirect
 	golang.org/x/net v0.52.0 // indirect
-	golang.org/x/sys v0.42.0 // indirect
-	golang.org/x/text v0.35.0 // indirect
+	golang.org/x/sys v0.43.0 // indirect
+	golang.org/x/text v0.36.0 // indirect
 	golang.org/x/tools v0.43.0 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20260406210006-6f92a3bedf2d // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20260406210006-6f92a3bedf2d // indirect
