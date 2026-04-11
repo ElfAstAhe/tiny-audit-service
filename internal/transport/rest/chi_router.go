@@ -11,7 +11,8 @@ import (
 	_ "github.com/ElfAstAhe/tiny-audit-service/docs"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/config"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/facade"
-	trmware "github.com/ElfAstAhe/tiny-audit-service/internal/transport/rest/middleware"
+	appmware "github.com/ElfAstAhe/tiny-audit-service/internal/transport/rest/middleware"
+	pkgmware "github.com/ElfAstAhe/tiny-audit-service/pkg/transport/middleware"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/hellofresh/health-go/v5"
@@ -95,6 +96,19 @@ func (cr *AppChiRouter) setupMiddleware(
 	cr.router.Use(libmware.HTTPMetricsMiddleware)
 	// requestID
 	cr.router.Use(middleware.RequestID)
+	// audit requestID
+	cr.router.Use(pkgmware.NewAuditRequestIDExtractor([]string{
+		pkgmware.HeaderXRequestID,
+		pkgmware.HeaderXCorrelationID,
+		pkgmware.HeaderRequestID,
+	}).Handle)
+	// audit trace id
+	cr.router.Use(pkgmware.NewAuditTraceIDExtractor([]string{
+		pkgmware.HeaderXCloudTraceContext,
+		pkgmware.HeaderTraceParent,
+		pkgmware.HeaderXTraceID,
+		pkgmware.HeaderTraceID,
+	}).Handle)
 	// realIP
 	cr.router.Use(middleware.RealIP)
 	// recoverer
@@ -108,7 +122,7 @@ func (cr *AppChiRouter) setupMiddleware(
 	// decompress
 	cr.router.Use(libmware.NewHTTPDecompress(int64(cr.config.HTTP.MaxRequestBodySize), logger).Handle)
 	// jwt auth extractor - extract user info from token
-	cr.router.Use(trmware.NewAuthExtractor(
+	cr.router.Use(appmware.NewAuthExtractor(
 		jwtHelper,
 		jwtHTTPHelper,
 		authHelper,

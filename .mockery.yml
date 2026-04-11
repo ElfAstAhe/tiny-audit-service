@@ -34,6 +34,6 @@ packages:
   github.com/ElfAstAhe/tiny-audit-service/pkg/domain:
     config:
       all: true
-  github.com/ElfAstAhe/tiny-audit-service/pkg/client/rest:
+  github.com/ElfAstAhe/tiny-audit-service/pkg/client:
     config:
       all: true

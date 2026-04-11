@@ -7,7 +7,9 @@ import (
 	grpcsvc "github.com/ElfAstAhe/tiny-audit-service/internal/transport/grpc"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/transport/grpc/interceptor"
 	pb "github.com/ElfAstAhe/tiny-audit-service/pkg/api/grpc/tiny-audit-service/v1"
+	pkggrpcintercept "github.com/ElfAstAhe/tiny-audit-service/pkg/transport/interceptor"
 	grpcprom "github.com/grpc-ecosystem/go-grpc-middleware/providers/prometheus"
+	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/realip"
 	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/recovery"
 	"github.com/grpc-ecosystem/go-grpc-middleware/v2/metadata"
 	"github.com/prometheus/client_golang/prometheus"
@@ -27,6 +29,7 @@ func (app *App) initGRPCService() error {
 	return nil
 }
 
+//goland:noinspection DuplicatedCode
 func (app *App) initGRPCServer() error {
 	// Настраиваем KeepAlive на основе твоего GRPCConfig
 	kasp := keepalive.ServerParameters{
@@ -82,6 +85,15 @@ func (app *App) initGRPCServer() error {
 		return status.Errorf(codes.Internal, "%s", p)
 	}
 
+	// real IP
+	realIPOpts := []realip.Option{
+		realip.WithHeaders([]string{
+			realip.XRealIp,
+			realip.XForwardedFor,
+			realip.TrueClientIp,
+		}),
+	}
+
 	authExtractor := interceptor.NewAuthExtractor(
 		app.jwtHelper,
 		app.jwtGRPCHelper,
@@ -104,6 +116,18 @@ func (app *App) initGRPCServer() error {
 				grpcprom.WithExemplarFromContext(exemplarFromContext),
 				grpcprom.WithLabelsFromContext(labelsFromContext),
 			),
+			pkggrpcintercept.AuditRequestIDExtractorUnaryServerInterceptor([]string{
+				pkggrpcintercept.MDXRequestID,
+				pkggrpcintercept.MDXCorrelationID,
+				pkggrpcintercept.MDRequestID,
+			}),
+			pkggrpcintercept.AuditTraceIDExtractorUnaryServerInterceptor([]string{
+				pkggrpcintercept.MDXCloudTraceContext,
+				pkggrpcintercept.MDTraceParent,
+				pkggrpcintercept.MDXTraceID,
+				pkggrpcintercept.MDTraceID,
+			}),
+			realip.UnaryServerInterceptorOpts(realIPOpts...),
 			authExtractor.UnaryServerInterceptor,
 			recovery.UnaryServerInterceptor(recovery.WithRecoveryHandler(grpcPanicRecoveryHandler)),
 		),
@@ -112,6 +136,18 @@ func (app *App) initGRPCServer() error {
 				grpcprom.WithExemplarFromContext(exemplarFromContext),
 				grpcprom.WithLabelsFromContext(labelsFromContext),
 			),
+			pkggrpcintercept.AuditRequestIDExtractorStreamServerInterceptor([]string{
+				pkggrpcintercept.MDXRequestID,
+				pkggrpcintercept.MDXCorrelationID,
+				pkggrpcintercept.MDRequestID,
+			}),
+			pkggrpcintercept.AuditTraceIDExtractorStreamServerInterceptor([]string{
+				pkggrpcintercept.MDXCloudTraceContext,
+				pkggrpcintercept.MDTraceParent,
+				pkggrpcintercept.MDXTraceID,
+				pkggrpcintercept.MDTraceID,
+			}),
+			realip.StreamServerInterceptorOpts(realIPOpts...),
 			authExtractor.StreamServerInterceptor,
 			recovery.StreamServerInterceptor(recovery.WithRecoveryHandler(grpcPanicRecoveryHandler)),
 		),

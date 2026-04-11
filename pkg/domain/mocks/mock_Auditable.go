@@ -5,6 +5,7 @@
 package mocks
 
 import (
+	"github.com/ElfAstAhe/tiny-audit-service/pkg/domain"
 	mock "github.com/stretchr/testify/mock"
 )
 
@@ -300,19 +301,19 @@ func (_c *MockAuditable_HashCode_Call) RunAndReturn(run func() uint32) *MockAudi
 }
 
 // ToAuditMap provides a mock function for the type MockAuditable
-func (_mock *MockAuditable) ToAuditMap() map[string]string {
+func (_mock *MockAuditable) ToAuditMap() map[string]*domain.AuditField {
 	ret := _mock.Called()
 
 	if len(ret) == 0 {
 		panic("no return value specified for ToAuditMap")
 	}
 
-	var r0 map[string]string
-	if returnFunc, ok := ret.Get(0).(func() map[string]string); ok {
+	var r0 map[string]*domain.AuditField
+	if returnFunc, ok := ret.Get(0).(func() map[string]*domain.AuditField); ok {
 		r0 = returnFunc()
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(map[string]string)
+			r0 = ret.Get(0).(map[string]*domain.AuditField)
 		}
 	}
 	return r0
@@ -335,12 +336,12 @@ func (_c *MockAuditable_ToAuditMap_Call) Run(run func()) *MockAuditable_ToAuditM
 	return _c
 }
 
-func (_c *MockAuditable_ToAuditMap_Call) Return(stringToString map[string]string) *MockAuditable_ToAuditMap_Call {
-	_c.Call.Return(stringToString)
+func (_c *MockAuditable_ToAuditMap_Call) Return(stringToAuditField map[string]*domain.AuditField) *MockAuditable_ToAuditMap_Call {
+	_c.Call.Return(stringToAuditField)
 	return _c
 }
 
-func (_c *MockAuditable_ToAuditMap_Call) RunAndReturn(run func() map[string]string) *MockAuditable_ToAuditMap_Call {
+func (_c *MockAuditable_ToAuditMap_Call) RunAndReturn(run func() map[string]*domain.AuditField) *MockAuditable_ToAuditMap_Call {
 	_c.Call.Return(run)
 	return _c
 }
