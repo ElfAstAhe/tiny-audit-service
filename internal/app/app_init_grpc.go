@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/ElfAstAhe/go-service-template/pkg/errs"
+	"github.com/ElfAstAhe/go-service-template/pkg/transport/grpc/interceptors"
 	grpcsvc "github.com/ElfAstAhe/tiny-audit-service/internal/transport/grpc"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/transport/grpc/interceptor"
 	pb "github.com/ElfAstAhe/tiny-audit-service/pkg/api/grpc/tiny-audit-service/v1"
@@ -116,6 +117,17 @@ func (app *App) initGRPCServer() error {
 				grpcprom.WithExemplarFromContext(exemplarFromContext),
 				grpcprom.WithLabelsFromContext(labelsFromContext),
 			),
+			interceptors.RequestIDExtractorUSInterceptor([]string{
+				interceptors.MDXRequestID,
+				interceptors.MDXCorrelationID,
+				interceptors.MDRequestID,
+			}),
+			interceptors.TraceIDExtractorUSInterceptor([]string{
+				interceptors.MDXCloudTraceContext,
+				interceptors.MDTraceParent,
+				interceptors.MDXTraceID,
+				interceptors.MDTraceID,
+			}),
 			pkggrpcintercept.AuditRequestIDExtractorUnaryServerInterceptor([]string{
 				pkggrpcintercept.MDXRequestID,
 				pkggrpcintercept.MDXCorrelationID,
@@ -136,6 +148,17 @@ func (app *App) initGRPCServer() error {
 				grpcprom.WithExemplarFromContext(exemplarFromContext),
 				grpcprom.WithLabelsFromContext(labelsFromContext),
 			),
+			interceptors.RequestIDExtractorSSInterceptor([]string{
+				interceptors.MDXRequestID,
+				interceptors.MDXCorrelationID,
+				interceptors.MDRequestID,
+			}),
+			interceptors.TraceIDExtractorSSInterceptor([]string{
+				interceptors.MDXCloudTraceContext,
+				interceptors.MDTraceParent,
+				interceptors.MDXTraceID,
+				interceptors.MDTraceID,
+			}),
 			pkggrpcintercept.AuditRequestIDExtractorStreamServerInterceptor([]string{
 				pkggrpcintercept.MDXRequestID,
 				pkggrpcintercept.MDXCorrelationID,

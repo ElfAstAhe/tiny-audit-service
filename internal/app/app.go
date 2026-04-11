@@ -9,7 +9,7 @@ import (
 	"github.com/ElfAstAhe/go-service-template/pkg/db"
 	"github.com/ElfAstAhe/go-service-template/pkg/helper"
 	"github.com/ElfAstAhe/go-service-template/pkg/logger"
-	"github.com/ElfAstAhe/go-service-template/pkg/transport"
+	libhttp "github.com/ElfAstAhe/go-service-template/pkg/transport/http"
 	"github.com/ElfAstAhe/go-service-template/pkg/transport/worker"
 	"github.com/ElfAstAhe/go-service-template/pkg/utils"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/config"
@@ -53,7 +53,7 @@ type App struct {
 	tm db.TransactionManager
 
 	// http
-	httpRouter transport.HTTPRouter
+	httpRouter libhttp.Router
 	httpServer *http.Server
 
 	// gRPC

@@ -8,7 +8,7 @@ import (
 	"github.com/ElfAstAhe/go-service-template/pkg/errs"
 	"github.com/ElfAstAhe/go-service-template/pkg/helper"
 	"github.com/ElfAstAhe/go-service-template/pkg/logger"
-	"github.com/ElfAstAhe/go-service-template/pkg/transport"
+	libhttp "github.com/ElfAstAhe/go-service-template/pkg/transport/http"
 	"github.com/golang-jwt/jwt/v5"
 )
 
@@ -17,7 +17,7 @@ type AuthExtractor struct {
 	jwtHTTPHelper *helper.JWTHTTPHelper
 	authHelper    auth.Helper
 	log           logger.Logger
-	nonSecure     *transport.HTTPPathMatchers
+	nonSecure     *libhttp.PathMatchers
 	acceptIssuers map[string]struct{}
 }
 
@@ -26,7 +26,7 @@ func NewAuthExtractor(
 	jwtHTTPHelper *helper.JWTHTTPHelper,
 	authHelper auth.Helper,
 	logger logger.Logger,
-	nonSecure *transport.HTTPPathMatchers,
+	nonSecure *libhttp.PathMatchers,
 	acceptIssuers []string,
 ) *AuthExtractor {
 	acceptIssuersMap := make(map[string]struct{}, len(acceptIssuers))

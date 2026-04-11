@@ -1,5 +1,5 @@
-github.com/ElfAstAhe/go-service-template v0.0.43 h1:Hx0T3/TMfBQ8WtjfsSf0LL6O9RcHM5komE1Rr79A6hM=
-github.com/ElfAstAhe/go-service-template v0.0.43/go.mod h1:rusox2+AQX6jbqQNSMFiuW3bTKyVGi8wqtgbGxObqRo=
+github.com/ElfAstAhe/go-service-template v0.0.44 h1:+DjtmC/it1Np1JoeKZ0a2NoNHfsIbx3MEUOubBZJR8I=
+github.com/ElfAstAhe/go-service-template v0.0.44/go.mod h1:rusox2+AQX6jbqQNSMFiuW3bTKyVGi8wqtgbGxObqRo=
 github.com/ElfAstAhe/tiny-auth-service v0.0.6 h1:RI0LmqGxnDi49fdDuwFWv0F/9m1RjRUnz8UKUaScYIA=
 github.com/ElfAstAhe/tiny-auth-service v0.0.6/go.mod h1:MJGS3ZtByGDoxz+0z+wJaXQNJIYn5bnS7/TwN0/9Avk=
 github.com/KyleBanks/depth v1.2.1 h1:5h8fQADFrWtarTdtDudMmGsC7GPbOAu6RVB3ffsVFHc=
