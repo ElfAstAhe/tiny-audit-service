@@ -116,17 +116,47 @@ func (acr *AuditCRUDRepository[E, ID]) Change(ctx context.Context, entity E) (E,
 	// data
 	if err == nil && beforeErr == nil && utils.HasChanges(auditBeforeEntity, auditAfterEntity) {
 		// case 1 - all data in our hands
-		builder.With
+		builder.WithValues(utils.BuildBothDataAuditValues(auditBeforeEntity, auditAfterEntity))
 	} else if err == nil && beforeErr != nil {
 		// case 2 - only after entity in our hands
 		builder.WithValues(utils.BuildSingleDataAuditValues(auditAfterEntity, false))
+	} else if err != nil && beforeErr == nil {
+		// case 3 - all data in our hands, but got error on change
+		builder.WithValues(utils.BuildBothDataAuditValues(auditBeforeEntity, auditAfterEntity))
+	} else {
+		// default, got all errors (get before and change)
+		builder.WithValues(utils.BuildSingleDataAuditValues(auditAfterEntity, false))
 	}
+	// audit
+	acr.audit(builder)
 
 	return res, err
 }
 
 func (acr *AuditCRUDRepository[E, ID]) Delete(ctx context.Context, id ID) error {
+	acr.log.Debugf("audit Delete start")
+	defer acr.log.Debugf("audit Delete finish")
+
+	// get before entity
+	beforeEntity, beforeErr := acr.next.Find(ctx, id)
+	if beforeErr != nil {
+		acr.log.Debugf("audit Delete get before entity failed [%v]", beforeErr)
+	}
+
+	// action
 	err := acr.next.Delete(ctx, id)
+
+	// auditable
+	var auditEntity = acr.mapper(beforeEntity)
+
+	// builder
+	builder := acr.builder(ctx, auditEntity, err).WithEvent(dto.DataEventRemove)
+	// data
+	if beforeErr != nil {
+		builder.WithValues(utils.BuildSingleDataAuditValues(auditEntity, true))
+	}
+	// audit
+	acr.audit(builder)
 
 	return err
 }
