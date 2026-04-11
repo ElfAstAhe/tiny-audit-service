@@ -1,4 +1,4 @@
-package rest
+package dto
 
 const (
 	AuthEventLogin   string = "login"

@@ -3,22 +3,17 @@ package utils
 import (
 	"time"
 
-	"github.com/ElfAstAhe/tiny-audit-service/pkg/api/http/audit/v1/models"
+	"github.com/ElfAstAhe/tiny-audit-service/pkg/client/dto"
 )
 
 type AuthAuditBuilder struct {
-	instance *models.AuthAuditDTO
+	instance *dto.AuthAuditDTO
 }
 
 func NewAuthAuditBuilder() *AuthAuditBuilder {
 	return &AuthAuditBuilder{
-		instance: new(models.AuthAuditDTO),
+		instance: new(dto.AuthAuditDTO),
 	}
-}
-
-func (aab *AuthAuditBuilder) NewInstance() *AuthAuditBuilder {
-	aab.instance = new(models.AuthAuditDTO)
-	return aab
 }
 
 func (aab *AuthAuditBuilder) WithSource(source string) *AuthAuditBuilder {
@@ -27,7 +22,7 @@ func (aab *AuthAuditBuilder) WithSource(source string) *AuthAuditBuilder {
 }
 
 func (aab *AuthAuditBuilder) WithEventDate(eventDate time.Time) *AuthAuditBuilder {
-	aab.instance.EventDate = eventDate.Format(time.RFC3339)
+	aab.instance.EventDate = eventDate
 	return aab
 }
 
@@ -66,6 +61,6 @@ func (aab *AuthAuditBuilder) WithRefreshToken(refreshToken string) *AuthAuditBui
 	return aab
 }
 
-func (aab *AuthAuditBuilder) Build() *models.AuthAuditDTO {
+func (aab *AuthAuditBuilder) Build() *dto.AuthAuditDTO {
 	return aab.instance
 }

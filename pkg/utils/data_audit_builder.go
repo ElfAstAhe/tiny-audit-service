@@ -3,22 +3,17 @@ package utils
 import (
 	"time"
 
-	"github.com/ElfAstAhe/tiny-audit-service/pkg/api/http/audit/v1/models"
+	"github.com/ElfAstAhe/tiny-audit-service/pkg/client/dto"
 )
 
 type DataAuditBuilder struct {
-	instance *models.DataAuditDTO
+	instance *dto.DataAuditDTO
 }
 
 func NewDataAuditBuilder() *DataAuditBuilder {
 	return &DataAuditBuilder{
-		instance: new(models.DataAuditDTO),
+		instance: new(dto.DataAuditDTO),
 	}
-}
-
-func (dab *DataAuditBuilder) NewInstance() *DataAuditBuilder {
-	dab.instance = new(models.DataAuditDTO)
-	return dab
 }
 
 func (dab *DataAuditBuilder) WithSource(source string) *DataAuditBuilder {
@@ -27,7 +22,7 @@ func (dab *DataAuditBuilder) WithSource(source string) *DataAuditBuilder {
 }
 
 func (dab *DataAuditBuilder) WithEventDate(eventDate time.Time) *DataAuditBuilder {
-	dab.instance.EventDate = eventDate.Format(time.RFC3339)
+	dab.instance.EventDate = eventDate
 	return dab
 }
 
@@ -56,6 +51,11 @@ func (dab *DataAuditBuilder) WithUsername(username string) *DataAuditBuilder {
 	return dab
 }
 
+func (dab *DataAuditBuilder) WithInternalTypeName(internalTypeName string) *DataAuditBuilder {
+	dab.instance.InternalTypeName = internalTypeName
+	return dab
+}
+
 func (dab *DataAuditBuilder) WithTypeName(typeName string) *DataAuditBuilder {
 	dab.instance.TypeName = typeName
 	return dab
@@ -76,11 +76,11 @@ func (dab *DataAuditBuilder) WithInstanceName(instanceName string) *DataAuditBui
 	return dab
 }
 
-func (dab *DataAuditBuilder) WithValues(values []*models.DataAuditValueDTO) *DataAuditBuilder {
+func (dab *DataAuditBuilder) WithValues(values []*dto.DataAuditValueDTO) *DataAuditBuilder {
 	dab.instance.Values = values
 	return dab
 }
 
-func (dab *DataAuditBuilder) Build() *models.DataAuditDTO {
+func (dab *DataAuditBuilder) Build() *dto.DataAuditDTO {
 	return dab.instance
 }
