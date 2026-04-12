@@ -18,12 +18,12 @@ type AuditableEntity[ID comparable] interface {
 	pkgdomain.Auditable
 }
 
-type AuditableMapper[ID comparable] func(entity domain.Entity[ID]) pkgdomain.Auditable
+type AuditableMapper[E domain.Entity[ID], ID comparable] func(entity E) pkgdomain.Auditable
 
 type BaseAuditCRUDRepository[E AuditableEntity[ID], ID comparable] struct {
 	next        domain.CRUDRepository[E, ID]
 	source      string
-	mapper      AuditableMapper[ID]
+	mapper      AuditableMapper[E, ID]
 	auditClient client.DataAuditClient
 	log         logger.Logger
 }
@@ -31,7 +31,7 @@ type BaseAuditCRUDRepository[E AuditableEntity[ID], ID comparable] struct {
 func NewBaseAuditCRUDRepository[E AuditableEntity[ID], ID comparable](
 	next domain.CRUDRepository[E, ID],
 	source string,
-	mapper AuditableMapper[ID],
+	mapper AuditableMapper[E, ID],
 	auditClient client.DataAuditClient,
 	log logger.Logger,
 ) *BaseAuditCRUDRepository[E, ID] {
