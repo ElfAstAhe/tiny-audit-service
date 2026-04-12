@@ -18,24 +18,24 @@ type AuditableEntity[ID comparable] interface {
 	pkgdomain.Auditable
 }
 
-type AuditableMapper[ID comparable] func(entity domain.Entity[ID]) pkgdomain.Auditable
+type AuditableMapper[E domain.Entity[ID], ID comparable] func(entity E) pkgdomain.Auditable
 
-type AuditCRUDRepository[E AuditableEntity[ID], ID comparable] struct {
+type BaseAuditCRUDRepository[E AuditableEntity[ID], ID comparable] struct {
 	next        domain.CRUDRepository[E, ID]
 	source      string
-	mapper      AuditableMapper[ID]
+	mapper      AuditableMapper[E, ID]
 	auditClient client.DataAuditClient
 	log         logger.Logger
 }
 
-func NewAuditCRUDRepository[E AuditableEntity[ID], ID comparable](
+func NewBaseAuditCRUDRepository[E AuditableEntity[ID], ID comparable](
 	next domain.CRUDRepository[E, ID],
 	source string,
-	mapper AuditableMapper[ID],
+	mapper AuditableMapper[E, ID],
 	auditClient client.DataAuditClient,
 	log logger.Logger,
-) *AuditCRUDRepository[E, ID] {
-	return &AuditCRUDRepository[E, ID]{
+) *BaseAuditCRUDRepository[E, ID] {
+	return &BaseAuditCRUDRepository[E, ID]{
 		next:        next,
 		source:      source,
 		mapper:      mapper,
@@ -44,15 +44,15 @@ func NewAuditCRUDRepository[E AuditableEntity[ID], ID comparable](
 	}
 }
 
-func (acr *AuditCRUDRepository[E, ID]) Find(ctx context.Context, id ID) (E, error) {
+func (acr *BaseAuditCRUDRepository[E, ID]) Find(ctx context.Context, id ID) (E, error) {
 	return acr.next.Find(ctx, id)
 }
 
-func (acr *AuditCRUDRepository[E, ID]) List(ctx context.Context, limit, offset int) ([]E, error) {
+func (acr *BaseAuditCRUDRepository[E, ID]) List(ctx context.Context, limit, offset int) ([]E, error) {
 	return acr.next.List(ctx, limit, offset)
 }
 
-func (acr *AuditCRUDRepository[E, ID]) Create(ctx context.Context, entity E) (E, error) {
+func (acr *BaseAuditCRUDRepository[E, ID]) Create(ctx context.Context, entity E) (E, error) {
 	acr.log.Debugf("audit Create start")
 	defer acr.log.Debugf("audit Create finish")
 
@@ -84,7 +84,7 @@ func (acr *AuditCRUDRepository[E, ID]) Create(ctx context.Context, entity E) (E,
 	return res, err
 }
 
-func (acr *AuditCRUDRepository[E, ID]) Change(ctx context.Context, entity E) (E, error) {
+func (acr *BaseAuditCRUDRepository[E, ID]) Change(ctx context.Context, entity E) (E, error) {
 	acr.log.Debugf("audit Change start")
 	defer acr.log.Debugf("audit Change finish")
 
@@ -133,7 +133,7 @@ func (acr *AuditCRUDRepository[E, ID]) Change(ctx context.Context, entity E) (E,
 	return res, err
 }
 
-func (acr *AuditCRUDRepository[E, ID]) Delete(ctx context.Context, id ID) error {
+func (acr *BaseAuditCRUDRepository[E, ID]) Delete(ctx context.Context, id ID) error {
 	acr.log.Debugf("audit Delete start")
 	defer acr.log.Debugf("audit Delete finish")
 
@@ -161,7 +161,7 @@ func (acr *AuditCRUDRepository[E, ID]) Delete(ctx context.Context, id ID) error 
 	return err
 }
 
-func (acr *AuditCRUDRepository[E, ID]) builder(ctx context.Context, auditEntity pkgdomain.Auditable, err error) *utils.DataAuditBuilder {
+func (acr *BaseAuditCRUDRepository[E, ID]) builder(ctx context.Context, auditEntity pkgdomain.Auditable, err error) *utils.DataAuditBuilder {
 	return utils.NewDataAuditBuilder().
 		// common
 		WithSource(acr.source).
@@ -179,7 +179,7 @@ func (acr *AuditCRUDRepository[E, ID]) builder(ctx context.Context, auditEntity 
 		WithRequestID(utils.RequestIDFromContext(ctx))
 }
 
-func (acr *AuditCRUDRepository[E, ID]) audit(builder *utils.DataAuditBuilder) {
+func (acr *BaseAuditCRUDRepository[E, ID]) audit(builder *utils.DataAuditBuilder) {
 	clientDTO := builder.Build()
 	acr.log.Debugf("audit Create client dto [%v]", clientDTO)
 
@@ -187,4 +187,20 @@ func (acr *AuditCRUDRepository[E, ID]) audit(builder *utils.DataAuditBuilder) {
 	if auditErr != nil {
 		acr.log.Errorf("audit Create audit [%v] failed [%v]", clientDTO, auditErr)
 	}
+}
+
+func (acr *BaseAuditCRUDRepository[E, ID]) GetSource() string {
+	return acr.source
+}
+
+// Unwrap get decorable repository
+func (acr *BaseAuditCRUDRepository[E, ID]) Unwrap() domain.CRUDRepository[E, ID] {
+	return acr.next
+}
+func (acr *BaseAuditCRUDRepository[E, ID]) GetAuditClient() client.DataAuditClient {
+	return acr.auditClient
+}
+
+func (acr *BaseAuditCRUDRepository[E, ID]) GetLogger() logger.Logger {
+	return acr.log
 }
