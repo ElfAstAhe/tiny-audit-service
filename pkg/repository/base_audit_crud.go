@@ -70,13 +70,9 @@ func (acr *BaseAuditCRUDRepository[E, ID]) Create(ctx context.Context, entity E)
 		auditEntity = acr.mapper(entity)
 	}
 
-	// builder
-	builder := acr.builder(ctx, auditEntity, err).WithEvent(dto.DataEventCreate)
-
-	// data
-	if err != nil {
-		builder.WithValues(utils.BuildSingleDataAuditValues(auditEntity, false))
-	}
+	// builder, data
+	builder := acr.builder(ctx, auditEntity, err).WithEvent(dto.DataEventCreate).
+		WithValues(utils.BuildSingleDataAuditValues(auditEntity, false))
 
 	// audit
 	acr.audit(builder)
@@ -142,13 +138,13 @@ func (acr *BaseAuditCRUDRepository[E, ID]) Delete(ctx context.Context, id ID) er
 	if beforeErr != nil {
 		acr.log.Debugf("audit Delete get before entity failed [%v]", beforeErr)
 	}
-
 	// action
 	err := acr.next.Delete(ctx, id)
-
 	// auditable
-	var auditEntity = acr.mapper(beforeEntity)
-
+	var auditEntity pkgdomain.Auditable = nil
+	if beforeErr != nil {
+		auditEntity = acr.mapper(beforeEntity)
+	}
 	// builder
 	builder := acr.builder(ctx, auditEntity, err).WithEvent(dto.DataEventRemove)
 	// data
