@@ -1,14 +1,14 @@
 package domain
 
 type AuditField struct {
-	Description string
 	Value       string
+	Description string
 }
 
-func NewAuditField(description string, value string) *AuditField {
+func NewAuditField(value string, description string) *AuditField {
 	return &AuditField{
-		Description: description,
 		Value:       value,
+		Description: description,
 	}
 }
 
