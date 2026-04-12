@@ -44,7 +44,7 @@ func NewDataAuditPgRepository(executor db.Executor, errDecipher db.ErrorDecipher
 		}).
 		Build()
 	// callbacks
-	callbacks, err := repository.NewBaseRepositoryCallbacksBuilder[*domain.DataAudit, string]().NewInstance().
+	callbacks, _ := repository.NewBaseRepositoryCallbacksBuilder[*domain.DataAudit, string]().NewInstance().
 		WithEntityScanner(res.entityScanner).
 		WithNewEntityFactory(domain.NewEmptyDataAudit).
 		WithAfterListYield(res.afterListYield).
