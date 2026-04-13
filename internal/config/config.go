@@ -9,6 +9,10 @@ import (
 	"github.com/spf13/viper"
 )
 
+const (
+	ApplicationName = "tiny-audit-service"
+)
+
 type Config struct {
 	App       *AppConfig              `mapstructure:"app" json:"app,omitempty" yaml:"app,omitempty"`
 	AuthTC    *TailCutterConfig       `mapstructure:"auth_tc" json:"auth_tc,omitempty" yaml:"auth_tc,omitempty"`
@@ -23,7 +27,6 @@ type Config struct {
 
 // linker params
 var (
-	AppName      string
 	AppVersion   string
 	AppBuildTime string
 )

@@ -123,7 +123,7 @@ func (app *App) initMetrics() error {
 	//}
 
 	if app.db != nil {
-		if err := prometheus.Register(collectors.NewDBStatsCollector(app.db.GetDB(), config.AppName)); err != nil {
+		if err := prometheus.Register(collectors.NewDBStatsCollector(app.db.GetDB(), app.config.App.NodeName)); err != nil {
 			return errs.NewCommonError("failed to register db stats", err)
 		}
 	}
@@ -147,7 +147,7 @@ func (app *App) initStartupServices() error {
 
 func (app *App) initHealth() error {
 	healthChecker, err := health.New(health.WithComponent(health.Component{
-		Name:    config.AppName,
+		Name:    app.config.App.NodeName,
 		Version: config.AppVersion,
 	}))
 	if err != nil {

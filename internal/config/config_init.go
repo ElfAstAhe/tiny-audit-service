@@ -15,6 +15,7 @@ import (
 func applyDefaults(v *viper.Viper) {
 	// App
 	v.SetDefault(keyAppEnv, defaultAppEnv)
+	v.SetDefault(keyAppNodeName, defaultAppNodeName)
 	v.SetDefault(keyAppMaxListLimit, defaultMaxListLimit)
 	v.SetDefault(keyAppTokenIssuer, defaultTokenIssuer)
 	// auth tc
@@ -94,6 +95,7 @@ func initFLags() (res *pflag.FlagSet, err error) {
 		// app
 		res.String(FlagConfig, "config/config.yaml", "path to config file")
 		res.String(FlagAppEnv, string(defaultAppEnv), "application environment")
+		res.String(FlagAppNodeName, defaultAppNodeName, "application node name")
 		res.Int(FlagAppMaxListLimit, usecase.DefaultMaxLimit, "max list limit")
 		res.String(FlagAppCipherKey, "", "cipher key")
 		res.String(FlagAppTokenIssuer, "", "token issuer")
@@ -173,6 +175,7 @@ func bindFlags(flags *pflag.FlagSet, v *viper.Viper) error {
 	err := errors.Join(
 		// App
 		v.BindPFlag(keyAppEnv, flags.Lookup(FlagAppEnv)),
+		v.BindPFlag(keyAppNodeName, flags.Lookup(FlagAppNodeName)),
 		v.BindPFlag(keyAppMaxListLimit, flags.Lookup(FlagAppMaxListLimit)),
 		v.BindPFlag(keyAppTokenIssuer, flags.Lookup(FlagAppTokenIssuer)),
 		v.BindPFlag(keyAppCipherKey, flags.Lookup(FlagAppCipherKey)),

@@ -7,6 +7,7 @@ import (
 // AppConfig — метаданные сервиса
 type AppConfig struct {
 	Env                AppEnv   `mapstructure:"env" json:"env,omitempty" yaml:"env,omitempty"` // dev, prod, test
+	NodeName           string   `mapstructure:"node_name" json:"node_name,omitempty" yaml:"node_name,omitempty"`
 	MaxListLimit       int      `mapstructure:"max_list_limit" json:"max_list_limit,omitempty" yaml:"max_list_limit,omitempty"`
 	TokenIssuer        string   `mapstructure:"token_issuer" json:"token_issuer,omitempty" yaml:"token_issuer,omitempty"`
 	AcceptTokenIssuers []string `mapstructure:"accept_token_issuers" json:"accept_token_issuers,omitempty" yaml:"accept_token_issuers,omitempty"`

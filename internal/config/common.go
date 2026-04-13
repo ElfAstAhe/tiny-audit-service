@@ -6,6 +6,7 @@ const FlagConfig = "config-path"
 // App config flags
 const (
 	FlagAppEnv                string = "env"
+	FlagAppNodeName           string = "node-name"
 	FlagAppMaxListLimit       string = "app-max-list-limit"
 	FlagAppTokenIssuer        string = "app-token-issuer"
 	FlagAppCipherKey          string = "app-cipher-key"

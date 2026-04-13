@@ -7,6 +7,7 @@ import (
 // app
 const (
 	defaultAppEnv       AppEnv = AppEnvDevelopment
+	defaultAppNodeName  string = ApplicationName
 	defaultMaxListLimit int    = 100
 	defaultTokenIssuer  string = "tiny-auth-service"
 )
@@ -38,6 +39,7 @@ const (
 // app
 const (
 	keyAppEnv                string = "app.env"
+	keyAppNodeName           string = "app.node_name"
 	keyAppMaxListLimit       string = "app.max_list_limit"
 	keyAppTokenIssuer        string = "app.token_issuer"
 	keyAppCipherKey          string = "app.cipher_key"
