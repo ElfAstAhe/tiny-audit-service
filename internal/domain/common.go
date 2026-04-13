@@ -80,7 +80,7 @@ func validateDataEvent(event string) error {
 }
 
 func defaultBeforeCreate(entity domain.Entity[string]) error {
-	newID, err := uuid.NewRandom()
+	newID, err := uuid.NewV7()
 	if err != nil {
 		return errs.NewBllError("defaultBeforeCreate", "generate new id", err)
 	}
