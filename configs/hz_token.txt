@@ -1,0 +1,5 @@
+# Hazelcast dev stand key-value storage token
+username: svc_audit
+password: password!?+
+
+token: Cn4X5DZPP7l2Yqh59jyKfg0yKZ5RChNR9Nfc2Kgn5SE
