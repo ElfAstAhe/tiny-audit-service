@@ -87,3 +87,9 @@ static-check:
 # Очистка бинарников
 clean:
 	rm -rf ./bin/*
+
+# обновление зависимостей
+update-deps:
+	go get -u -x all
+
+#
