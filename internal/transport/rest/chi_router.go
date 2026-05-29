@@ -96,19 +96,14 @@ func (cr *AppChiRouter) setupMiddleware(
 	cr.router.Use(libmware.MetricsMiddleware)
 	// requestID
 	cr.router.Use(middleware.RequestID)
+	// requestID (own implementation)
+	cr.router.Use(libmware.NewDefaultRequestIDExtractor().Handler)
+	// traceID (own implementation)
+	cr.router.Use(libmware.NewDefaultTraceIDExtractor().Handler)
 	// audit requestID
-	cr.router.Use(pkgmware.NewAuditRequestIDExtractor([]string{
-		pkgmware.HeaderXRequestID,
-		pkgmware.HeaderXCorrelationID,
-		pkgmware.HeaderRequestID,
-	}).Handle)
+	cr.router.Use(pkgmware.NewDefaultAuditRequestIDExtractor().Handle)
 	// audit trace id
-	cr.router.Use(pkgmware.NewAuditTraceIDExtractor([]string{
-		pkgmware.HeaderXCloudTraceContext,
-		pkgmware.HeaderTraceParent,
-		pkgmware.HeaderXTraceID,
-		pkgmware.HeaderTraceID,
-	}).Handle)
+	cr.router.Use(pkgmware.NewDefaultAuditTraceIDExtractor().Handle)
 	// realIP
 	cr.router.Use(middleware.RealIP)
 	// recoverer

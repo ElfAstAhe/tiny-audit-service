@@ -16,10 +16,18 @@ type AuditRequestIDExtractor struct {
 	headers []string
 }
 
-func NewAuditRequestIDExtractor(headers []string) *AuditRequestIDExtractor {
+func NewAuditRequestIDExtractor(headers ...string) *AuditRequestIDExtractor {
 	return &AuditRequestIDExtractor{
 		headers: headers,
 	}
+}
+
+func NewDefaultAuditRequestIDExtractor() *AuditRequestIDExtractor {
+	return NewAuditRequestIDExtractor(
+		HeaderXRequestID,
+		HeaderXCorrelationID,
+		HeaderRequestID,
+	)
 }
 
 func (are *AuditRequestIDExtractor) Handle(next http.Handler) http.Handler {

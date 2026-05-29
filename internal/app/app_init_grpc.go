@@ -117,28 +117,28 @@ func (app *App) initGRPCServer() error {
 				grpcprom.WithExemplarFromContext(exemplarFromContext),
 				grpcprom.WithLabelsFromContext(labelsFromContext),
 			),
-			interceptors.RequestIDExtractorUSInterceptor([]string{
+			interceptors.RequestIDExtractorUSInterceptor(
 				interceptors.MDXRequestID,
 				interceptors.MDXCorrelationID,
 				interceptors.MDRequestID,
-			}),
-			interceptors.TraceIDExtractorUSInterceptor([]string{
+			),
+			interceptors.TraceIDExtractorUSInterceptor(
 				interceptors.MDXCloudTraceContext,
 				interceptors.MDTraceParent,
 				interceptors.MDXTraceID,
 				interceptors.MDTraceID,
-			}),
-			pkggrpcintercept.AuditRequestIDExtractorUnaryServerInterceptor([]string{
+			),
+			pkggrpcintercept.AuditRequestIDExtractorUnaryServerInterceptor(
 				pkggrpcintercept.MDXRequestID,
 				pkggrpcintercept.MDXCorrelationID,
 				pkggrpcintercept.MDRequestID,
-			}),
-			pkggrpcintercept.AuditTraceIDExtractorUnaryServerInterceptor([]string{
+			),
+			pkggrpcintercept.AuditTraceIDExtractorUnaryServerInterceptor(
 				pkggrpcintercept.MDXCloudTraceContext,
 				pkggrpcintercept.MDTraceParent,
 				pkggrpcintercept.MDXTraceID,
 				pkggrpcintercept.MDTraceID,
-			}),
+			),
 			realip.UnaryServerInterceptorOpts(realIPOpts...),
 			authExtractor.UnaryServerInterceptor,
 			recovery.UnaryServerInterceptor(recovery.WithRecoveryHandler(grpcPanicRecoveryHandler)),
@@ -148,28 +148,28 @@ func (app *App) initGRPCServer() error {
 				grpcprom.WithExemplarFromContext(exemplarFromContext),
 				grpcprom.WithLabelsFromContext(labelsFromContext),
 			),
-			interceptors.RequestIDExtractorSSInterceptor([]string{
+			interceptors.RequestIDExtractorSSInterceptor(
 				interceptors.MDXRequestID,
 				interceptors.MDXCorrelationID,
 				interceptors.MDRequestID,
-			}),
-			interceptors.TraceIDExtractorSSInterceptor([]string{
+			),
+			interceptors.TraceIDExtractorSSInterceptor(
 				interceptors.MDXCloudTraceContext,
 				interceptors.MDTraceParent,
 				interceptors.MDXTraceID,
 				interceptors.MDTraceID,
-			}),
-			pkggrpcintercept.AuditRequestIDExtractorStreamServerInterceptor([]string{
+			),
+			pkggrpcintercept.AuditRequestIDExtractorStreamServerInterceptor(
 				pkggrpcintercept.MDXRequestID,
 				pkggrpcintercept.MDXCorrelationID,
 				pkggrpcintercept.MDRequestID,
-			}),
-			pkggrpcintercept.AuditTraceIDExtractorStreamServerInterceptor([]string{
+			),
+			pkggrpcintercept.AuditTraceIDExtractorStreamServerInterceptor(
 				pkggrpcintercept.MDXCloudTraceContext,
 				pkggrpcintercept.MDTraceParent,
 				pkggrpcintercept.MDXTraceID,
 				pkggrpcintercept.MDTraceID,
-			}),
+			),
 			realip.StreamServerInterceptorOpts(realIPOpts...),
 			authExtractor.StreamServerInterceptor,
 			recovery.StreamServerInterceptor(recovery.WithRecoveryHandler(grpcPanicRecoveryHandler)),
