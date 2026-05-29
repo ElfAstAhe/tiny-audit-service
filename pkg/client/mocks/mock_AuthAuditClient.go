@@ -6,7 +6,6 @@ package mocks
 
 import (
 	"context"
-	"time"
 
 	"github.com/ElfAstAhe/tiny-audit-service/pkg/client/dto"
 	mock "github.com/stretchr/testify/mock"
@@ -142,16 +141,16 @@ func (_c *MockAuthAuditClient_Start_Call) RunAndReturn(run func(ctx context.Cont
 }
 
 // Stop provides a mock function for the type MockAuthAuditClient
-func (_mock *MockAuthAuditClient) Stop(stopTimeout time.Duration) error {
-	ret := _mock.Called(stopTimeout)
+func (_mock *MockAuthAuditClient) Stop(ctx context.Context) error {
+	ret := _mock.Called(ctx)
 
 	if len(ret) == 0 {
 		panic("no return value specified for Stop")
 	}
 
 	var r0 error
-	if returnFunc, ok := ret.Get(0).(func(time.Duration) error); ok {
-		r0 = returnFunc(stopTimeout)
+	if returnFunc, ok := ret.Get(0).(func(context.Context) error); ok {
+		r0 = returnFunc(ctx)
 	} else {
 		r0 = ret.Error(0)
 	}
@@ -164,16 +163,16 @@ type MockAuthAuditClient_Stop_Call struct {
 }
 
 // Stop is a helper method to define mock.On call
-//   - stopTimeout time.Duration
-func (_e *MockAuthAuditClient_Expecter) Stop(stopTimeout interface{}) *MockAuthAuditClient_Stop_Call {
-	return &MockAuthAuditClient_Stop_Call{Call: _e.mock.On("Stop", stopTimeout)}
+//   - ctx context.Context
+func (_e *MockAuthAuditClient_Expecter) Stop(ctx interface{}) *MockAuthAuditClient_Stop_Call {
+	return &MockAuthAuditClient_Stop_Call{Call: _e.mock.On("Stop", ctx)}
 }
 
-func (_c *MockAuthAuditClient_Stop_Call) Run(run func(stopTimeout time.Duration)) *MockAuthAuditClient_Stop_Call {
+func (_c *MockAuthAuditClient_Stop_Call) Run(run func(ctx context.Context)) *MockAuthAuditClient_Stop_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		var arg0 time.Duration
+		var arg0 context.Context
 		if args[0] != nil {
-			arg0 = args[0].(time.Duration)
+			arg0 = args[0].(context.Context)
 		}
 		run(
 			arg0,
@@ -187,7 +186,7 @@ func (_c *MockAuthAuditClient_Stop_Call) Return(err error) *MockAuthAuditClient_
 	return _c
 }
 
-func (_c *MockAuthAuditClient_Stop_Call) RunAndReturn(run func(stopTimeout time.Duration) error) *MockAuthAuditClient_Stop_Call {
+func (_c *MockAuthAuditClient_Stop_Call) RunAndReturn(run func(ctx context.Context) error) *MockAuthAuditClient_Stop_Call {
 	_c.Call.Return(run)
 	return _c
 }

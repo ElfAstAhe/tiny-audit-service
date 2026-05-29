@@ -6,7 +6,6 @@ package mocks
 
 import (
 	"context"
-	"time"
 
 	"github.com/ElfAstAhe/tiny-audit-service/pkg/client/dto"
 	mock "github.com/stretchr/testify/mock"
@@ -142,16 +141,16 @@ func (_c *MockDataAuditClient_Start_Call) RunAndReturn(run func(ctx context.Cont
 }
 
 // Stop provides a mock function for the type MockDataAuditClient
-func (_mock *MockDataAuditClient) Stop(stopTimeout time.Duration) error {
-	ret := _mock.Called(stopTimeout)
+func (_mock *MockDataAuditClient) Stop(ctx context.Context) error {
+	ret := _mock.Called(ctx)
 
 	if len(ret) == 0 {
 		panic("no return value specified for Stop")
 	}
 
 	var r0 error
-	if returnFunc, ok := ret.Get(0).(func(time.Duration) error); ok {
-		r0 = returnFunc(stopTimeout)
+	if returnFunc, ok := ret.Get(0).(func(context.Context) error); ok {
+		r0 = returnFunc(ctx)
 	} else {
 		r0 = ret.Error(0)
 	}
@@ -164,16 +163,16 @@ type MockDataAuditClient_Stop_Call struct {
 }
 
 // Stop is a helper method to define mock.On call
-//   - stopTimeout time.Duration
-func (_e *MockDataAuditClient_Expecter) Stop(stopTimeout interface{}) *MockDataAuditClient_Stop_Call {
-	return &MockDataAuditClient_Stop_Call{Call: _e.mock.On("Stop", stopTimeout)}
+//   - ctx context.Context
+func (_e *MockDataAuditClient_Expecter) Stop(ctx interface{}) *MockDataAuditClient_Stop_Call {
+	return &MockDataAuditClient_Stop_Call{Call: _e.mock.On("Stop", ctx)}
 }
 
-func (_c *MockDataAuditClient_Stop_Call) Run(run func(stopTimeout time.Duration)) *MockDataAuditClient_Stop_Call {
+func (_c *MockDataAuditClient_Stop_Call) Run(run func(ctx context.Context)) *MockDataAuditClient_Stop_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		var arg0 time.Duration
+		var arg0 context.Context
 		if args[0] != nil {
-			arg0 = args[0].(time.Duration)
+			arg0 = args[0].(context.Context)
 		}
 		run(
 			arg0,
@@ -187,7 +186,7 @@ func (_c *MockDataAuditClient_Stop_Call) Return(err error) *MockDataAuditClient_
 	return _c
 }
 
-func (_c *MockDataAuditClient_Stop_Call) RunAndReturn(run func(stopTimeout time.Duration) error) *MockDataAuditClient_Stop_Call {
+func (_c *MockDataAuditClient_Stop_Call) RunAndReturn(run func(ctx context.Context) error) *MockDataAuditClient_Stop_Call {
 	_c.Call.Return(run)
 	return _c
 }
