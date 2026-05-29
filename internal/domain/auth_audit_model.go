@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/ElfAstAhe/go-service-template/pkg/domain"
-	"github.com/ElfAstAhe/tiny-audit-service/internal/domain/errs"
+	"github.com/ElfAstAhe/go-service-template/pkg/errs"
 )
 
 type AuthAudit struct {

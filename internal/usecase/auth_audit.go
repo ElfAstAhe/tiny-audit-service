@@ -6,7 +6,6 @@ import (
 	usecase "github.com/ElfAstAhe/go-service-template/pkg/db"
 	"github.com/ElfAstAhe/go-service-template/pkg/errs"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/domain"
-	domerrs "github.com/ElfAstAhe/tiny-audit-service/internal/domain/errs"
 )
 
 type AuthAuditUseCase interface {
@@ -29,7 +28,7 @@ func NewAuthAuditUseCase(tm usecase.TransactionManager, authRepo domain.AuthAudi
 
 func (aai *AuthAuditInteractor) Audit(ctx context.Context, data *domain.AuthAudit) error {
 	if err := aai.validate(data); err != nil {
-		return domerrs.NewBllValidateError("AuthAuditInteractor.Audit", "validate failed", err)
+		return errs.NewBllValidateError("AuthAuditInteractor.Audit", "validate failed", err)
 	}
 
 	err := aai.tm.WithinTransaction(ctx, nil, func(ctx context.Context) error {
@@ -38,7 +37,7 @@ func (aai *AuthAuditInteractor) Audit(ctx context.Context, data *domain.AuthAudi
 		return txErr
 	})
 	if err != nil {
-		return domerrs.NewBllError("AuthAuditInteractor.Audit", "add auth audit failed", err)
+		return errs.NewBllError("AuthAuditInteractor.Audit", "add auth audit failed", err)
 	}
 
 	return nil

@@ -4,8 +4,8 @@ import (
 	"context"
 
 	usecase "github.com/ElfAstAhe/go-service-template/pkg/db"
+	"github.com/ElfAstAhe/go-service-template/pkg/errs"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/domain"
-	"github.com/ElfAstAhe/tiny-audit-service/internal/domain/errs"
 )
 
 type TailCutUseCase[ID comparable] interface {

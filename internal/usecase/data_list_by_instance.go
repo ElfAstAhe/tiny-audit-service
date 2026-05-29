@@ -6,7 +6,6 @@ import (
 
 	"github.com/ElfAstAhe/go-service-template/pkg/errs"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/domain"
-	domerrs "github.com/ElfAstAhe/tiny-audit-service/internal/domain/errs"
 )
 
 type DataListByInstanceUseCase interface {
@@ -27,12 +26,12 @@ func NewDataListByInstanceUseCase(dataAuditRepo domain.DataAuditRepository) *Dat
 
 func (dli *DataListByInstanceInteractor) List(ctx context.Context, typeName, instanceID string, limit, offset int) ([]*domain.DataAudit, error) {
 	if err := dli.validate(typeName, instanceID, limit, offset); err != nil {
-		return nil, domerrs.NewBllValidateError("DataListByInstanceInteractor.List", "validate income failed", err)
+		return nil, errs.NewBllValidateError("DataListByInstanceInteractor.List", "validate income failed", err)
 	}
 
 	res, err := dli.dataAuditRepo.ListByInstance(ctx, typeName, instanceID, limit, offset)
 	if err != nil {
-		return nil, domerrs.NewBllError("DataListByInstanceInteractor.List", fmt.Sprintf("data audit list for type name [%s] and instance id [%s] with limit [%v] and offset [%v] failed", typeName, instanceID, limit, offset), err)
+		return nil, errs.NewBllError("DataListByInstanceInteractor.List", fmt.Sprintf("data audit list for type name [%s] and instance id [%s] with limit [%v] and offset [%v] failed", typeName, instanceID, limit, offset), err)
 	}
 
 	return res, nil

@@ -5,6 +5,8 @@ import (
 
 	"github.com/ElfAstAhe/tiny-audit-service/internal/facade/dto"
 	"github.com/go-chi/chi/v5/middleware"
+
+	_ "github.com/ElfAstAhe/tiny-audit-service/internal/transport"
 )
 
 // postAPIV1AuditData godoc

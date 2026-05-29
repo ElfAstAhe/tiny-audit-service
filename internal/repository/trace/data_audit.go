@@ -27,6 +27,7 @@ func NewDataAuditTraceRepository(next domain.DataAuditRepository) *DataAuditTrac
 	}
 }
 
+//goland:noinspection DuplicatedCode
 func (dat *DataAuditTraceRepository) ListByPeriod(ctx context.Context, from, till time.Time, limit, offset int) ([]*domain.DataAudit, error) {
 	ctx, span := dat.StartSpan(ctx, fmt.Sprintf("%s.ListByPeriod", dat.BaseCRUDTraceRepository.GetRepositoryName()))
 	defer span.End()
