@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/ElfAstAhe/go-service-template/pkg/auth"
+	libconf "github.com/ElfAstAhe/go-service-template/pkg/config"
 	"github.com/ElfAstAhe/go-service-template/pkg/helper"
 	"github.com/ElfAstAhe/go-service-template/pkg/logger"
 	libhttp "github.com/ElfAstAhe/go-service-template/pkg/transport/http"
@@ -143,7 +144,7 @@ func (cr *AppChiRouter) setupRoutes() {
 	// readiness check
 	cr.router.Get("/readyz", cr.getReadyz)
 	// config (debug)
-	if cr.config.App.Env != config.AppEnvProduction {
+	if cr.config.App.Env != libconf.AppEnvProduction {
 		cr.router.Get("/config", cr.getConfig)
 	}
 
