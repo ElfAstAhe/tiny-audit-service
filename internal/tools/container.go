@@ -1,4 +1,4 @@
-package usecase
+package tools
 
 import (
 	"context"
@@ -6,7 +6,7 @@ import (
 	"github.com/ElfAstAhe/go-service-template/pkg/container"
 )
 
-const ContainerName string = "useCase"
+const ContainerName string = "tools"
 
 type Container struct {
 	*container.BaseLazyContainer

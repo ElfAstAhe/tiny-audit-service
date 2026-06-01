@@ -6,6 +6,8 @@ import (
 	"github.com/ElfAstAhe/go-service-template/pkg/container"
 )
 
+const ContainerName string = "app"
+
 const (
 	InstanceApplication       string = "application"
 	InstanceApplicationReady  string = "application-ready"
@@ -20,11 +22,11 @@ type Container struct {
 
 var _ container.Container = (*Container)(nil)
 
-func NewAppContainer(
+func NewContainer(
 	orchestrator container.Orchestrator,
 ) *Container {
 	return &Container{
-		BaseContainer: container.NewBaseContainer(AppContainerName, orchestrator),
+		BaseContainer: container.NewBaseContainer(ContainerName, orchestrator),
 	}
 }
 

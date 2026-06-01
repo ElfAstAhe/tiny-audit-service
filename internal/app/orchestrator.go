@@ -12,6 +12,8 @@ import (
 	"github.com/ElfAstAhe/tiny-audit-service/internal/config"
 )
 
+const OrchestratorName string = "orchestrator"
+
 type Orchestrator struct {
 	*container.BaseOrchestrator
 	conf   *config.Config
@@ -29,7 +31,7 @@ func NewOrchestrator(conf *config.Config, log logger.Logger) *Orchestrator {
 }
 
 func (o *Orchestrator) Init(ctx context.Context) error {
-	appCnt, err := o.GetContainer(AppContainerName)
+	appCnt, err := o.GetContainer(ContainerName)
 	if err != nil {
 		return errs.NewContainerError(OrchestratorName, "init failed", err)
 	}

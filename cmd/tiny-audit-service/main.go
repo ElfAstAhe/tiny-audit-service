@@ -20,6 +20,8 @@ import (
 // @license.url   http://www.apache.org
 
 // @BasePath  /
+//
+//goland:noinspection SpellCheckingInspection
 func main() {
 	var err error
 	// 0. startup logger
