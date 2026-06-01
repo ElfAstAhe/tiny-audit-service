@@ -24,7 +24,7 @@ func NewAuthAuditGRPCService(authAuditFacade facade.AuthAuditFacade) *AuthAuditG
 func (aas *AuthAuditGRPCService) Audit(ctx context.Context, req *pb.AuthAuditRequest) (*emptypb.Empty, error) {
 	err := aas.authAuditFacade.Audit(ctx, MapAuthAuditGRPCToDTO(req.GetData()))
 	if err != nil {
-		return nil, MapToGrpcError(err)
+		return nil, mapToGrpcError(err)
 	}
 
 	return &emptypb.Empty{}, nil
@@ -33,7 +33,7 @@ func (aas *AuthAuditGRPCService) Audit(ctx context.Context, req *pb.AuthAuditReq
 func (aas *AuthAuditGRPCService) ListByPeriod(ctx context.Context, req *pb.ListByPeriodRequest) (*pb.AuthAuditInstances, error) {
 	dtoRes, err := aas.authAuditFacade.ListByPeriod(ctx, MapAuditPeriodGRPCToDTO(req))
 	if err != nil {
-		return nil, MapToGrpcError(err)
+		return nil, mapToGrpcError(err)
 	}
 
 	return pb.AuthAuditInstances_builder{
@@ -44,7 +44,7 @@ func (aas *AuthAuditGRPCService) ListByPeriod(ctx context.Context, req *pb.ListB
 func (aas *AuthAuditGRPCService) ListByUsername(ctx context.Context, req *pb.AuthListByUsernameRequest) (*pb.AuthAuditInstances, error) {
 	dtoRes, err := aas.authAuditFacade.ListByUsername(ctx, MapAuthAuditUserGRPCToDTO(req))
 	if err != nil {
-		return nil, MapToGrpcError(err)
+		return nil, mapToGrpcError(err)
 	}
 
 	return pb.AuthAuditInstances_builder{

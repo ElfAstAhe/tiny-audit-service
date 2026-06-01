@@ -3,6 +3,7 @@ package rest
 import (
 	"net/http"
 
+	libhttp "github.com/ElfAstAhe/go-service-template/pkg/transport/http"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/facade/dto"
 	"github.com/go-chi/chi/v5/middleware"
 
@@ -28,19 +29,19 @@ func (cr *AppChiRouter) postAPIV1AuditDataPeriod(rw http.ResponseWriter, r *http
 	defer cr.log.Debugf("postAPIV1AuditDataPeriod finish, requestID [%s]", middleware.GetReqID(r.Context()))
 
 	var income = &dto.AuditPeriodDTO{}
-	err := cr.decodeJSON(r, income)
+	err := libhttp.DecodeJSON(r, income)
 	if err != nil {
 		cr.log.Errorf("postAPIV1AuditDataPeriod decode income json [%v]", err)
-		cr.renderError(rw, err)
+		libhttp.RenderError(rw, err, mapToHTTPStatus)
 		return
 	}
 
 	res, err := cr.dataAuditFacade.ListByPeriod(r.Context(), income)
 	if err != nil {
 		cr.log.Errorf("postAPIV1AuditDataPeriod list by period [%v]", err)
-		cr.renderError(rw, err)
+		libhttp.RenderError(rw, err, mapToHTTPStatus)
 		return
 	}
 
-	cr.renderJSON(rw, http.StatusOK, res)
+	libhttp.RenderJSON(rw, http.StatusOK, res, mapToHTTPStatus)
 }

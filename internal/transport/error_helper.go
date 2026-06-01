@@ -4,19 +4,18 @@ import (
 	"errors"
 
 	"github.com/ElfAstAhe/go-service-template/pkg/errs"
-	transperrs "github.com/ElfAstAhe/tiny-audit-service/internal/transport/errs"
 )
 
 func IsBadRequest(err error) bool {
 	var (
 		errInvalidArgument *errs.InvalidArgumentError
 		errBllValidate     *errs.BllValidateError
-		errTrMapping       *transperrs.TrMappingError
+		errTlMapping       *errs.TlMappingError
 	)
 
 	return errors.As(err, &errInvalidArgument) ||
 		errors.As(err, &errBllValidate) ||
-		errors.As(err, &errTrMapping)
+		errors.As(err, &errTlMapping)
 }
 
 func IsUnauthorized(err error) bool {

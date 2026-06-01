@@ -3,6 +3,7 @@ package rest
 import (
 	"net/http"
 
+	libhttp "github.com/ElfAstAhe/go-service-template/pkg/transport/http"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/facade/dto"
 	"github.com/go-chi/chi/v5/middleware"
 
@@ -26,11 +27,11 @@ func (cr *AppChiRouter) postAPIV1AuditData(rw http.ResponseWriter, r *http.Reque
 	defer cr.log.Debugf("postAPIV1AuditData finish, requestID [%s]", middleware.GetReqID(r.Context()))
 
 	var income = &dto.DataAuditDTO{}
-	err := cr.decodeJSON(r, income)
+	err := libhttp.DecodeJSON(r, income)
 	if err != nil {
 		cr.log.Errorf("postAPIV1AuditData decode income json [%v]", err)
 
-		cr.renderError(rw, err)
+		libhttp.RenderError(rw, err, mapToHTTPStatus)
 
 		return
 	}
@@ -39,11 +40,10 @@ func (cr *AppChiRouter) postAPIV1AuditData(rw http.ResponseWriter, r *http.Reque
 	if err != nil {
 		cr.log.Errorf("postAPIV1AuditData post data audit error, [%v]", err)
 
-		cr.renderError(rw, err)
+		libhttp.RenderError(rw, err, mapToHTTPStatus)
 
 		return
 	}
 
-	cr.renderEmpty(rw, http.StatusCreated)
-
+	libhttp.RenderEmpty(rw, http.StatusCreated)
 }
