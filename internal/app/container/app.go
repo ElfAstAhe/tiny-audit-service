@@ -1,12 +1,10 @@
-package app
+package container
 
 import (
 	"context"
 
 	"github.com/ElfAstAhe/go-service-template/pkg/container"
 )
-
-const ContainerName string = "app"
 
 const (
 	InstanceApplication       string = "application"
@@ -16,20 +14,20 @@ const (
 	InstanceLogger            string = "logger"
 )
 
-type Container struct {
+type AppContainer struct {
 	*container.BaseContainer
 }
 
-var _ container.Container = (*Container)(nil)
+var _ container.Container = (*AppContainer)(nil)
 
-func NewContainer(
+func NewAppContainer(
 	orchestrator container.Orchestrator,
-) *Container {
-	return &Container{
-		BaseContainer: container.NewBaseContainer(ContainerName, orchestrator),
+) *AppContainer {
+	return &AppContainer{
+		BaseContainer: container.NewBaseContainer(AppContainerName, orchestrator),
 	}
 }
 
-func (c *Container) Init(ctx context.Context) error {
+func (ac *AppContainer) Init(ctx context.Context) error {
 	return nil
 }

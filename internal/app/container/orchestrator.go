@@ -1,4 +1,4 @@
-package app
+package container
 
 import (
 	"context"
@@ -11,8 +11,6 @@ import (
 	"github.com/ElfAstAhe/go-service-template/pkg/logger"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/config"
 )
-
-const OrchestratorName string = "orchestrator"
 
 type Orchestrator struct {
 	*container.BaseOrchestrator
@@ -31,7 +29,7 @@ func NewOrchestrator(conf *config.Config, log logger.Logger) *Orchestrator {
 }
 
 func (o *Orchestrator) Init(ctx context.Context) error {
-	appCnt, err := o.GetContainer(ContainerName)
+	appCnt, err := o.GetContainer(AppContainerName)
 	if err != nil {
 		return errs.NewContainerError(OrchestratorName, "init failed", err)
 	}

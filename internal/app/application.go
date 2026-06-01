@@ -6,15 +6,8 @@ import (
 	"github.com/ElfAstAhe/go-service-template/pkg/app"
 	"github.com/ElfAstAhe/go-service-template/pkg/errs"
 	"github.com/ElfAstAhe/go-service-template/pkg/logger"
+	"github.com/ElfAstAhe/tiny-audit-service/internal/app/container"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/config"
-	"github.com/ElfAstAhe/tiny-audit-service/internal/facade"
-	"github.com/ElfAstAhe/tiny-audit-service/internal/repository"
-	"github.com/ElfAstAhe/tiny-audit-service/internal/repository/postgres"
-	"github.com/ElfAstAhe/tiny-audit-service/internal/tools"
-	"github.com/ElfAstAhe/tiny-audit-service/internal/transport/grpc"
-	"github.com/ElfAstAhe/tiny-audit-service/internal/transport/rest"
-	"github.com/ElfAstAhe/tiny-audit-service/internal/transport/worker"
-	"github.com/ElfAstAhe/tiny-audit-service/internal/usecase"
 )
 
 type Application struct {
@@ -34,7 +27,7 @@ func NewApplication(opts ...Option) (*Application, error) {
 	}
 	// embed
 	res.BaseApplication = app.NewBaseApplication(
-		app.WithOrchestrator(NewOrchestrator(res.conf, res.log)),
+		app.WithOrchestrator(container.NewOrchestrator(res.conf, res.log)),
 		app.WithLogger(res.log),
 		app.WithCloseTimeout(res.conf.App.CloseTimeout),
 		app.WithStopTimeout(res.conf.App.StopTimeout),
@@ -42,25 +35,25 @@ func NewApplication(opts ...Option) (*Application, error) {
 	// orchestrator and containers
 	err := errors.Join(
 		// app container
-		res.GetOrchestrator().Register(NewContainer(res.GetOrchestrator())),
+		res.GetOrchestrator().Register(container.NewAppContainer(res.GetOrchestrator())),
 		// tools container
-		res.GetOrchestrator().Register(tools.NewContainer(res.GetOrchestrator())),
+		res.GetOrchestrator().Register(container.NewToolsContainer(res.GetOrchestrator())),
 		// postgres container
-		res.GetOrchestrator().Register(postgres.NewContainer(res.GetOrchestrator())),
+		res.GetOrchestrator().Register(container.NewPgContainer(res.GetOrchestrator())),
 		// repository container
-		res.GetOrchestrator().Register(repository.NewContainer(res.GetOrchestrator())),
+		res.GetOrchestrator().Register(container.NewRepositoryContainer(res.GetOrchestrator())),
 		// use case container
-		res.GetOrchestrator().Register(usecase.NewContainer(res.GetOrchestrator())),
+		res.GetOrchestrator().Register(container.NewUseCaseContainer(res.GetOrchestrator())),
 		// facade container
-		res.GetOrchestrator().Register(facade.NewContainer(res.GetOrchestrator())),
+		res.GetOrchestrator().Register(container.NewFacadeContainer(res.GetOrchestrator())),
 		// services container (inner kitchen)
 		// res.GetOrchestrator().Register(container.NewServiceContainer(res.GetOrchestrator())),
 		// worker container
-		res.GetOrchestrator().Register(worker.NewContainer(res.GetOrchestrator())),
+		res.GetOrchestrator().Register(container.NewWorkerContainer(res.GetOrchestrator())),
 		// http container
-		res.GetOrchestrator().Register(rest.NewContainer(res.GetOrchestrator())),
+		res.GetOrchestrator().Register(container.NewHTTPContainer(res.GetOrchestrator())),
 		// gRPC container
-		res.GetOrchestrator().Register(grpc.NewContainer(res.GetOrchestrator())),
+		res.GetOrchestrator().Register(container.NewGRPCContainer(res.GetOrchestrator())),
 	)
 	if err != nil {
 		return nil, errs.NewCommonError("application create failed", err)
@@ -70,13 +63,13 @@ func NewApplication(opts ...Option) (*Application, error) {
 }
 
 func (app *Application) Init() error {
-	appCnt, err := app.GetOrchestrator().GetContainer(ContainerName)
+	appCnt, err := app.GetOrchestrator().GetContainer(container.AppContainerName)
 	if err != nil {
 		return errs.NewCommonError("app init", err)
 	}
 	err = errors.Join(
-		appCnt.RegisterInstance(InstanceApplication, app),
-		appCnt.RegisterInstance(InstanceApplicationReady, app.IsReady),
+		appCnt.RegisterInstance(container.InstanceApplication, app),
+		appCnt.RegisterInstance(container.InstanceApplicationReady, app.IsReady),
 	)
 	if err != nil {
 		return errs.NewCommonError("app init", err)
