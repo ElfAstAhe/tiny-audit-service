@@ -8,6 +8,11 @@ import (
 	"github.com/ElfAstAhe/go-service-template/pkg/errs"
 )
 
+const (
+	InstanceAuthFacade string = "AuthFacade"
+	InstanceDataFacade string = "DataFacade"
+)
+
 type FacadeContainer struct {
 	*container.BaseLazyContainer
 }
@@ -23,7 +28,8 @@ func NewFacadeContainer(orchestrator container.Orchestrator) *FacadeContainer {
 
 func (fc *FacadeContainer) Init(ctx context.Context) error {
 	err := errors.Join(
-	//fc.RegisterProvider(InstanceTestFacade, fc.providerTestFacade),
+		fc.RegisterProvider(InstanceAuthFacade, fc.providerAuthFacade),
+		fc.RegisterProvider(InstanceDataFacade, fc.providerDataFacade),
 	)
 	if err != nil {
 		return errs.NewContainerError(fc.GetName(), "container init: register providers failed", err)

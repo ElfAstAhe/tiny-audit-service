@@ -27,6 +27,7 @@ type Config struct {
 
 // linker params
 var (
+	AppName      string
 	AppVersion   string
 	AppBuildTime string
 )

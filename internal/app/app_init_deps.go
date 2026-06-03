@@ -96,7 +96,7 @@ func (app *App) initDependencies() error {
 					),
 					libworker.NewBasePoolConfig(
 						app.config.AuthTC.WorkerCount,
-						app.config.AuthTC.WorkerCount,
+						app.config.AuthTC.DataCapacity,
 						app.config.AuthTC.CompleteProcessing,
 						app.config.AuthTC.ShutdownTimeout,
 					),
@@ -119,7 +119,7 @@ func (app *App) initDependencies() error {
 					),
 					libworker.NewBasePoolConfig(
 						app.config.DataTC.WorkerCount,
-						app.config.DataTC.WorkerCount,
+						app.config.DataTC.DataCapacity,
 						app.config.DataTC.CompleteProcessing,
 						app.config.DataTC.ShutdownTimeout,
 					),

@@ -9,12 +9,17 @@ import (
 )
 
 const (
-	InstanceTM              string = "TransactionManager"
-	InstanceTestGetUC       string = "TestGetUC"
-	InstanceTestGetByCodeUC string = "TestGetByCodeUC"
-	InstanceTestListUC      string = "TestListUC"
-	InstanceTestSaveUC      string = "TestSaveUC"
-	InstanceTestDeleteUC    string = "TestDeleteUC"
+	InstanceTM                   string = "TransactionManager"
+	InstanceAuthAuditUC          string = "AuthAuditUC"
+	InstanceAuthListByPeriodUC   string = "AuthListByPeriodUC"
+	InstanceAuthListByUsernameUC string = "AuthListByUsernameUC"
+	InstanceDataAuditUC          string = "DataAuditUC"
+	InstanceDataListByPeriodUC   string = "DataListByPeriodUC"
+	InstanceDataListByInstanceUC string = "DataListByInstanceUC"
+	InstanceAuthAuditTailGetUC   string = "AuthAuditTailGetUC"
+	InstanceAuthAuditTailCutUC   string = "AuthAuditTailCutUC"
+	InstanceDataAuditTailGetUC   string = "DataAuditTailGetUC"
+	InstanceDataAuditTailCutUC   string = "DataAuditTailCutUC"
 )
 
 type UseCaseContainer struct {
@@ -33,11 +38,16 @@ func NewUseCaseContainer(orchestrator container.Orchestrator) *UseCaseContainer 
 func (ucc *UseCaseContainer) Init(ctx context.Context) error {
 	err := errors.Join(
 		ucc.RegisterProvider(InstanceTM, ucc.providerTM),
-		//ucc.RegisterProvider(InstanceTestGetUC, ucc.providerTestGetUC),
-		//ucc.RegisterProvider(InstanceTestGetByCodeUC, ucc.providerTestGetByCodeUC),
-		//ucc.RegisterProvider(InstanceTestListUC, ucc.providerTestListUC),
-		//ucc.RegisterProvider(InstanceTestSaveUC, ucc.providerTestSaveUC),
-		//ucc.RegisterProvider(InstanceTestDeleteUC, ucc.providerTestDeleteUC),
+		ucc.RegisterProvider(InstanceAuthAuditUC, ucc.providerAuthAuditUC),
+		ucc.RegisterProvider(InstanceAuthListByPeriodUC, ucc.providerAuthListByPeriodUC),
+		ucc.RegisterProvider(InstanceAuthListByUsernameUC, ucc.providerAuthListByUsernameUC),
+		ucc.RegisterProvider(InstanceDataAuditUC, ucc.providerDataAuditUC),
+		ucc.RegisterProvider(InstanceDataListByPeriodUC, ucc.providerDataListByPeriodUC),
+		ucc.RegisterProvider(InstanceDataListByInstanceUC, ucc.providerDataListByInstanceUC),
+		ucc.RegisterProvider(InstanceAuthAuditTailGetUC, ucc.providerAuthAuditTailGetUC),
+		ucc.RegisterProvider(InstanceAuthAuditTailCutUC, ucc.providerAuthAuditTailCutUC),
+		ucc.RegisterProvider(InstanceDataAuditTailGetUC, ucc.providerDataAuditTailGetUC),
+		ucc.RegisterProvider(InstanceDataAuditTailCutUC, ucc.providerDataAuditTailCutUC),
 	)
 	if err != nil {
 		return errs.NewContainerError(ucc.GetName(), "container init: register providers failed", err)

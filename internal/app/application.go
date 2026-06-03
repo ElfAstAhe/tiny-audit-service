@@ -47,7 +47,7 @@ func NewApplication(opts ...Option) (*Application, error) {
 		// facade container
 		res.GetOrchestrator().Register(container.NewFacadeContainer(res.GetOrchestrator())),
 		// services container (inner kitchen)
-		// res.GetOrchestrator().Register(container.NewServiceContainer(res.GetOrchestrator())),
+		res.GetOrchestrator().Register(container.NewServiceContainer(res.GetOrchestrator())),
 		// worker container
 		res.GetOrchestrator().Register(container.NewWorkerContainer(res.GetOrchestrator())),
 		// http container

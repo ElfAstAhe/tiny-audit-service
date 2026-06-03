@@ -2,15 +2,15 @@ package container
 
 // containers
 const (
-	OrchestratorName        string = "orchestrator"
-	AppContainerName        string = "app"
-	ToolsContainerName      string = "tools"
-	DBContainerName         string = "db"
-	RepositoryContainerName string = "repository"
-	UseCaseContainerName    string = "useCase"
-	FacadeContainerName     string = "facade"
-	ServiceContainerName    string = "service"
-	HTTPContainerName       string = "http"
-	GRPCContainerName       string = "gRPC"
-	WorkerContainerName     string = "worker"
+	OrchestratorName        string = "orchestrator-container"
+	AppContainerName        string = "app-container"
+	ToolsContainerName      string = "tools-container"
+	DBContainerName         string = "db-container"
+	RepositoryContainerName string = "repository-container"
+	UseCaseContainerName    string = "useCase-container"
+	FacadeContainerName     string = "facade-container"
+	ServiceContainerName    string = "service-container"
+	HTTPContainerName       string = "http-container"
+	GRPCContainerName       string = "gRPC-container"
+	WorkerContainerName     string = "worker-container"
 )

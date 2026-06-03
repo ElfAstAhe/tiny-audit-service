@@ -9,7 +9,8 @@ import (
 )
 
 const (
-	InstanceTestRepo string = "testRepo"
+	InstanceAuthAuditRepo string = "authAuditRepo"
+	InstanceDataAuditRepo string = "dataAuditRepo"
 )
 
 type RepositoryContainer struct {
@@ -27,7 +28,8 @@ func NewRepositoryContainer(orchestrator container.Orchestrator) *RepositoryCont
 
 func (rc *RepositoryContainer) Init(ctx context.Context) error {
 	err := errors.Join(
-	//rc.RegisterProvider(InstanceTestRepo, rc.providerTestRepository),
+		rc.RegisterProvider(InstanceAuthAuditRepo, rc.providerAuthAuditRepo),
+		rc.RegisterProvider(InstanceDataAuditRepo, rc.providerDataAuditRepo),
 	)
 	if err != nil {
 		return errs.NewContainerError(rc.GetName(), "container init: register providers failed", err)
