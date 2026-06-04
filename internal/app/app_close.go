@@ -59,6 +59,11 @@ func (app *App) stopStartup() {
 	log := app.logger.GetLogger("App.stopStartup")
 	var stopWG sync.WaitGroup
 
+	authStopCtx, authStopCancel := context.WithTimeout(app.ctx, app.config.AuthTC.ShutdownTimeout)
+	defer authStopCancel()
+	dataStopCtx, dataStopCancel := context.WithTimeout(app.ctx, app.config.DataTC.ShutdownTimeout)
+	defer dataStopCancel()
+
 	if app.authAuditTailCutter != nil {
 		stopWG.Add(1)
 		go func() {
@@ -66,7 +71,7 @@ func (app *App) stopStartup() {
 			log.Info("stoping auth tail cutter...")
 			defer log.Info("done stop auth tail cutter")
 
-			if err := app.authAuditTailCutter.Stop(app.config.HTTP.ShutdownTimeout); err != nil {
+			if err := app.authAuditTailCutter.Stop(authStopCtx); err != nil {
 				log.Errorf("failed to stop auth tail cutter [%v]", err)
 			}
 			app.authAuditTailCutter = nil
@@ -80,7 +85,7 @@ func (app *App) stopStartup() {
 			log.Info("stoping data tail cutter...")
 			defer log.Info("done stop data tail cutter")
 
-			if err := app.dataAuditTailCutter.Stop(app.config.HTTP.ShutdownTimeout); err != nil {
+			if err := app.dataAuditTailCutter.Stop(dataStopCtx); err != nil {
 				log.Errorf("failed to stop data tail cutter [%v]", err)
 			}
 			app.dataAuditTailCutter = nil

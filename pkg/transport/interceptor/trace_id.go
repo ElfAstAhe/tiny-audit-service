@@ -15,7 +15,7 @@ const (
 	MDTraceID            string = "trace-id"
 )
 
-func AuditTraceIDExtractorUnaryServerInterceptor(headers []string) grpc.UnaryServerInterceptor {
+func AuditTraceIDExtractorUnaryServerInterceptor(headers ...string) grpc.UnaryServerInterceptor {
 	return func(ctx context.Context, req any, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (any, error) {
 		var traceID string
 		for _, header := range headers {
@@ -33,7 +33,7 @@ func AuditTraceIDExtractorUnaryServerInterceptor(headers []string) grpc.UnarySer
 	}
 }
 
-func AuditTraceIDExtractorStreamServerInterceptor(headers []string) grpc.StreamServerInterceptor {
+func AuditTraceIDExtractorStreamServerInterceptor(headers ...string) grpc.StreamServerInterceptor {
 	return func(srv any, ss grpc.ServerStream, info *grpc.StreamServerInfo, handler grpc.StreamHandler) error {
 		var traceID string
 		for _, header := range headers {

@@ -2,13 +2,16 @@ package config
 
 import (
 	"time"
+
+	"github.com/ElfAstAhe/go-service-template/pkg/config"
 )
 
 // app
 const (
-	defaultAppEnv       AppEnv = AppEnvDevelopment
-	defaultMaxListLimit int    = 100
-	defaultTokenIssuer  string = "tiny-auth-service"
+	defaultAppEnv       config.AppEnv = config.AppEnvDevelopment
+	defaultAppNodeName  string        = ApplicationName
+	defaultMaxListLimit int           = 100
+	defaultTokenIssuer  string        = "tiny-auth-service"
 )
 
 // auth tail cutter
@@ -37,7 +40,7 @@ const (
 
 // app
 const (
-	keyAppEnv                string = "app.env"
+	keyAppNodeName           string = "app.node_name"
 	keyAppMaxListLimit       string = "app.max_list_limit"
 	keyAppTokenIssuer        string = "app.token_issuer"
 	keyAppCipherKey          string = "app.cipher_key"

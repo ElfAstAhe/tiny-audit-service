@@ -7,20 +7,19 @@ import (
 )
 
 func (app *App) initHTTPRouter() error {
-	app.httpRouter = rest.NewAppChiRouter(
-		app.config,
-		app.logger,
-		app.jwtHelper,
-		app.jwtHTTPHelper,
-		app.authHelper,
-		app.health,
-		nil,
-		nil,
-		app.authFacade,
-		app.dataFacade,
+	var err error
+	app.httpRouter, err = rest.NewAppRouter(
+		rest.WithConfig(app.config),
+		rest.WithLogger(app.logger),
+		rest.WithJwtHelper(app.jwtHelper),
+		rest.WithJwtHTTPHelper(app.jwtHTTPHelper),
+		rest.WithAuthHelper(app.authHelper),
+		rest.WithHealth(app.health),
+		rest.WithAuthAuditFacade(app.authFacade),
+		rest.WithDataAuditFacade(app.dataFacade),
 	)
 
-	return nil
+	return err
 }
 
 func (app *App) initHTTPServer() error {

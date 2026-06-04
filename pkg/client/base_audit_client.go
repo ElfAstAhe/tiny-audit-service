@@ -3,7 +3,6 @@ package client
 import (
 	"context"
 	"sync/atomic"
-	"time"
 
 	"github.com/ElfAstAhe/go-service-template/pkg/errs"
 	"github.com/ElfAstAhe/go-service-template/pkg/logger"
@@ -45,6 +44,7 @@ func NewBaseAuditClient[D any](
 			conf.WorkerCount,
 			conf.DataCapacity,
 			conf.CompleteProcess,
+			conf.StopTimeout,
 		),
 		res.jobHandler,
 		log,
@@ -57,8 +57,8 @@ func (bac *BaseAuditClient[D]) Start(ctx context.Context) error {
 	return bac.pool.Start(ctx)
 }
 
-func (bac *BaseAuditClient[D]) Stop(stopTimeout time.Duration) error {
-	return bac.pool.Stop(stopTimeout)
+func (bac *BaseAuditClient[D]) Stop(ctx context.Context) error {
+	return bac.pool.Stop(ctx)
 }
 
 func (bac *BaseAuditClient[D]) Audit(data D) error {

@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/ElfAstAhe/go-service-template/pkg/auth"
+	libconf "github.com/ElfAstAhe/go-service-template/pkg/config"
 	"github.com/ElfAstAhe/go-service-template/pkg/helper"
 	"github.com/ElfAstAhe/go-service-template/pkg/logger"
 	libhttp "github.com/ElfAstAhe/go-service-template/pkg/transport/http"
@@ -34,7 +35,33 @@ type AppChiRouter struct {
 
 var _ libhttp.Router = (*AppChiRouter)(nil)
 
-func NewAppChiRouter(
+func NewAppRouter(opts ...Option) (*AppChiRouter, error) {
+	options := &AppRouterOptions{}
+
+	for _, opt := range opts {
+		opt(options)
+	}
+
+	err := options.Validate()
+	if err != nil {
+		return nil, err
+	}
+
+	return newAppChiRouter(
+		options.Conf,
+		options.Logger,
+		options.JWTHelper,
+		options.JWTHTTPHelper,
+		options.AuthHelper,
+		options.Health,
+		options.Healthz,
+		options.Readyz,
+		options.AuthAuditFacade,
+		options.DataAuditFacade,
+	), err
+}
+
+func newAppChiRouter(
 	config *config.Config,
 	logger logger.Logger,
 	jwtHelper *helper.JWTHelper,
@@ -96,19 +123,14 @@ func (cr *AppChiRouter) setupMiddleware(
 	cr.router.Use(libmware.MetricsMiddleware)
 	// requestID
 	cr.router.Use(middleware.RequestID)
+	// requestID (own implementation)
+	cr.router.Use(libmware.NewDefaultRequestIDExtractor().Handler)
+	// traceID (own implementation)
+	cr.router.Use(libmware.NewDefaultTraceIDExtractor().Handler)
 	// audit requestID
-	cr.router.Use(pkgmware.NewAuditRequestIDExtractor([]string{
-		pkgmware.HeaderXRequestID,
-		pkgmware.HeaderXCorrelationID,
-		pkgmware.HeaderRequestID,
-	}).Handle)
+	cr.router.Use(pkgmware.NewDefaultAuditRequestIDExtractor().Handle)
 	// audit trace id
-	cr.router.Use(pkgmware.NewAuditTraceIDExtractor([]string{
-		pkgmware.HeaderXCloudTraceContext,
-		pkgmware.HeaderTraceParent,
-		pkgmware.HeaderXTraceID,
-		pkgmware.HeaderTraceID,
-	}).Handle)
+	cr.router.Use(pkgmware.NewDefaultAuditTraceIDExtractor().Handle)
 	// realIP
 	cr.router.Use(middleware.RealIP)
 	// recoverer
@@ -148,7 +170,7 @@ func (cr *AppChiRouter) setupRoutes() {
 	// readiness check
 	cr.router.Get("/readyz", cr.getReadyz)
 	// config (debug)
-	if cr.config.App.Env != config.AppEnvProduction {
+	if cr.config.App.Env != libconf.AppEnvProduction {
 		cr.router.Get("/config", cr.getConfig)
 	}
 

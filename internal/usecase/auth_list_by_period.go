@@ -7,7 +7,6 @@ import (
 
 	"github.com/ElfAstAhe/go-service-template/pkg/errs"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/domain"
-	domerrs "github.com/ElfAstAhe/tiny-audit-service/internal/domain/errs"
 )
 
 type AuthListByPeriodUseCase interface {
@@ -28,12 +27,12 @@ func NewAuthListByPeriodUseCase(authAuditRepo domain.AuthAuditRepository) *AuthL
 
 func (alp *AuthListByPeriodInteractor) List(ctx context.Context, from, till time.Time, limit int, offset int) ([]*domain.AuthAudit, error) {
 	if err := alp.validate(from, till, limit, offset); err != nil {
-		return nil, domerrs.NewBllValidateError("AuthListByPeriodInteractor.List", "validate income failed", err)
+		return nil, errs.NewBllValidateError("AuthListByPeriodInteractor.List", "validate income failed", err)
 	}
 
 	res, err := alp.authAuditRepo.ListByPeriod(ctx, from, till, limit, offset)
 	if err != nil {
-		return nil, domerrs.NewBllError("AuthListByPeriodInteractor.List", fmt.Sprintf("list auth audit data by period from [%s] till [%s] with limit [%v] and offset [%v] failed", from.Format(time.DateTime), till.Format(time.DateTime), limit, offset), err)
+		return nil, errs.NewBllError("AuthListByPeriodInteractor.List", fmt.Sprintf("list auth audit data by period from [%s] till [%s] with limit [%v] and offset [%v] failed", from.Format(time.DateTime), till.Format(time.DateTime), limit, offset), err)
 	}
 
 	return res, nil

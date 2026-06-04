@@ -6,7 +6,6 @@ package mocks
 
 import (
 	"context"
-	"time"
 
 	mock "github.com/stretchr/testify/mock"
 )
@@ -141,16 +140,16 @@ func (_c *MockAuditClient_Start_Call[A]) RunAndReturn(run func(ctx context.Conte
 }
 
 // Stop provides a mock function for the type MockAuditClient
-func (_mock *MockAuditClient[A]) Stop(stopTimeout time.Duration) error {
-	ret := _mock.Called(stopTimeout)
+func (_mock *MockAuditClient[A]) Stop(ctx context.Context) error {
+	ret := _mock.Called(ctx)
 
 	if len(ret) == 0 {
 		panic("no return value specified for Stop")
 	}
 
 	var r0 error
-	if returnFunc, ok := ret.Get(0).(func(time.Duration) error); ok {
-		r0 = returnFunc(stopTimeout)
+	if returnFunc, ok := ret.Get(0).(func(context.Context) error); ok {
+		r0 = returnFunc(ctx)
 	} else {
 		r0 = ret.Error(0)
 	}
@@ -163,16 +162,16 @@ type MockAuditClient_Stop_Call[A any] struct {
 }
 
 // Stop is a helper method to define mock.On call
-//   - stopTimeout time.Duration
-func (_e *MockAuditClient_Expecter[A]) Stop(stopTimeout interface{}) *MockAuditClient_Stop_Call[A] {
-	return &MockAuditClient_Stop_Call[A]{Call: _e.mock.On("Stop", stopTimeout)}
+//   - ctx context.Context
+func (_e *MockAuditClient_Expecter[A]) Stop(ctx interface{}) *MockAuditClient_Stop_Call[A] {
+	return &MockAuditClient_Stop_Call[A]{Call: _e.mock.On("Stop", ctx)}
 }
 
-func (_c *MockAuditClient_Stop_Call[A]) Run(run func(stopTimeout time.Duration)) *MockAuditClient_Stop_Call[A] {
+func (_c *MockAuditClient_Stop_Call[A]) Run(run func(ctx context.Context)) *MockAuditClient_Stop_Call[A] {
 	_c.Call.Run(func(args mock.Arguments) {
-		var arg0 time.Duration
+		var arg0 context.Context
 		if args[0] != nil {
-			arg0 = args[0].(time.Duration)
+			arg0 = args[0].(context.Context)
 		}
 		run(
 			arg0,
@@ -186,7 +185,7 @@ func (_c *MockAuditClient_Stop_Call[A]) Return(err error) *MockAuditClient_Stop_
 	return _c
 }
 
-func (_c *MockAuditClient_Stop_Call[A]) RunAndReturn(run func(stopTimeout time.Duration) error) *MockAuditClient_Stop_Call[A] {
+func (_c *MockAuditClient_Stop_Call[A]) RunAndReturn(run func(ctx context.Context) error) *MockAuditClient_Stop_Call[A] {
 	_c.Call.Return(run)
 	return _c
 }

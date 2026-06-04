@@ -7,12 +7,11 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/ElfAstAhe/tiny-audit-service/pkg/api/http/audit/v1/models"
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
-
-	"github.com/ElfAstAhe/tiny-audit-service/pkg/api/http/audit/v1/models"
 )
 
 // NewPostAPIV1AuditDataParams creates a new PostAPIV1AuditDataParams object,
@@ -22,24 +21,28 @@ import (
 //
 // To enforce default values in parameter, use SetDefaults or WithDefaults.
 func NewPostAPIV1AuditDataParams() *PostAPIV1AuditDataParams {
-	return &PostAPIV1AuditDataParams{
-		timeout: cr.DefaultTimeout,
-	}
+	return NewPostAPIV1AuditDataParamsWithTimeout(cr.DefaultTimeout)
 }
 
 // NewPostAPIV1AuditDataParamsWithTimeout creates a new PostAPIV1AuditDataParams object
 // with the ability to set a timeout on a request.
 func NewPostAPIV1AuditDataParamsWithTimeout(timeout time.Duration) *PostAPIV1AuditDataParams {
 	return &PostAPIV1AuditDataParams{
-		timeout: timeout,
+		inner: innerParams{
+			timeout: timeout,
+		},
 	}
 }
 
 // NewPostAPIV1AuditDataParamsWithContext creates a new PostAPIV1AuditDataParams object
 // with the ability to set a context for a request.
+//
+// Deprecated: use the operation call with context to pass the context instead of [PostAPIV1AuditDataParams].
 func NewPostAPIV1AuditDataParamsWithContext(ctx context.Context) *PostAPIV1AuditDataParams {
 	return &PostAPIV1AuditDataParams{
-		Context: ctx,
+		inner: innerParams{
+			ctx: ctx,
+		},
 	}
 }
 
@@ -66,9 +69,9 @@ type PostAPIV1AuditDataParams struct {
 	*/
 	Input *models.DataAuditDTO
 
-	timeout    time.Duration
-	Context    context.Context
 	HTTPClient *http.Client
+
+	inner innerParams
 }
 
 // WithDefaults hydrates default values in the post API v1 audit data params (not the query body).
@@ -86,54 +89,57 @@ func (o *PostAPIV1AuditDataParams) SetDefaults() {
 	// no default values defined for this parameter
 }
 
-// WithTimeout adds the timeout to the post API v1 audit data params
+// WithTimeout adds the timeout to the post API v1 audit data params.
 func (o *PostAPIV1AuditDataParams) WithTimeout(timeout time.Duration) *PostAPIV1AuditDataParams {
 	o.SetTimeout(timeout)
 	return o
 }
 
-// SetTimeout adds the timeout to the post API v1 audit data params
+// SetTimeout adds the timeout to the post API v1 audit data params.
 func (o *PostAPIV1AuditDataParams) SetTimeout(timeout time.Duration) {
-	o.timeout = timeout
+	o.inner.timeout = timeout
 }
 
-// WithContext adds the context to the post API v1 audit data params
+// WithContext adds the context to the post API v1 audit data params.
+//
+// Deprecated: use the operation call with context to pass the context instead of [PostAPIV1AuditDataParams].
 func (o *PostAPIV1AuditDataParams) WithContext(ctx context.Context) *PostAPIV1AuditDataParams {
 	o.SetContext(ctx)
 	return o
 }
 
-// SetContext adds the context to the post API v1 audit data params
+// SetContext adds the context to the post API v1 audit data params.
+//
+// Deprecated: use the operation call with context to pass the context instead of [PostAPIV1AuditDataParams].
 func (o *PostAPIV1AuditDataParams) SetContext(ctx context.Context) {
-	o.Context = ctx
+	o.inner.ctx = ctx
 }
 
-// WithHTTPClient adds the HTTPClient to the post API v1 audit data params
+// WithHTTPClient adds the HTTPClient to the post API v1 audit data params.
 func (o *PostAPIV1AuditDataParams) WithHTTPClient(client *http.Client) *PostAPIV1AuditDataParams {
 	o.SetHTTPClient(client)
 	return o
 }
 
-// SetHTTPClient adds the HTTPClient to the post API v1 audit data params
+// SetHTTPClient adds the HTTPClient to the post API v1 audit data params.
 func (o *PostAPIV1AuditDataParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
-// WithInput adds the input to the post API v1 audit data params
+// WithInput adds the input to the post API v1 audit data params.
 func (o *PostAPIV1AuditDataParams) WithInput(input *models.DataAuditDTO) *PostAPIV1AuditDataParams {
 	o.SetInput(input)
 	return o
 }
 
-// SetInput adds the input to the post API v1 audit data params
+// SetInput adds the input to the post API v1 audit data params.
 func (o *PostAPIV1AuditDataParams) SetInput(input *models.DataAuditDTO) {
 	o.Input = input
 }
 
-// WriteToRequest writes these params to a swagger request
+// WriteToRequest writes these params to a [runtime.ClientRequest].
 func (o *PostAPIV1AuditDataParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Registry) error {
-
-	if err := r.SetTimeout(o.timeout); err != nil {
+	if err := r.SetTimeout(o.inner.timeout); err != nil {
 		return err
 	}
 	var res []error

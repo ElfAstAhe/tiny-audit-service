@@ -14,7 +14,7 @@ const (
 	MDRequestID      string = "x-request-id"
 )
 
-func AuditRequestIDExtractorUnaryServerInterceptor(headers []string) grpc.UnaryServerInterceptor {
+func AuditRequestIDExtractorUnaryServerInterceptor(headers ...string) grpc.UnaryServerInterceptor {
 	return func(ctx context.Context, req any, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (any, error) {
 		var requestID string
 		for _, header := range headers {
@@ -32,7 +32,7 @@ func AuditRequestIDExtractorUnaryServerInterceptor(headers []string) grpc.UnaryS
 	}
 }
 
-func AuditRequestIDExtractorStreamServerInterceptor(headers []string) grpc.StreamServerInterceptor {
+func AuditRequestIDExtractorStreamServerInterceptor(headers ...string) grpc.StreamServerInterceptor {
 	return func(srv any, ss grpc.ServerStream, info *grpc.StreamServerInfo, handler grpc.StreamHandler) error {
 		var requestID string
 		for _, header := range headers {

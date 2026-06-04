@@ -6,7 +6,6 @@ import (
 	"github.com/ElfAstAhe/go-service-template/pkg/auth"
 	"github.com/ElfAstAhe/go-service-template/pkg/errs"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/domain"
-	domerrs "github.com/ElfAstAhe/tiny-audit-service/internal/domain/errs"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/facade/dto"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/facade/mapper"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/usecase"
@@ -45,11 +44,11 @@ func (daf *DataAuditFacadeImpl) Audit(ctx context.Context, data *dto.DataAuditDT
 	// subject
 	subj, err := daf.authHelper.SubjectFromContext(ctx)
 	if err != nil {
-		return domerrs.NewBllForbiddenError("DataAuditFacadeImpl.Audit", "retrieve subject", err)
+		return errs.NewBllForbiddenError("DataAuditFacadeImpl.Audit", "retrieve subject", err)
 	}
 	// rbac
 	if !(subj.HasRole(domain.RoleWriter) || subj.HasRole(domain.RoleAdmin)) {
-		return domerrs.NewBllForbiddenError("DataAuditFacadeImpl.Audit", "subject is not audit-writer", nil)
+		return errs.NewBllForbiddenError("DataAuditFacadeImpl.Audit", "subject is not audit-writer", nil)
 	}
 	// validate
 	if data == nil {
@@ -59,7 +58,7 @@ func (daf *DataAuditFacadeImpl) Audit(ctx context.Context, data *dto.DataAuditDT
 	// logic
 	err = daf.dataAuditUC.Audit(ctx, mapper.MapDataAuditDTOToModel(data))
 	if err != nil {
-		return domerrs.NewBllError("DataAuditFacadeImpl.Audit", "write audit data", err)
+		return errs.NewBllError("DataAuditFacadeImpl.Audit", "write audit data", err)
 	}
 
 	return nil
@@ -69,11 +68,11 @@ func (daf *DataAuditFacadeImpl) ListByPeriod(ctx context.Context, auditPeriod *d
 	// subject
 	subj, err := daf.authHelper.SubjectFromContext(ctx)
 	if err != nil {
-		return nil, domerrs.NewBllForbiddenError("DataAuditFacadeImpl.ListByPeriod", "retrieve subject", err)
+		return nil, errs.NewBllForbiddenError("DataAuditFacadeImpl.ListByPeriod", "retrieve subject", err)
 	}
 	// rbac
 	if !(subj.HasRole(domain.RoleReader) || subj.HasRole(domain.RoleAdmin)) {
-		return nil, domerrs.NewBllForbiddenError("DataAuditFacadeImpl.ListByPeriod", "subject is not audit-reader", nil)
+		return nil, errs.NewBllForbiddenError("DataAuditFacadeImpl.ListByPeriod", "subject is not audit-reader", nil)
 	}
 	// validate
 	// pass to bll
@@ -91,11 +90,11 @@ func (daf *DataAuditFacadeImpl) ListByInstance(ctx context.Context, auditInstanc
 	// subject
 	subj, err := daf.authHelper.SubjectFromContext(ctx)
 	if err != nil {
-		return nil, domerrs.NewBllForbiddenError("DataAuditFacadeImpl.ListByInstance", "retrieve subject", err)
+		return nil, errs.NewBllForbiddenError("DataAuditFacadeImpl.ListByInstance", "retrieve subject", err)
 	}
 	// rbac
 	if !(subj.HasRole(domain.RoleReader) || subj.HasRole(domain.RoleAdmin)) {
-		return nil, domerrs.NewBllForbiddenError("DataAuditFacadeImpl.ListByInstance", "subject is not audit-reader", nil)
+		return nil, errs.NewBllForbiddenError("DataAuditFacadeImpl.ListByInstance", "subject is not audit-reader", nil)
 	}
 	// validate
 	// pass to bll

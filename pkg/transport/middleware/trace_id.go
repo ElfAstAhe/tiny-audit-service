@@ -17,10 +17,19 @@ type AuditTraceIDExtractor struct {
 	headers []string
 }
 
-func NewAuditTraceIDExtractor(headers []string) *AuditTraceIDExtractor {
+func NewAuditTraceIDExtractor(headers ...string) *AuditTraceIDExtractor {
 	return &AuditTraceIDExtractor{
 		headers: headers,
 	}
+}
+
+func NewDefaultAuditTraceIDExtractor() *AuditTraceIDExtractor {
+	return NewAuditTraceIDExtractor(
+		HeaderXCloudTraceContext,
+		HeaderTraceParent,
+		HeaderXTraceID,
+		HeaderTraceID,
+	)
 }
 
 func (ate *AuditTraceIDExtractor) Handle(next http.Handler) http.Handler {

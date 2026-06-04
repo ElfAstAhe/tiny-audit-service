@@ -4,25 +4,23 @@ import (
 	"errors"
 
 	"github.com/ElfAstAhe/go-service-template/pkg/errs"
-	domerrs "github.com/ElfAstAhe/tiny-audit-service/internal/domain/errs"
-	transperrs "github.com/ElfAstAhe/tiny-audit-service/internal/transport/errs"
 )
 
 func IsBadRequest(err error) bool {
 	var (
 		errInvalidArgument *errs.InvalidArgumentError
-		errBllValidate     *domerrs.BllValidateError
-		errTrMapping       *transperrs.TrMappingError
+		errBllValidate     *errs.BllValidateError
+		errTlMapping       *errs.TlMappingError
 	)
 
 	return errors.As(err, &errInvalidArgument) ||
 		errors.As(err, &errBllValidate) ||
-		errors.As(err, &errTrMapping)
+		errors.As(err, &errTlMapping)
 }
 
 func IsUnauthorized(err error) bool {
 	var (
-		errBllUnauthorized *domerrs.BllUnauthorizedError
+		errBllUnauthorized *errs.BllUnauthorizedError
 	)
 
 	return errors.As(err, &errBllUnauthorized)
@@ -30,7 +28,7 @@ func IsUnauthorized(err error) bool {
 
 func IsForbidden(err error) bool {
 	var (
-		errBllForbidden *domerrs.BllForbiddenError
+		errBllForbidden *errs.BllForbiddenError
 	)
 
 	return errors.As(err, &errBllForbidden)
@@ -38,7 +36,7 @@ func IsForbidden(err error) bool {
 
 func IsNotFound(err error) bool {
 	var (
-		errBllNotFound *domerrs.BllNotFoundError
+		errBllNotFound *errs.BllNotFoundError
 		errDalNotFound *errs.DalNotFoundError
 	)
 
@@ -48,7 +46,7 @@ func IsNotFound(err error) bool {
 
 func IsConflict(err error) bool {
 	var (
-		errBllUnique        *domerrs.BllUniqueError
+		errBllUnique        *errs.BllUniqueError
 		errDalAlreadyExists *errs.DalAlreadyExistsError
 	)
 

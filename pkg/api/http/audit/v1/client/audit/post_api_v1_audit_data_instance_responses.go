@@ -8,10 +8,9 @@ import (
 	"fmt"
 	"io"
 
+	"github.com/ElfAstAhe/tiny-audit-service/pkg/api/http/audit/v1/models"
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
-
-	"github.com/ElfAstAhe/tiny-audit-service/pkg/api/http/audit/v1/models"
 )
 
 // PostAPIV1AuditDataInstanceReader is a Reader for the PostAPIV1AuditDataInstance structure.

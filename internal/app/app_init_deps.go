@@ -92,11 +92,13 @@ func (app *App) initDependencies() error {
 					libworker.NewBaseSchedulerConfig(
 						app.config.AuthTC.StartInterval,
 						app.config.AuthTC.ScheduleInterval,
+						app.config.AuthTC.ShutdownTimeout,
 					),
 					libworker.NewBasePoolConfig(
 						app.config.AuthTC.WorkerCount,
-						app.config.AuthTC.WorkerCount,
+						app.config.AuthTC.DataCapacity,
 						app.config.AuthTC.CompleteProcessing,
+						app.config.AuthTC.ShutdownTimeout,
 					),
 				),
 				app.config.AuthTC.TailInterval,
@@ -113,11 +115,13 @@ func (app *App) initDependencies() error {
 					libworker.NewBaseSchedulerConfig(
 						app.config.DataTC.StartInterval,
 						app.config.DataTC.ScheduleInterval,
+						app.config.DataTC.ShutdownTimeout,
 					),
 					libworker.NewBasePoolConfig(
 						app.config.DataTC.WorkerCount,
-						app.config.DataTC.WorkerCount,
+						app.config.DataTC.DataCapacity,
 						app.config.DataTC.CompleteProcessing,
+						app.config.DataTC.ShutdownTimeout,
 					),
 				),
 				app.config.DataTC.TailInterval,

@@ -1,6 +1,7 @@
 package app
 
 import (
+	"context"
 	"fmt"
 	"time"
 
@@ -8,7 +9,7 @@ import (
 	"github.com/ElfAstAhe/go-service-template/pkg/errs"
 	"github.com/ElfAstAhe/go-service-template/pkg/helper"
 	"github.com/ElfAstAhe/go-service-template/pkg/infra/telemetry"
-	libmigr "github.com/ElfAstAhe/go-service-template/pkg/migration/goose"
+	"github.com/ElfAstAhe/go-service-template/pkg/migration/goose"
 	"github.com/ElfAstAhe/go-service-template/pkg/utils"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/config"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/repository/postgres"
@@ -82,15 +83,15 @@ func (app *App) initDB() error {
 	return nil
 }
 
-func (app *App) migrateDB() error {
-	migrator, err := libmigr.NewGooseDBMigrator(app.ctx, app.db, app.logger)
+func (app *App) migrateDB(ctx context.Context) error {
+	migrator, err := goose.NewDBMigrator(app.db, app.logger)
 	if err != nil {
 		return errs.NewCommonError("create migrator", err)
 	}
 	if err = migrator.Initialize(); err != nil {
 		return errs.NewCommonError("init migrator", err)
 	}
-	if err = migrator.Up(); err != nil {
+	if err = migrator.Up(ctx); err != nil {
 		return errs.NewCommonError("migrator up", err)
 	}
 
@@ -123,7 +124,7 @@ func (app *App) initMetrics() error {
 	//}
 
 	if app.db != nil {
-		if err := prometheus.Register(collectors.NewDBStatsCollector(app.db.GetDB(), config.AppName)); err != nil {
+		if err := prometheus.Register(collectors.NewDBStatsCollector(app.db.GetDB(), app.config.App.NodeName)); err != nil {
 			return errs.NewCommonError("failed to register db stats", err)
 		}
 	}
@@ -147,7 +148,7 @@ func (app *App) initStartupServices() error {
 
 func (app *App) initHealth() error {
 	healthChecker, err := health.New(health.WithComponent(health.Component{
-		Name:    config.AppName,
+		Name:    app.config.App.NodeName,
 		Version: config.AppVersion,
 	}))
 	if err != nil {

@@ -17,7 +17,7 @@ func (app *App) Init() error {
 	}
 
 	log.Info("launch migrations")
-	if err := app.migrateDB(); err != nil {
+	if err := app.migrateDB(app.ctx); err != nil {
 		return err
 	}
 

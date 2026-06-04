@@ -3,7 +3,9 @@
 package audit
 
 import (
+	"context"
 	"fmt"
+	"time"
 
 	"github.com/go-openapi/runtime"
 	httptransport "github.com/go-openapi/runtime/client"
@@ -11,11 +13,12 @@ import (
 )
 
 // New creates a new audit API client.
-func New(transport runtime.ClientTransport, formats strfmt.Registry) ClientService {
+func New(transport runtime.ContextualTransport, formats strfmt.Registry) ClientService {
 	return &Client{transport: transport, formats: formats}
 }
 
 // New creates a new audit API client with basic auth credentials.
+//
 // It takes the following parameters:
 // - host: http host (github.com).
 // - basePath: any base path for the API client ("/v1", "/v3").
@@ -29,6 +32,7 @@ func NewClientWithBasicAuth(host, basePath, scheme, user, password string) Clien
 }
 
 // New creates a new audit API client with a bearer token for authentication.
+//
 // It takes the following parameters:
 // - host: http host (github.com).
 // - basePath: any base path for the API client ("/v1", "/v3").
@@ -41,43 +45,92 @@ func NewClientWithBearerToken(host, basePath, scheme, bearerToken string) Client
 }
 
 /*
-Client for audit API
+Client for audit API.
 */
 type Client struct {
-	transport runtime.ClientTransport
+	transport runtime.ContextualTransport
 	formats   strfmt.Registry
 }
 
 // ClientOption may be used to customize the behavior of Client methods.
 type ClientOption func(*runtime.ClientOperation)
 
-// ClientService is the interface for Client methods
+// ClientService is the interface for Client methods.
 type ClientService interface {
+
+	// PostAPIV1AuditAuth аудит аутентификации и авторизации.
 	PostAPIV1AuditAuth(params *PostAPIV1AuditAuthParams, opts ...ClientOption) (*PostAPIV1AuditAuthCreated, error)
 
+	// PostAPIV1AuditAuthContext аудит аутентификации и авторизации.
+	PostAPIV1AuditAuthContext(ctx context.Context, params *PostAPIV1AuditAuthParams, opts ...ClientOption) (*PostAPIV1AuditAuthCreated, error)
+
+	// PostAPIV1AuditAuthPeriod список аудита аутентификации в разрезе периода.
 	PostAPIV1AuditAuthPeriod(params *PostAPIV1AuditAuthPeriodParams, opts ...ClientOption) (*PostAPIV1AuditAuthPeriodOK, error)
 
+	// PostAPIV1AuditAuthPeriodContext список аудита аутентификации в разрезе периода.
+	PostAPIV1AuditAuthPeriodContext(ctx context.Context, params *PostAPIV1AuditAuthPeriodParams, opts ...ClientOption) (*PostAPIV1AuditAuthPeriodOK, error)
+
+	// PostAPIV1AuditData аудит данных.
 	PostAPIV1AuditData(params *PostAPIV1AuditDataParams, opts ...ClientOption) (*PostAPIV1AuditDataCreated, error)
 
+	// PostAPIV1AuditDataContext аудит данных.
+	PostAPIV1AuditDataContext(ctx context.Context, params *PostAPIV1AuditDataParams, opts ...ClientOption) (*PostAPIV1AuditDataCreated, error)
+
+	// PostAPIV1AuditDataInstance список аудита данных в разрезе инстанса данных.
 	PostAPIV1AuditDataInstance(params *PostAPIV1AuditDataInstanceParams, opts ...ClientOption) (*PostAPIV1AuditDataInstanceOK, error)
 
+	// PostAPIV1AuditDataInstanceContext список аудита данных в разрезе инстанса данных.
+	PostAPIV1AuditDataInstanceContext(ctx context.Context, params *PostAPIV1AuditDataInstanceParams, opts ...ClientOption) (*PostAPIV1AuditDataInstanceOK, error)
+
+	// PostAPIV1AuditDataPeriod список аудита данных в разрезе периода.
 	PostAPIV1AuditDataPeriod(params *PostAPIV1AuditDataPeriodParams, opts ...ClientOption) (*PostAPIV1AuditDataPeriodOK, error)
 
+	// PostAPIV1AuditDataPeriodContext список аудита данных в разрезе периода.
+	PostAPIV1AuditDataPeriodContext(ctx context.Context, params *PostAPIV1AuditDataPeriodParams, opts ...ClientOption) (*PostAPIV1AuditDataPeriodOK, error)
+
+	// PostAPIV1AuditDataUsername список аудита данных в разрезе пользователя.
 	PostAPIV1AuditDataUsername(params *PostAPIV1AuditDataUsernameParams, opts ...ClientOption) (*PostAPIV1AuditDataUsernameOK, error)
 
-	SetTransport(transport runtime.ClientTransport)
+	// PostAPIV1AuditDataUsernameContext список аудита данных в разрезе пользователя.
+	PostAPIV1AuditDataUsernameContext(ctx context.Context, params *PostAPIV1AuditDataUsernameParams, opts ...ClientOption) (*PostAPIV1AuditDataUsernameOK, error)
+
+	SetTransport(transport runtime.ContextualTransport)
 }
 
 /*
-PostAPIV1AuditAuth аудитs аутентификации и авторизации
+PostAPIV1AuditAuthаудитs аутентификации и авторизации.
 
-Создание новой записи аудита
+Создание новой записи аудита.
+
+This method does not support injected context.
+However, timeout and opentracing contexts are honored whenever enabled.
+
+If you need to pass a specific context, use [Client.PostAPIV1AuditAuthContext] instead.
 */
 func (a *Client) PostAPIV1AuditAuth(params *PostAPIV1AuditAuthParams, opts ...ClientOption) (*PostAPIV1AuditAuthCreated, error) {
+	var ctx context.Context
+	if params.inner.ctx != nil {
+		ctx = params.inner.ctx
+	} else {
+		ctx = context.Background()
+	}
+
+	return a.PostAPIV1AuditAuthContext(ctx, params, opts...)
+}
+
+/*
+PostAPIV1AuditAuthContextаудитs аутентификации и авторизации.
+
+Создание новой записи аудита.
+
+Do not use the deprecated [PostAPIV1AuditAuthParams.Context] with this method: it would be ignored.
+*/
+func (a *Client) PostAPIV1AuditAuthContext(ctx context.Context, params *PostAPIV1AuditAuthParams, opts ...ClientOption) (*PostAPIV1AuditAuthCreated, error) {
 	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewPostAPIV1AuditAuthParams()
 	}
+
 	op := &runtime.ClientOperation{
 		ID:                 "PostAPIV1AuditAuth",
 		Method:             "POST",
@@ -87,13 +140,14 @@ func (a *Client) PostAPIV1AuditAuth(params *PostAPIV1AuditAuthParams, opts ...Cl
 		Schemes:            []string{"http"},
 		Params:             params,
 		Reader:             &PostAPIV1AuditAuthReader{formats: a.formats},
-		Context:            params.Context,
 		Client:             params.HTTPClient,
 	}
+
 	for _, opt := range opts {
 		opt(op)
 	}
-	result, err := a.transport.Submit(op)
+
+	result, err := a.transport.SubmitContext(ctx, op)
 	if err != nil {
 		return nil, err
 	}
@@ -114,15 +168,39 @@ func (a *Client) PostAPIV1AuditAuth(params *PostAPIV1AuditAuthParams, opts ...Cl
 }
 
 /*
-PostAPIV1AuditAuthPeriod списокs аудита аутентификации в разрезе периода
+PostAPIV1AuditAuthPeriodсписокs аудита аутентификации в разрезе периода.
 
-Получить список аудита аутентификации в разрезе периода
+Получить список аудита аутентификации в разрезе периода.
+
+This method does not support injected context.
+However, timeout and opentracing contexts are honored whenever enabled.
+
+If you need to pass a specific context, use [Client.PostAPIV1AuditAuthPeriodContext] instead.
 */
 func (a *Client) PostAPIV1AuditAuthPeriod(params *PostAPIV1AuditAuthPeriodParams, opts ...ClientOption) (*PostAPIV1AuditAuthPeriodOK, error) {
+	var ctx context.Context
+	if params.inner.ctx != nil {
+		ctx = params.inner.ctx
+	} else {
+		ctx = context.Background()
+	}
+
+	return a.PostAPIV1AuditAuthPeriodContext(ctx, params, opts...)
+}
+
+/*
+PostAPIV1AuditAuthPeriodContextсписокs аудита аутентификации в разрезе периода.
+
+Получить список аудита аутентификации в разрезе периода.
+
+Do not use the deprecated [PostAPIV1AuditAuthPeriodParams.Context] with this method: it would be ignored.
+*/
+func (a *Client) PostAPIV1AuditAuthPeriodContext(ctx context.Context, params *PostAPIV1AuditAuthPeriodParams, opts ...ClientOption) (*PostAPIV1AuditAuthPeriodOK, error) {
 	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewPostAPIV1AuditAuthPeriodParams()
 	}
+
 	op := &runtime.ClientOperation{
 		ID:                 "PostAPIV1AuditAuthPeriod",
 		Method:             "POST",
@@ -132,13 +210,14 @@ func (a *Client) PostAPIV1AuditAuthPeriod(params *PostAPIV1AuditAuthPeriodParams
 		Schemes:            []string{"http"},
 		Params:             params,
 		Reader:             &PostAPIV1AuditAuthPeriodReader{formats: a.formats},
-		Context:            params.Context,
 		Client:             params.HTTPClient,
 	}
+
 	for _, opt := range opts {
 		opt(op)
 	}
-	result, err := a.transport.Submit(op)
+
+	result, err := a.transport.SubmitContext(ctx, op)
 	if err != nil {
 		return nil, err
 	}
@@ -159,15 +238,39 @@ func (a *Client) PostAPIV1AuditAuthPeriod(params *PostAPIV1AuditAuthPeriodParams
 }
 
 /*
-PostAPIV1AuditData аудитs данных
+PostAPIV1AuditDataаудитs данных.
 
-Создание новой записи аудита
+Создание новой записи аудита.
+
+This method does not support injected context.
+However, timeout and opentracing contexts are honored whenever enabled.
+
+If you need to pass a specific context, use [Client.PostAPIV1AuditDataContext] instead.
 */
 func (a *Client) PostAPIV1AuditData(params *PostAPIV1AuditDataParams, opts ...ClientOption) (*PostAPIV1AuditDataCreated, error) {
+	var ctx context.Context
+	if params.inner.ctx != nil {
+		ctx = params.inner.ctx
+	} else {
+		ctx = context.Background()
+	}
+
+	return a.PostAPIV1AuditDataContext(ctx, params, opts...)
+}
+
+/*
+PostAPIV1AuditDataContextаудитs данных.
+
+Создание новой записи аудита.
+
+Do not use the deprecated [PostAPIV1AuditDataParams.Context] with this method: it would be ignored.
+*/
+func (a *Client) PostAPIV1AuditDataContext(ctx context.Context, params *PostAPIV1AuditDataParams, opts ...ClientOption) (*PostAPIV1AuditDataCreated, error) {
 	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewPostAPIV1AuditDataParams()
 	}
+
 	op := &runtime.ClientOperation{
 		ID:                 "PostAPIV1AuditData",
 		Method:             "POST",
@@ -177,13 +280,14 @@ func (a *Client) PostAPIV1AuditData(params *PostAPIV1AuditDataParams, opts ...Cl
 		Schemes:            []string{"http"},
 		Params:             params,
 		Reader:             &PostAPIV1AuditDataReader{formats: a.formats},
-		Context:            params.Context,
 		Client:             params.HTTPClient,
 	}
+
 	for _, opt := range opts {
 		opt(op)
 	}
-	result, err := a.transport.Submit(op)
+
+	result, err := a.transport.SubmitContext(ctx, op)
 	if err != nil {
 		return nil, err
 	}
@@ -204,15 +308,39 @@ func (a *Client) PostAPIV1AuditData(params *PostAPIV1AuditDataParams, opts ...Cl
 }
 
 /*
-PostAPIV1AuditDataInstance списокs аудита данных в разрезе инстанса данных
+PostAPIV1AuditDataInstanceсписокs аудита данных в разрезе инстанса данных.
 
-Получить список аудита данных в разрезе инстанса данных
+Получить список аудита данных в разрезе инстанса данных.
+
+This method does not support injected context.
+However, timeout and opentracing contexts are honored whenever enabled.
+
+If you need to pass a specific context, use [Client.PostAPIV1AuditDataInstanceContext] instead.
 */
 func (a *Client) PostAPIV1AuditDataInstance(params *PostAPIV1AuditDataInstanceParams, opts ...ClientOption) (*PostAPIV1AuditDataInstanceOK, error) {
+	var ctx context.Context
+	if params.inner.ctx != nil {
+		ctx = params.inner.ctx
+	} else {
+		ctx = context.Background()
+	}
+
+	return a.PostAPIV1AuditDataInstanceContext(ctx, params, opts...)
+}
+
+/*
+PostAPIV1AuditDataInstanceContextсписокs аудита данных в разрезе инстанса данных.
+
+Получить список аудита данных в разрезе инстанса данных.
+
+Do not use the deprecated [PostAPIV1AuditDataInstanceParams.Context] with this method: it would be ignored.
+*/
+func (a *Client) PostAPIV1AuditDataInstanceContext(ctx context.Context, params *PostAPIV1AuditDataInstanceParams, opts ...ClientOption) (*PostAPIV1AuditDataInstanceOK, error) {
 	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewPostAPIV1AuditDataInstanceParams()
 	}
+
 	op := &runtime.ClientOperation{
 		ID:                 "PostAPIV1AuditDataInstance",
 		Method:             "POST",
@@ -222,13 +350,14 @@ func (a *Client) PostAPIV1AuditDataInstance(params *PostAPIV1AuditDataInstancePa
 		Schemes:            []string{"http"},
 		Params:             params,
 		Reader:             &PostAPIV1AuditDataInstanceReader{formats: a.formats},
-		Context:            params.Context,
 		Client:             params.HTTPClient,
 	}
+
 	for _, opt := range opts {
 		opt(op)
 	}
-	result, err := a.transport.Submit(op)
+
+	result, err := a.transport.SubmitContext(ctx, op)
 	if err != nil {
 		return nil, err
 	}
@@ -249,15 +378,39 @@ func (a *Client) PostAPIV1AuditDataInstance(params *PostAPIV1AuditDataInstancePa
 }
 
 /*
-PostAPIV1AuditDataPeriod списокs аудита данных в разрезе периода
+PostAPIV1AuditDataPeriodсписокs аудита данных в разрезе периода.
 
-Получить список аудита данных в разрезе периода
+Получить список аудита данных в разрезе периода.
+
+This method does not support injected context.
+However, timeout and opentracing contexts are honored whenever enabled.
+
+If you need to pass a specific context, use [Client.PostAPIV1AuditDataPeriodContext] instead.
 */
 func (a *Client) PostAPIV1AuditDataPeriod(params *PostAPIV1AuditDataPeriodParams, opts ...ClientOption) (*PostAPIV1AuditDataPeriodOK, error) {
+	var ctx context.Context
+	if params.inner.ctx != nil {
+		ctx = params.inner.ctx
+	} else {
+		ctx = context.Background()
+	}
+
+	return a.PostAPIV1AuditDataPeriodContext(ctx, params, opts...)
+}
+
+/*
+PostAPIV1AuditDataPeriodContextсписокs аудита данных в разрезе периода.
+
+Получить список аудита данных в разрезе периода.
+
+Do not use the deprecated [PostAPIV1AuditDataPeriodParams.Context] with this method: it would be ignored.
+*/
+func (a *Client) PostAPIV1AuditDataPeriodContext(ctx context.Context, params *PostAPIV1AuditDataPeriodParams, opts ...ClientOption) (*PostAPIV1AuditDataPeriodOK, error) {
 	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewPostAPIV1AuditDataPeriodParams()
 	}
+
 	op := &runtime.ClientOperation{
 		ID:                 "PostAPIV1AuditDataPeriod",
 		Method:             "POST",
@@ -267,13 +420,14 @@ func (a *Client) PostAPIV1AuditDataPeriod(params *PostAPIV1AuditDataPeriodParams
 		Schemes:            []string{"http"},
 		Params:             params,
 		Reader:             &PostAPIV1AuditDataPeriodReader{formats: a.formats},
-		Context:            params.Context,
 		Client:             params.HTTPClient,
 	}
+
 	for _, opt := range opts {
 		opt(op)
 	}
-	result, err := a.transport.Submit(op)
+
+	result, err := a.transport.SubmitContext(ctx, op)
 	if err != nil {
 		return nil, err
 	}
@@ -294,15 +448,39 @@ func (a *Client) PostAPIV1AuditDataPeriod(params *PostAPIV1AuditDataPeriodParams
 }
 
 /*
-PostAPIV1AuditDataUsername списокs аудита данных в разрезе пользователя
+PostAPIV1AuditDataUsernameсписокs аудита данных в разрезе пользователя.
 
-Получить список аудита данных в разрезе пользователя
+Получить список аудита данных в разрезе пользователя.
+
+This method does not support injected context.
+However, timeout and opentracing contexts are honored whenever enabled.
+
+If you need to pass a specific context, use [Client.PostAPIV1AuditDataUsernameContext] instead.
 */
 func (a *Client) PostAPIV1AuditDataUsername(params *PostAPIV1AuditDataUsernameParams, opts ...ClientOption) (*PostAPIV1AuditDataUsernameOK, error) {
+	var ctx context.Context
+	if params.inner.ctx != nil {
+		ctx = params.inner.ctx
+	} else {
+		ctx = context.Background()
+	}
+
+	return a.PostAPIV1AuditDataUsernameContext(ctx, params, opts...)
+}
+
+/*
+PostAPIV1AuditDataUsernameContextсписокs аудита данных в разрезе пользователя.
+
+Получить список аудита данных в разрезе пользователя.
+
+Do not use the deprecated [PostAPIV1AuditDataUsernameParams.Context] with this method: it would be ignored.
+*/
+func (a *Client) PostAPIV1AuditDataUsernameContext(ctx context.Context, params *PostAPIV1AuditDataUsernameParams, opts ...ClientOption) (*PostAPIV1AuditDataUsernameOK, error) {
 	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewPostAPIV1AuditDataUsernameParams()
 	}
+
 	op := &runtime.ClientOperation{
 		ID:                 "PostAPIV1AuditDataUsername",
 		Method:             "POST",
@@ -312,13 +490,14 @@ func (a *Client) PostAPIV1AuditDataUsername(params *PostAPIV1AuditDataUsernamePa
 		Schemes:            []string{"http"},
 		Params:             params,
 		Reader:             &PostAPIV1AuditDataUsernameReader{formats: a.formats},
-		Context:            params.Context,
 		Client:             params.HTTPClient,
 	}
+
 	for _, opt := range opts {
 		opt(op)
 	}
-	result, err := a.transport.Submit(op)
+
+	result, err := a.transport.SubmitContext(ctx, op)
 	if err != nil {
 		return nil, err
 	}
@@ -339,6 +518,14 @@ func (a *Client) PostAPIV1AuditDataUsername(params *PostAPIV1AuditDataUsernamePa
 }
 
 // SetTransport changes the transport on the client
-func (a *Client) SetTransport(transport runtime.ClientTransport) {
+func (a *Client) SetTransport(transport runtime.ContextualTransport) {
 	a.transport = transport
+}
+
+// innerParams captures internal fields so they don't conflict with user-supplied parameters.
+type innerParams struct {
+	timeout time.Duration
+
+	// Deprecated: use the operation call with context to pass the context instead of [AuditParams].
+	ctx context.Context
 }
