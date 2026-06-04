@@ -5,6 +5,7 @@ import (
 
 	"github.com/ElfAstAhe/go-service-template/pkg/container"
 	"github.com/ElfAstAhe/go-service-template/pkg/errs"
+	"github.com/ElfAstAhe/tiny-audit-service/internal/domain"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/repository/metrics"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/repository/postgres"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/repository/trace"
@@ -21,7 +22,25 @@ func (rc *RepositoryContainer) providerAuthAuditRepo() (any, error) {
 		return nil, errs.NewContainerError(rc.GetName(), fmt.Sprintf("provider: create %s instance failed", InstanceAuthAuditRepo), err)
 	}
 
-	return trace.NewAuthAuditTraceRepository(metrics.NewAuthAuditMetricsRepository(res)), nil
+	return res, nil
+}
+
+func (rc *RepositoryContainer) providerAuthAuditMetricsRepo() (any, error) {
+	repo, err := container.GetInstance[domain.AuthAuditRepository](InstanceAuthAuditRepo)
+	if err != nil {
+		return nil, errs.NewContainerError(rc.GetName(), "provider: retrieve instance failed", err)
+	}
+
+	return metrics.NewAuthAuditMetricsRepository(repo), nil
+}
+
+func (rc *RepositoryContainer) providerAuthAuditTraceRepo() (any, error) {
+	repo, err := container.GetInstance[domain.AuthAuditRepository](InstanceAuthAuditMetricsRepo)
+	if err != nil {
+		return nil, errs.NewContainerError(rc.GetName(), "provider: retrieve instance failed", err)
+	}
+
+	return trace.NewAuthAuditTraceRepository(repo), nil
 }
 
 //goland:noinspection DuplicatedCode
@@ -35,5 +54,23 @@ func (rc *RepositoryContainer) providerDataAuditRepo() (any, error) {
 		return nil, errs.NewContainerError(rc.GetName(), fmt.Sprintf("provider: create %s instance failed", InstanceDataAuditRepo), err)
 	}
 
-	return trace.NewDataAuditTraceRepository(metrics.NewDataAuditMetricsRepository(res)), nil
+	return res, nil
+}
+
+func (rc *RepositoryContainer) providerDataAuditMetricsRepo() (any, error) {
+	repo, err := container.GetInstance[domain.DataAuditRepository](InstanceDataAuditRepo)
+	if err != nil {
+		return nil, errs.NewContainerError(rc.GetName(), "provider: retrieve instance failed", err)
+	}
+
+	return metrics.NewDataAuditMetricsRepository(repo), nil
+}
+
+func (rc *RepositoryContainer) providerDataAuditTraceRepo() (any, error) {
+	repo, err := container.GetInstance[domain.DataAuditRepository](InstanceDataAuditMetricsRepo)
+	if err != nil {
+		return nil, errs.NewContainerError(rc.GetName(), "provider: retrieve instance failed", err)
+	}
+
+	return trace.NewDataAuditTraceRepository(repo), nil
 }

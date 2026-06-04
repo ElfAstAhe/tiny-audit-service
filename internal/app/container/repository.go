@@ -9,8 +9,12 @@ import (
 )
 
 const (
-	InstanceAuthAuditRepo string = "authAuditRepo"
-	InstanceDataAuditRepo string = "dataAuditRepo"
+	InstanceAuthAuditRepo        string = "authAuditRepo"
+	InstanceAuthAuditMetricsRepo string = "authAuditMetricsRepo"
+	InstanceAuthAuditTraceRepo   string = "authAuditTraceRepo"
+	InstanceDataAuditRepo        string = "dataAuditRepo"
+	InstanceDataAuditMetricsRepo string = "dataAuditMetricsRepo"
+	InstanceDataAuditTraceRepo   string = "dataAuditTraceRepo"
 )
 
 type RepositoryContainer struct {
@@ -29,7 +33,11 @@ func NewRepositoryContainer(orchestrator container.Orchestrator) *RepositoryCont
 func (rc *RepositoryContainer) Init(ctx context.Context) error {
 	err := errors.Join(
 		rc.RegisterProvider(InstanceAuthAuditRepo, rc.providerAuthAuditRepo),
+		rc.RegisterProvider(InstanceAuthAuditMetricsRepo, rc.providerAuthAuditMetricsRepo),
+		rc.RegisterProvider(InstanceAuthAuditTraceRepo, rc.providerAuthAuditTraceRepo),
 		rc.RegisterProvider(InstanceDataAuditRepo, rc.providerDataAuditRepo),
+		rc.RegisterProvider(InstanceDataAuditMetricsRepo, rc.providerDataAuditMetricsRepo),
+		rc.RegisterProvider(InstanceDataAuditTraceRepo, rc.providerDataAuditTraceRepo),
 	)
 	if err != nil {
 		return errs.NewContainerError(rc.GetName(), "container init: register providers failed", err)

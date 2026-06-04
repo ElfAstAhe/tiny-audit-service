@@ -3,47 +3,52 @@ package container
 import (
 	"fmt"
 
-	pb "github.com/ElfAstAhe/go-service-template/pkg/api/grpc/example/v1"
 	"github.com/ElfAstAhe/go-service-template/pkg/container"
 	"github.com/ElfAstAhe/go-service-template/pkg/errs"
 	"github.com/ElfAstAhe/go-service-template/pkg/logger"
 	"github.com/ElfAstAhe/go-service-template/pkg/transport/grpc"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/config"
+	"github.com/ElfAstAhe/tiny-audit-service/internal/facade"
 	grpcsvc "github.com/ElfAstAhe/tiny-audit-service/internal/transport/grpc"
+	pb "github.com/ElfAstAhe/tiny-audit-service/pkg/api/grpc/tiny-audit-service/v1"
 
 	libgrpc "google.golang.org/grpc"
 )
 
 func (gc *GRPCContainer) serviceRegister(server *libgrpc.Server) error {
-	serviceInst, err := container.GetInstance[*grpcsvc.ExampleGRPCService](gc, InstanceGRPCService)
+	authAuditServiceInst, err := container.GetInstance[*grpcsvc.AuthAuditGRPCService](InstanceAuthAuditGRPCService)
+	if err != nil {
+		return errs.NewContainerError(gc.GetName(), "service register: retrieve instance failed", err)
+	}
+	dataAuditServiceInst, err := container.GetInstance[*grpcsvc.DataAuditGRPCService](InstanceDataAuditGRPCService)
 	if err != nil {
 		return errs.NewContainerError(gc.GetName(), "service register: retrieve instance failed", err)
 	}
 
-	pb.RegisterExampleServiceServer(server, serviceInst)
+	pb.RegisterAuthAuditServiceServer(server, authAuditServiceInst)
+	pb.RegisterDataAuditServiceServer(server, dataAuditServiceInst)
 
 	return nil
 }
 
-//goland:noinspection DuplicatedCode
-func (gc *GRPCContainer) providerGRPCService() (any, error) {
-	confInst, err := container.GetInstance[*config.Config](InstanceConfig)
+func (gc *GRPCContainer) providerAuthAuditGRPCService() (any, error) {
+	authFacadeInst, err := container.GetInstance[facade.AuthAuditFacade](InstanceAuthFacade)
 	if err != nil {
-		return nil, errs.NewContainerError(gc.GetName(), "provider: retrieve instance failed", err)
-	}
-	logInst, err := container.GetInstance[logger.Logger](InstanceLogger)
-	if err != nil {
-		return nil, errs.NewContainerError(gc.GetName(), "provider: retrieve instance failed", err)
-	}
-	testFacadeInst, err := container.GetInstance[facade.TestFacade](facadeCnt, InstanceTestFacade)
-	if err != nil {
-		return nil, errs.NewContainerError(gc.GetName(), "provider: retrieve instance failed", err)
+		return nil, errs.NewContainerError(gc.GetName(), "service register: retrieve instance failed", err)
 	}
 
-	return grpcsvc.NewExampleGRPCService(confInst.GRPC, testFacadeInst, logInst), nil
+	return grpcsvc.NewAuthAuditGRPCService(authFacadeInst), nil
 }
 
-//goland:noinspection DuplicatedCode
+func (gc *GRPCContainer) providerDataAuditGRPCService() (any, error) {
+	dataFacadeInst, err := container.GetInstance[facade.DataAuditFacade](InstanceDataFacade)
+	if err != nil {
+		return nil, errs.NewContainerError(gc.GetName(), "service register: retrieve instance failed", err)
+	}
+
+	return grpcsvc.NewDataAuditGRPCService(dataFacadeInst), nil
+}
+
 func (gc *GRPCContainer) providerGRPCRunner() (any, error) {
 	confInst, err := container.GetInstance[*config.Config](InstanceConfig)
 	if err != nil {

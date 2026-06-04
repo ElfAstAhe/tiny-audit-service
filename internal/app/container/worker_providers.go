@@ -10,6 +10,7 @@ import (
 	"github.com/ElfAstAhe/tiny-audit-service/internal/usecase"
 )
 
+//goland:noinspection DuplicatedCode
 func (wc *WorkerContainer) providerAuthAuditTailCutter() (any, error) {
 	confInst, err := container.GetInstance[*config.Config](InstanceConfig)
 	if err != nil {
@@ -29,7 +30,7 @@ func (wc *WorkerContainer) providerAuthAuditTailCutter() (any, error) {
 	}
 
 	return worker.NewTailCutter(
-		"auth",
+		"auth-tail-cutter",
 		worker.NewTailCutterConfig(
 			libworker.NewBaseSchedulerDispatcherConfig(
 				libworker.NewBaseSchedulerConfig(
@@ -53,6 +54,7 @@ func (wc *WorkerContainer) providerAuthAuditTailCutter() (any, error) {
 	), nil
 }
 
+//goland:noinspection DuplicatedCode
 func (wc *WorkerContainer) providerDataAuditTailCutter() (any, error) {
 	confInst, err := container.GetInstance[*config.Config](InstanceConfig)
 	if err != nil {
@@ -72,7 +74,7 @@ func (wc *WorkerContainer) providerDataAuditTailCutter() (any, error) {
 	}
 
 	return worker.NewTailCutter(
-		"data",
+		"data-tail-cutter",
 		worker.NewTailCutterConfig(
 			libworker.NewBaseSchedulerDispatcherConfig(
 				libworker.NewBaseSchedulerConfig(

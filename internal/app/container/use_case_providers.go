@@ -23,7 +23,7 @@ func (ucc *UseCaseContainer) providerAuthAuditUC() (any, error) {
 	if err != nil {
 		return nil, errs.NewContainerError(ucc.GetName(), "provider: retrieve instance failed", err)
 	}
-	authAuditRepoInst, err := container.GetInstance[domain.AuthAuditRepository](InstanceAuthAuditRepo)
+	authAuditRepoInst, err := container.GetInstance[domain.AuthAuditRepository](InstanceAuthAuditTraceRepo)
 	if err != nil {
 		return nil, errs.NewContainerError(ucc.GetName(), "provider: retrieve instance failed", err)
 	}
@@ -32,7 +32,7 @@ func (ucc *UseCaseContainer) providerAuthAuditUC() (any, error) {
 }
 
 func (ucc *UseCaseContainer) providerAuthListByPeriodUC() (any, error) {
-	authAuditRepoInst, err := container.GetInstance[domain.AuthAuditRepository](InstanceAuthAuditRepo)
+	authAuditRepoInst, err := container.GetInstance[domain.AuthAuditRepository](InstanceAuthAuditTraceRepo)
 	if err != nil {
 		return nil, errs.NewContainerError(ucc.GetName(), "provider: retrieve instance failed", err)
 	}
@@ -41,7 +41,7 @@ func (ucc *UseCaseContainer) providerAuthListByPeriodUC() (any, error) {
 }
 
 func (ucc *UseCaseContainer) providerAuthListByUsernameUC() (any, error) {
-	authAuditRepoInst, err := container.GetInstance[domain.AuthAuditRepository](InstanceAuthAuditRepo)
+	authAuditRepoInst, err := container.GetInstance[domain.AuthAuditRepository](InstanceAuthAuditTraceRepo)
 	if err != nil {
 		return nil, errs.NewContainerError(ucc.GetName(), "provider: retrieve instance failed", err)
 	}
@@ -54,7 +54,7 @@ func (ucc *UseCaseContainer) providerDataAuditUC() (any, error) {
 	if err != nil {
 		return nil, errs.NewContainerError(ucc.GetName(), "provider: retrieve instance failed", err)
 	}
-	dataAuditRepoInst, err := container.GetInstance[domain.DataAuditRepository](InstanceDataAuditRepo)
+	dataAuditRepoInst, err := container.GetInstance[domain.DataAuditRepository](InstanceDataAuditTraceRepo)
 	if err != nil {
 		return nil, errs.NewContainerError(ucc.GetName(), "provider: retrieve instance failed", err)
 	}
@@ -63,7 +63,7 @@ func (ucc *UseCaseContainer) providerDataAuditUC() (any, error) {
 }
 
 func (ucc *UseCaseContainer) providerDataListByPeriodUC() (any, error) {
-	dataAuditRepoInst, err := container.GetInstance[domain.DataAuditRepository](InstanceDataAuditRepo)
+	dataAuditRepoInst, err := container.GetInstance[domain.DataAuditRepository](InstanceDataAuditTraceRepo)
 	if err != nil {
 		return nil, errs.NewContainerError(ucc.GetName(), "provider: retrieve instance failed", err)
 	}
@@ -72,7 +72,7 @@ func (ucc *UseCaseContainer) providerDataListByPeriodUC() (any, error) {
 }
 
 func (ucc *UseCaseContainer) providerDataListByInstanceUC() (any, error) {
-	dataAuditRepoInst, err := container.GetInstance[domain.DataAuditRepository](InstanceDataAuditRepo)
+	dataAuditRepoInst, err := container.GetInstance[domain.DataAuditRepository](InstanceDataAuditTraceRepo)
 	if err != nil {
 		return nil, errs.NewContainerError(ucc.GetName(), "provider: retrieve instance failed", err)
 	}

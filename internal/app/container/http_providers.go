@@ -54,18 +54,17 @@ func (hc *HTTPContainer) providerChiRouter() (any, error) {
 		return nil, errs.NewContainerError(hc.GetName(), "provider: retrieve instance failed", err)
 	}
 
-	return rest.NewAppChiRouter(
-		confInst,
-		logInst,
-		jwtHelperInst,
-		jwtHTTPHelperInst,
-		authHelperInst,
-		healthInst,
-		nil,
-		readyzInst,
-		authFacadeInst,
-		dataFacadeInst,
-	), nil
+	return rest.NewAppRouter(
+		rest.WithConfig(confInst),
+		rest.WithLogger(logInst),
+		rest.WithJwtHelper(jwtHelperInst),
+		rest.WithJwtHTTPHelper(jwtHTTPHelperInst),
+		rest.WithAuthHelper(authHelperInst),
+		rest.WithHealth(healthInst),
+		rest.WithReadyz(readyzInst),
+		rest.WithAuthAuditFacade(authFacadeInst),
+		rest.WithDataAuditFacade(dataFacadeInst),
+	)
 }
 
 //goland:noinspection DuplicatedCode

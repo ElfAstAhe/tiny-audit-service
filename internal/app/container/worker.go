@@ -20,8 +20,8 @@ type WorkerContainer struct {
 var _ container.Container = (*WorkerContainer)(nil)
 var _ container.LazyContainer = (*WorkerContainer)(nil)
 
-func NewWorkerContainer(orchestrator container.Orchestrator) *HTTPContainer {
-	return &HTTPContainer{
+func NewWorkerContainer(orchestrator container.Orchestrator) *WorkerContainer {
+	return &WorkerContainer{
 		BaseLazyContainer: container.NewBaseLazyContainer(WorkerContainerName, orchestrator),
 	}
 }

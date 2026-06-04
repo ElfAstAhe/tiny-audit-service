@@ -4,6 +4,7 @@ import (
 	"errors"
 
 	"github.com/ElfAstAhe/go-service-template/pkg/app"
+	libcontainer "github.com/ElfAstAhe/go-service-template/pkg/container"
 	"github.com/ElfAstAhe/go-service-template/pkg/errs"
 	"github.com/ElfAstAhe/go-service-template/pkg/logger"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/app/container"
@@ -25,9 +26,12 @@ func NewApplication(opts ...Option) (*Application, error) {
 	for _, opt := range opts {
 		opt(res)
 	}
+	// orchestrator
+	orch := container.NewOrchestrator(res.conf, res.log)
+	libcontainer.SetDefaultOrchestrator(orch)
 	// embed
 	res.BaseApplication = app.NewBaseApplication(
-		app.WithOrchestrator(container.NewOrchestrator(res.conf, res.log)),
+		app.WithOrchestrator(orch),
 		app.WithLogger(res.log),
 		app.WithCloseTimeout(res.conf.App.CloseTimeout),
 		app.WithStopTimeout(res.conf.App.StopTimeout),
