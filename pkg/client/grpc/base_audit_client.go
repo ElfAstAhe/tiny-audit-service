@@ -3,7 +3,6 @@ package grpc
 import (
 	"context"
 	"errors"
-	"time"
 
 	"github.com/ElfAstAhe/go-service-template/pkg/auth"
 	"github.com/ElfAstAhe/go-service-template/pkg/errs"
@@ -72,9 +71,9 @@ func (bac *BaseAuditClient[D]) Start(ctx context.Context) error {
 	return nil
 }
 
-func (bac *BaseAuditClient[D]) Stop(stopTimeout time.Duration) error {
+func (bac *BaseAuditClient[D]) Stop(ctx context.Context) error {
 	var stopErrs []error
-	stopErrs = append(stopErrs, bac.BaseAuditClient.Stop(stopTimeout))
+	stopErrs = append(stopErrs, bac.BaseAuditClient.Stop(ctx))
 	stopErrs = append(stopErrs, bac.conn.Close())
 	err := errors.Join(stopErrs...)
 	if err != nil {

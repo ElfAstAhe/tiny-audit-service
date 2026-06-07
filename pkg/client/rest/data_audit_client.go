@@ -2,6 +2,7 @@ package rest
 
 import (
 	"context"
+	"strings"
 
 	"github.com/ElfAstAhe/go-service-template/pkg/container"
 	"github.com/ElfAstAhe/go-service-template/pkg/errs"
@@ -26,6 +27,7 @@ var _ client.DataAuditClient = (*DataAuditClient)(nil)
 var _ container.Runner = (*DataAuditClient)(nil)
 
 func NewDataAuditClient(
+	name string,
 	conf *AuditClientConfig,
 	tokenProvider auth.TokenProvider,
 	log logger.Logger,
@@ -35,8 +37,12 @@ func NewDataAuditClient(
 		conf:   conf,
 		client: audit.NewClientWithBearerToken(conf.Host, conf.BasePath, conf.Scheme, ""),
 	}
+	if strings.TrimSpace(name) == "" {
+		name = "data-audit-client"
+	}
+
 	res.BaseAuditClient = client.NewBaseAuditClient[*dto.DataAuditDTO](
-		"data",
+		name,
 		conf.poolConf,
 		res.auditAction,
 		tokenProvider,
