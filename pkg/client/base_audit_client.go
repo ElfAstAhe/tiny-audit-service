@@ -4,6 +4,7 @@ import (
 	"context"
 	"sync/atomic"
 
+	"github.com/ElfAstAhe/go-service-template/pkg/container"
 	"github.com/ElfAstAhe/go-service-template/pkg/errs"
 	"github.com/ElfAstAhe/go-service-template/pkg/logger"
 	"github.com/ElfAstAhe/go-service-template/pkg/transport/worker"
@@ -22,6 +23,7 @@ type BaseAuditClient[D any] struct {
 
 var _ AuditClient[*dto.AuthAuditDTO] = (*BaseAuditClient[*dto.AuthAuditDTO])(nil)
 var _ AuditClient[*dto.DataAuditDTO] = (*BaseAuditClient[*dto.DataAuditDTO])(nil)
+var _ container.Runner = (*BaseAuditClient[*dto.DataAuditDTO])(nil)
 
 func NewBaseAuditClient[D any](
 	name string,
@@ -115,4 +117,12 @@ func (bac *BaseAuditClient[D]) GetLogger() logger.Logger {
 
 func (bac *BaseAuditClient[D]) IncLostCounter() {
 	bac.totalLost.Add(1)
+}
+
+func (bac *BaseAuditClient[D]) GetName() string {
+	return bac.pool.GetName()
+}
+
+func (bac *BaseAuditClient[D]) IsRunning() bool {
+	return bac.pool.IsRunning()
 }
