@@ -3,6 +3,7 @@ package rest
 import (
 	"context"
 
+	"github.com/ElfAstAhe/go-service-template/pkg/container"
 	"github.com/ElfAstAhe/go-service-template/pkg/errs"
 	"github.com/ElfAstAhe/go-service-template/pkg/logger"
 	"github.com/ElfAstAhe/tiny-audit-service/pkg/api/http/audit/v1/client/audit"
@@ -22,6 +23,7 @@ type AuthAuditClient struct {
 
 var _ client.AuditClient[*dto.AuthAuditDTO] = (*AuthAuditClient)(nil)
 var _ client.AuthAuditClient = (*AuthAuditClient)(nil)
+var _ container.Runner = (*AuthAuditClient)(nil)
 
 func NewAuthAuditClient(
 	conf *AuditClientConfig,
@@ -55,9 +57,9 @@ func (aac *AuthAuditClient) auditAction(
 
 	clientDTO := MapAuthDtoSDKToRest(data)
 	// request
-	_, err := aac.client.PostAPIV1AuditAuth(
+	_, err := aac.client.PostAPIV1AuditAuthContext(
+		ctx,
 		audit.NewPostAPIV1AuditAuthParams().
-			WithContext(ctx).
 			WithTimeout(aac.conf.ReadTimeout).
 			WithInput(clientDTO),
 		func(op *runtime.ClientOperation) {
