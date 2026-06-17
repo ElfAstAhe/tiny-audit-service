@@ -75,7 +75,7 @@ type MockDataAuditRepository_Change_Call struct {
 // Change is a helper method to define mock.On call
 //   - ctx context.Context
 //   - entity *domain.DataAudit
-func (_e *MockDataAuditRepository_Expecter) Change(ctx interface{}, entity interface{}) *MockDataAuditRepository_Change_Call {
+func (_e *MockDataAuditRepository_Expecter) Change(ctx any, entity any) *MockDataAuditRepository_Change_Call {
 	return &MockDataAuditRepository_Change_Call{Call: _e.mock.On("Change", ctx, entity)}
 }
 
@@ -143,7 +143,7 @@ type MockDataAuditRepository_Create_Call struct {
 // Create is a helper method to define mock.On call
 //   - ctx context.Context
 //   - entity *domain.DataAudit
-func (_e *MockDataAuditRepository_Expecter) Create(ctx interface{}, entity interface{}) *MockDataAuditRepository_Create_Call {
+func (_e *MockDataAuditRepository_Expecter) Create(ctx any, entity any) *MockDataAuditRepository_Create_Call {
 	return &MockDataAuditRepository_Create_Call{Call: _e.mock.On("Create", ctx, entity)}
 }
 
@@ -200,7 +200,7 @@ type MockDataAuditRepository_Delete_Call struct {
 // Delete is a helper method to define mock.On call
 //   - ctx context.Context
 //   - id string
-func (_e *MockDataAuditRepository_Expecter) Delete(ctx interface{}, id interface{}) *MockDataAuditRepository_Delete_Call {
+func (_e *MockDataAuditRepository_Expecter) Delete(ctx any, id any) *MockDataAuditRepository_Delete_Call {
 	return &MockDataAuditRepository_Delete_Call{Call: _e.mock.On("Delete", ctx, id)}
 }
 
@@ -268,7 +268,7 @@ type MockDataAuditRepository_Find_Call struct {
 // Find is a helper method to define mock.On call
 //   - ctx context.Context
 //   - id string
-func (_e *MockDataAuditRepository_Expecter) Find(ctx interface{}, id interface{}) *MockDataAuditRepository_Find_Call {
+func (_e *MockDataAuditRepository_Expecter) Find(ctx any, id any) *MockDataAuditRepository_Find_Call {
 	return &MockDataAuditRepository_Find_Call{Call: _e.mock.On("Find", ctx, id)}
 }
 
@@ -337,7 +337,7 @@ type MockDataAuditRepository_List_Call struct {
 //   - ctx context.Context
 //   - limit int
 //   - offset int
-func (_e *MockDataAuditRepository_Expecter) List(ctx interface{}, limit interface{}, offset interface{}) *MockDataAuditRepository_List_Call {
+func (_e *MockDataAuditRepository_Expecter) List(ctx any, limit any, offset any) *MockDataAuditRepository_List_Call {
 	return &MockDataAuditRepository_List_Call{Call: _e.mock.On("List", ctx, limit, offset)}
 }
 
@@ -413,7 +413,7 @@ type MockDataAuditRepository_ListByInstance_Call struct {
 //   - instanceID string
 //   - limit int
 //   - offset int
-func (_e *MockDataAuditRepository_Expecter) ListByInstance(ctx interface{}, typeName interface{}, instanceID interface{}, limit interface{}, offset interface{}) *MockDataAuditRepository_ListByInstance_Call {
+func (_e *MockDataAuditRepository_Expecter) ListByInstance(ctx any, typeName any, instanceID any, limit any, offset any) *MockDataAuditRepository_ListByInstance_Call {
 	return &MockDataAuditRepository_ListByInstance_Call{Call: _e.mock.On("ListByInstance", ctx, typeName, instanceID, limit, offset)}
 }
 
@@ -499,7 +499,7 @@ type MockDataAuditRepository_ListByPeriod_Call struct {
 //   - till time.Time
 //   - limit int
 //   - offset int
-func (_e *MockDataAuditRepository_Expecter) ListByPeriod(ctx interface{}, from interface{}, till interface{}, limit interface{}, offset interface{}) *MockDataAuditRepository_ListByPeriod_Call {
+func (_e *MockDataAuditRepository_Expecter) ListByPeriod(ctx any, from any, till any, limit any, offset any) *MockDataAuditRepository_ListByPeriod_Call {
 	return &MockDataAuditRepository_ListByPeriod_Call{Call: _e.mock.On("ListByPeriod", ctx, from, till, limit, offset)}
 }
 

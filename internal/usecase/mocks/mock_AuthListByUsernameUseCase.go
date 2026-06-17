@@ -76,7 +76,7 @@ type MockAuthListByUsernameUseCase_List_Call struct {
 //   - username string
 //   - limit int
 //   - offset int
-func (_e *MockAuthListByUsernameUseCase_Expecter) List(ctx interface{}, username interface{}, limit interface{}, offset interface{}) *MockAuthListByUsernameUseCase_List_Call {
+func (_e *MockAuthListByUsernameUseCase_Expecter) List(ctx any, username any, limit any, offset any) *MockAuthListByUsernameUseCase_List_Call {
 	return &MockAuthListByUsernameUseCase_List_Call{Call: _e.mock.On("List", ctx, username, limit, offset)}
 }
 

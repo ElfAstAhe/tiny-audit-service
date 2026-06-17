@@ -63,7 +63,7 @@ type MockAuthAuditUseCase_Audit_Call struct {
 // Audit is a helper method to define mock.On call
 //   - ctx context.Context
 //   - data *domain.AuthAudit
-func (_e *MockAuthAuditUseCase_Expecter) Audit(ctx interface{}, data interface{}) *MockAuthAuditUseCase_Audit_Call {
+func (_e *MockAuthAuditUseCase_Expecter) Audit(ctx any, data any) *MockAuthAuditUseCase_Audit_Call {
 	return &MockAuthAuditUseCase_Audit_Call{Call: _e.mock.On("Audit", ctx, data)}
 }
 

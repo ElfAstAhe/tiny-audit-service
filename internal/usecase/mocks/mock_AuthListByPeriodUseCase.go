@@ -78,7 +78,7 @@ type MockAuthListByPeriodUseCase_List_Call struct {
 //   - till time.Time
 //   - limit int
 //   - offset int
-func (_e *MockAuthListByPeriodUseCase_Expecter) List(ctx interface{}, from interface{}, till interface{}, limit interface{}, offset interface{}) *MockAuthListByPeriodUseCase_List_Call {
+func (_e *MockAuthListByPeriodUseCase_Expecter) List(ctx any, from any, till any, limit any, offset any) *MockAuthListByPeriodUseCase_List_Call {
 	return &MockAuthListByPeriodUseCase_List_Call{Call: _e.mock.On("List", ctx, from, till, limit, offset)}
 }
 

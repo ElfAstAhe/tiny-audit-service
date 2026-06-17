@@ -63,7 +63,7 @@ type MockAuthAuditFacade_Audit_Call struct {
 // Audit is a helper method to define mock.On call
 //   - ctx context.Context
 //   - data *dto.AuthAuditDTO
-func (_e *MockAuthAuditFacade_Expecter) Audit(ctx interface{}, data interface{}) *MockAuthAuditFacade_Audit_Call {
+func (_e *MockAuthAuditFacade_Expecter) Audit(ctx any, data any) *MockAuthAuditFacade_Audit_Call {
 	return &MockAuthAuditFacade_Audit_Call{Call: _e.mock.On("Audit", ctx, data)}
 }
 
@@ -131,7 +131,7 @@ type MockAuthAuditFacade_ListByPeriod_Call struct {
 // ListByPeriod is a helper method to define mock.On call
 //   - ctx context.Context
 //   - auditPeriod *dto.AuditPeriodDTO
-func (_e *MockAuthAuditFacade_Expecter) ListByPeriod(ctx interface{}, auditPeriod interface{}) *MockAuthAuditFacade_ListByPeriod_Call {
+func (_e *MockAuthAuditFacade_Expecter) ListByPeriod(ctx any, auditPeriod any) *MockAuthAuditFacade_ListByPeriod_Call {
 	return &MockAuthAuditFacade_ListByPeriod_Call{Call: _e.mock.On("ListByPeriod", ctx, auditPeriod)}
 }
 
@@ -199,7 +199,7 @@ type MockAuthAuditFacade_ListByUsername_Call struct {
 // ListByUsername is a helper method to define mock.On call
 //   - ctx context.Context
 //   - auditUser *dto.AuditUserDTO
-func (_e *MockAuthAuditFacade_Expecter) ListByUsername(ctx interface{}, auditUser interface{}) *MockAuthAuditFacade_ListByUsername_Call {
+func (_e *MockAuthAuditFacade_Expecter) ListByUsername(ctx any, auditUser any) *MockAuthAuditFacade_ListByUsername_Call {
 	return &MockAuthAuditFacade_ListByUsername_Call{Call: _e.mock.On("ListByUsername", ctx, auditUser)}
 }
 
