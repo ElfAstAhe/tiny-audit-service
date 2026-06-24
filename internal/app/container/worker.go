@@ -6,6 +6,7 @@ import (
 
 	"github.com/ElfAstAhe/go-service-template/pkg/container"
 	"github.com/ElfAstAhe/go-service-template/pkg/errs"
+	"github.com/ElfAstAhe/go-service-template/pkg/logger"
 )
 
 const (
@@ -20,9 +21,16 @@ type WorkerContainer struct {
 var _ container.Container = (*WorkerContainer)(nil)
 var _ container.LazyContainer = (*WorkerContainer)(nil)
 
-func NewWorkerContainer(orchestrator container.Orchestrator) *WorkerContainer {
+func NewWorkerContainer(
+	orchestrator container.Orchestrator,
+	log logger.Logger,
+) *WorkerContainer {
 	return &WorkerContainer{
-		BaseLazyContainer: container.NewBaseLazyContainer(WorkerContainerName, orchestrator),
+		BaseLazyContainer: container.NewBaseLazyContainer(
+			container.WithLazyName(WorkerContainerName),
+			container.WithLazyOrchestrator(orchestrator),
+			container.WithLazyLogger(log),
+		),
 	}
 }
 
