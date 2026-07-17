@@ -42,6 +42,8 @@ func NewApplication(opts ...Option) (*Application, error) {
 		res.GetOrchestrator().Register(container.NewAppContainer(res.GetOrchestrator(), res.log)),
 		// tools container
 		res.GetOrchestrator().Register(container.NewToolsContainer(res.GetOrchestrator(), res.log)),
+		// client container
+		res.GetOrchestrator().Register(container.NewClientContainer(res.GetOrchestrator(), res.log)),
 		// postgres container
 		res.GetOrchestrator().Register(container.NewPgContainer(res.GetOrchestrator(), res.log)),
 		// repository container

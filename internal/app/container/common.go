@@ -5,6 +5,7 @@ const (
 	OrchestratorName        string = "orchestrator-container"
 	AppContainerName        string = "app-container"
 	ToolsContainerName      string = "tools-container"
+	ClientContainerName     string = "client-container"
 	DBContainerName         string = "db-container"
 	RepositoryContainerName string = "repository-container"
 	UseCaseContainerName    string = "useCase-container"

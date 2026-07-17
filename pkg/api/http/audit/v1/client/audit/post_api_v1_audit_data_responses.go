@@ -61,11 +61,9 @@ func NewPostAPIV1AuditDataCreated() *PostAPIV1AuditDataCreated {
 	return &PostAPIV1AuditDataCreated{}
 }
 
-/*
-PostAPIV1AuditDataCreated describes a response with status code 201, with default header values.
-
-Всё хорошо (пустое тело)
-*/
+// PostAPIV1AuditDataCreated describes a response with status code 201, with default header values.
+//
+// Всё хорошо (пустое тело)
 type PostAPIV1AuditDataCreated struct {
 }
 
@@ -117,11 +115,9 @@ func NewPostAPIV1AuditDataBadRequest() *PostAPIV1AuditDataBadRequest {
 	return &PostAPIV1AuditDataBadRequest{}
 }
 
-/*
-PostAPIV1AuditDataBadRequest describes a response with status code 400, with default header values.
-
-Кривые данные
-*/
+// PostAPIV1AuditDataBadRequest describes a response with status code 400, with default header values.
+//
+// Кривые данные
 type PostAPIV1AuditDataBadRequest struct {
 	Payload *models.ErrorDTO
 }
@@ -187,11 +183,9 @@ func NewPostAPIV1AuditDataUnauthorized() *PostAPIV1AuditDataUnauthorized {
 	return &PostAPIV1AuditDataUnauthorized{}
 }
 
-/*
-PostAPIV1AuditDataUnauthorized describes a response with status code 401, with default header values.
-
-Не авторизован
-*/
+// PostAPIV1AuditDataUnauthorized describes a response with status code 401, with default header values.
+//
+// Не авторизован
 type PostAPIV1AuditDataUnauthorized struct {
 	Payload *models.ErrorDTO
 }
@@ -257,11 +251,9 @@ func NewPostAPIV1AuditDataForbidden() *PostAPIV1AuditDataForbidden {
 	return &PostAPIV1AuditDataForbidden{}
 }
 
-/*
-PostAPIV1AuditDataForbidden describes a response with status code 403, with default header values.
-
-В доступе отказано
-*/
+// PostAPIV1AuditDataForbidden describes a response with status code 403, with default header values.
+//
+// В доступе отказано
 type PostAPIV1AuditDataForbidden struct {
 	Payload *models.ErrorDTO
 }
@@ -327,11 +319,9 @@ func NewPostAPIV1AuditDataInternalServerError() *PostAPIV1AuditDataInternalServe
 	return &PostAPIV1AuditDataInternalServerError{}
 }
 
-/*
-PostAPIV1AuditDataInternalServerError describes a response with status code 500, with default header values.
-
-Внутренняя ошибка сервера (пустое тело)
-*/
+// PostAPIV1AuditDataInternalServerError describes a response with status code 500, with default header values.
+//
+// Внутренняя ошибка сервера (пустое тело)
 type PostAPIV1AuditDataInternalServerError struct {
 }
 

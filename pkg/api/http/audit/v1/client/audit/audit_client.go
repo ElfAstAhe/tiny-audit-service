@@ -44,9 +44,7 @@ func NewClientWithBearerToken(host, basePath, scheme, bearerToken string) Client
 	return &Client{transport: transport, formats: strfmt.Default}
 }
 
-/*
-Client for audit API.
-*/
+// Client for audit API.
 type Client struct {
 	transport runtime.ContextualTransport
 	formats   strfmt.Registry
@@ -97,16 +95,14 @@ type ClientService interface {
 	SetTransport(transport runtime.ContextualTransport)
 }
 
-/*
-PostAPIV1AuditAuthаудитs аутентификации и авторизации.
-
-Создание новой записи аудита.
-
-This method does not support injected context.
-However, timeout and opentracing contexts are honored whenever enabled.
-
-If you need to pass a specific context, use [Client.PostAPIV1AuditAuthContext] instead.
-*/
+// PostAPIV1AuditAuth аудитs аутентификации и авторизации.
+//
+// Создание новой записи аудита.
+//
+// This method does not support injected context.
+// However, timeout and opentracing contexts are honored whenever enabled.
+//
+// If you need to pass a specific context, use [Client.PostAPIV1AuditAuthContext] instead.
 func (a *Client) PostAPIV1AuditAuth(params *PostAPIV1AuditAuthParams, opts ...ClientOption) (*PostAPIV1AuditAuthCreated, error) {
 	var ctx context.Context
 	if params.inner.ctx != nil {
@@ -118,13 +114,11 @@ func (a *Client) PostAPIV1AuditAuth(params *PostAPIV1AuditAuthParams, opts ...Cl
 	return a.PostAPIV1AuditAuthContext(ctx, params, opts...)
 }
 
-/*
-PostAPIV1AuditAuthContextаудитs аутентификации и авторизации.
-
-Создание новой записи аудита.
-
-Do not use the deprecated [PostAPIV1AuditAuthParams.Context] with this method: it would be ignored.
-*/
+// PostAPIV1AuditAuthContext аудитs аутентификации и авторизации.
+//
+// Создание новой записи аудита.
+//
+// Do not use the deprecated [PostAPIV1AuditAuthParams.Context] with this method: it would be ignored.
 func (a *Client) PostAPIV1AuditAuthContext(ctx context.Context, params *PostAPIV1AuditAuthParams, opts ...ClientOption) (*PostAPIV1AuditAuthCreated, error) {
 	// NOTE: parameters are not validated before sending
 	if params == nil {
@@ -167,16 +161,14 @@ func (a *Client) PostAPIV1AuditAuthContext(ctx context.Context, params *PostAPIV
 	panic(msg)
 }
 
-/*
-PostAPIV1AuditAuthPeriodсписокs аудита аутентификации в разрезе периода.
-
-Получить список аудита аутентификации в разрезе периода.
-
-This method does not support injected context.
-However, timeout and opentracing contexts are honored whenever enabled.
-
-If you need to pass a specific context, use [Client.PostAPIV1AuditAuthPeriodContext] instead.
-*/
+// PostAPIV1AuditAuthPeriod списокs аудита аутентификации в разрезе периода.
+//
+// Получить список аудита аутентификации в разрезе периода.
+//
+// This method does not support injected context.
+// However, timeout and opentracing contexts are honored whenever enabled.
+//
+// If you need to pass a specific context, use [Client.PostAPIV1AuditAuthPeriodContext] instead.
 func (a *Client) PostAPIV1AuditAuthPeriod(params *PostAPIV1AuditAuthPeriodParams, opts ...ClientOption) (*PostAPIV1AuditAuthPeriodOK, error) {
 	var ctx context.Context
 	if params.inner.ctx != nil {
@@ -188,13 +180,11 @@ func (a *Client) PostAPIV1AuditAuthPeriod(params *PostAPIV1AuditAuthPeriodParams
 	return a.PostAPIV1AuditAuthPeriodContext(ctx, params, opts...)
 }
 
-/*
-PostAPIV1AuditAuthPeriodContextсписокs аудита аутентификации в разрезе периода.
-
-Получить список аудита аутентификации в разрезе периода.
-
-Do not use the deprecated [PostAPIV1AuditAuthPeriodParams.Context] with this method: it would be ignored.
-*/
+// PostAPIV1AuditAuthPeriodContext списокs аудита аутентификации в разрезе периода.
+//
+// Получить список аудита аутентификации в разрезе периода.
+//
+// Do not use the deprecated [PostAPIV1AuditAuthPeriodParams.Context] with this method: it would be ignored.
 func (a *Client) PostAPIV1AuditAuthPeriodContext(ctx context.Context, params *PostAPIV1AuditAuthPeriodParams, opts ...ClientOption) (*PostAPIV1AuditAuthPeriodOK, error) {
 	// NOTE: parameters are not validated before sending
 	if params == nil {
@@ -237,16 +227,14 @@ func (a *Client) PostAPIV1AuditAuthPeriodContext(ctx context.Context, params *Po
 	panic(msg)
 }
 
-/*
-PostAPIV1AuditDataаудитs данных.
-
-Создание новой записи аудита.
-
-This method does not support injected context.
-However, timeout and opentracing contexts are honored whenever enabled.
-
-If you need to pass a specific context, use [Client.PostAPIV1AuditDataContext] instead.
-*/
+// PostAPIV1AuditData аудитs данных.
+//
+// Создание новой записи аудита.
+//
+// This method does not support injected context.
+// However, timeout and opentracing contexts are honored whenever enabled.
+//
+// If you need to pass a specific context, use [Client.PostAPIV1AuditDataContext] instead.
 func (a *Client) PostAPIV1AuditData(params *PostAPIV1AuditDataParams, opts ...ClientOption) (*PostAPIV1AuditDataCreated, error) {
 	var ctx context.Context
 	if params.inner.ctx != nil {
@@ -258,13 +246,11 @@ func (a *Client) PostAPIV1AuditData(params *PostAPIV1AuditDataParams, opts ...Cl
 	return a.PostAPIV1AuditDataContext(ctx, params, opts...)
 }
 
-/*
-PostAPIV1AuditDataContextаудитs данных.
-
-Создание новой записи аудита.
-
-Do not use the deprecated [PostAPIV1AuditDataParams.Context] with this method: it would be ignored.
-*/
+// PostAPIV1AuditDataContext аудитs данных.
+//
+// Создание новой записи аудита.
+//
+// Do not use the deprecated [PostAPIV1AuditDataParams.Context] with this method: it would be ignored.
 func (a *Client) PostAPIV1AuditDataContext(ctx context.Context, params *PostAPIV1AuditDataParams, opts ...ClientOption) (*PostAPIV1AuditDataCreated, error) {
 	// NOTE: parameters are not validated before sending
 	if params == nil {
@@ -307,16 +293,14 @@ func (a *Client) PostAPIV1AuditDataContext(ctx context.Context, params *PostAPIV
 	panic(msg)
 }
 
-/*
-PostAPIV1AuditDataInstanceсписокs аудита данных в разрезе инстанса данных.
-
-Получить список аудита данных в разрезе инстанса данных.
-
-This method does not support injected context.
-However, timeout and opentracing contexts are honored whenever enabled.
-
-If you need to pass a specific context, use [Client.PostAPIV1AuditDataInstanceContext] instead.
-*/
+// PostAPIV1AuditDataInstance списокs аудита данных в разрезе инстанса данных.
+//
+// Получить список аудита данных в разрезе инстанса данных.
+//
+// This method does not support injected context.
+// However, timeout and opentracing contexts are honored whenever enabled.
+//
+// If you need to pass a specific context, use [Client.PostAPIV1AuditDataInstanceContext] instead.
 func (a *Client) PostAPIV1AuditDataInstance(params *PostAPIV1AuditDataInstanceParams, opts ...ClientOption) (*PostAPIV1AuditDataInstanceOK, error) {
 	var ctx context.Context
 	if params.inner.ctx != nil {
@@ -328,13 +312,11 @@ func (a *Client) PostAPIV1AuditDataInstance(params *PostAPIV1AuditDataInstancePa
 	return a.PostAPIV1AuditDataInstanceContext(ctx, params, opts...)
 }
 
-/*
-PostAPIV1AuditDataInstanceContextсписокs аудита данных в разрезе инстанса данных.
-
-Получить список аудита данных в разрезе инстанса данных.
-
-Do not use the deprecated [PostAPIV1AuditDataInstanceParams.Context] with this method: it would be ignored.
-*/
+// PostAPIV1AuditDataInstanceContext списокs аудита данных в разрезе инстанса данных.
+//
+// Получить список аудита данных в разрезе инстанса данных.
+//
+// Do not use the deprecated [PostAPIV1AuditDataInstanceParams.Context] with this method: it would be ignored.
 func (a *Client) PostAPIV1AuditDataInstanceContext(ctx context.Context, params *PostAPIV1AuditDataInstanceParams, opts ...ClientOption) (*PostAPIV1AuditDataInstanceOK, error) {
 	// NOTE: parameters are not validated before sending
 	if params == nil {
@@ -377,16 +359,14 @@ func (a *Client) PostAPIV1AuditDataInstanceContext(ctx context.Context, params *
 	panic(msg)
 }
 
-/*
-PostAPIV1AuditDataPeriodсписокs аудита данных в разрезе периода.
-
-Получить список аудита данных в разрезе периода.
-
-This method does not support injected context.
-However, timeout and opentracing contexts are honored whenever enabled.
-
-If you need to pass a specific context, use [Client.PostAPIV1AuditDataPeriodContext] instead.
-*/
+// PostAPIV1AuditDataPeriod списокs аудита данных в разрезе периода.
+//
+// Получить список аудита данных в разрезе периода.
+//
+// This method does not support injected context.
+// However, timeout and opentracing contexts are honored whenever enabled.
+//
+// If you need to pass a specific context, use [Client.PostAPIV1AuditDataPeriodContext] instead.
 func (a *Client) PostAPIV1AuditDataPeriod(params *PostAPIV1AuditDataPeriodParams, opts ...ClientOption) (*PostAPIV1AuditDataPeriodOK, error) {
 	var ctx context.Context
 	if params.inner.ctx != nil {
@@ -398,13 +378,11 @@ func (a *Client) PostAPIV1AuditDataPeriod(params *PostAPIV1AuditDataPeriodParams
 	return a.PostAPIV1AuditDataPeriodContext(ctx, params, opts...)
 }
 
-/*
-PostAPIV1AuditDataPeriodContextсписокs аудита данных в разрезе периода.
-
-Получить список аудита данных в разрезе периода.
-
-Do not use the deprecated [PostAPIV1AuditDataPeriodParams.Context] with this method: it would be ignored.
-*/
+// PostAPIV1AuditDataPeriodContext списокs аудита данных в разрезе периода.
+//
+// Получить список аудита данных в разрезе периода.
+//
+// Do not use the deprecated [PostAPIV1AuditDataPeriodParams.Context] with this method: it would be ignored.
 func (a *Client) PostAPIV1AuditDataPeriodContext(ctx context.Context, params *PostAPIV1AuditDataPeriodParams, opts ...ClientOption) (*PostAPIV1AuditDataPeriodOK, error) {
 	// NOTE: parameters are not validated before sending
 	if params == nil {
@@ -447,16 +425,14 @@ func (a *Client) PostAPIV1AuditDataPeriodContext(ctx context.Context, params *Po
 	panic(msg)
 }
 
-/*
-PostAPIV1AuditDataUsernameсписокs аудита данных в разрезе пользователя.
-
-Получить список аудита данных в разрезе пользователя.
-
-This method does not support injected context.
-However, timeout and opentracing contexts are honored whenever enabled.
-
-If you need to pass a specific context, use [Client.PostAPIV1AuditDataUsernameContext] instead.
-*/
+// PostAPIV1AuditDataUsername списокs аудита данных в разрезе пользователя.
+//
+// Получить список аудита данных в разрезе пользователя.
+//
+// This method does not support injected context.
+// However, timeout and opentracing contexts are honored whenever enabled.
+//
+// If you need to pass a specific context, use [Client.PostAPIV1AuditDataUsernameContext] instead.
 func (a *Client) PostAPIV1AuditDataUsername(params *PostAPIV1AuditDataUsernameParams, opts ...ClientOption) (*PostAPIV1AuditDataUsernameOK, error) {
 	var ctx context.Context
 	if params.inner.ctx != nil {
@@ -468,13 +444,11 @@ func (a *Client) PostAPIV1AuditDataUsername(params *PostAPIV1AuditDataUsernamePa
 	return a.PostAPIV1AuditDataUsernameContext(ctx, params, opts...)
 }
 
-/*
-PostAPIV1AuditDataUsernameContextсписокs аудита данных в разрезе пользователя.
-
-Получить список аудита данных в разрезе пользователя.
-
-Do not use the deprecated [PostAPIV1AuditDataUsernameParams.Context] with this method: it would be ignored.
-*/
+// PostAPIV1AuditDataUsernameContext списокs аудита данных в разрезе пользователя.
+//
+// Получить список аудита данных в разрезе пользователя.
+//
+// Do not use the deprecated [PostAPIV1AuditDataUsernameParams.Context] with this method: it would be ignored.
 func (a *Client) PostAPIV1AuditDataUsernameContext(ctx context.Context, params *PostAPIV1AuditDataUsernameParams, opts ...ClientOption) (*PostAPIV1AuditDataUsernameOK, error) {
 	// NOTE: parameters are not validated before sending
 	if params == nil {

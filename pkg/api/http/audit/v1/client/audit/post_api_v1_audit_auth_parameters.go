@@ -63,10 +63,9 @@ PostAPIV1AuditAuthParams contains all the parameters to send to the API endpoint
 */
 type PostAPIV1AuditAuthParams struct {
 
-	/* Input.
-
-	   Аудит аутентификации
-	*/
+	// Input.
+	//
+	// Аудит аутентификации
 	Input *models.AuthAuditDTO
 
 	HTTPClient *http.Client

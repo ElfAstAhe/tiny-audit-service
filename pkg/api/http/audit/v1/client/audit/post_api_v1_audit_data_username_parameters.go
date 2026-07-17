@@ -63,10 +63,9 @@ PostAPIV1AuditDataUsernameParams contains all the parameters to send to the API 
 */
 type PostAPIV1AuditDataUsernameParams struct {
 
-	/* Input.
-
-	   Пользователь
-	*/
+	// Input.
+	//
+	// Пользователь
 	Input *models.AuditUserDTO
 
 	HTTPClient *http.Client

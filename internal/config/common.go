@@ -98,3 +98,21 @@ const (
 
 // EnvConfig - файл конфигурации
 const EnvConfig string = "CONFIG_PATH"
+
+// amqp connector
+const (
+	FlagAMQPConnectorURL             string = "amqp-connector-url"
+	FlagAMQPConnectorUsername        string = "amqp-connector-username"
+	FlagAMQPConnectorPassword        string = "amqp-connector-password"
+	FlagAMQPConnectorConnectTimeout  string = "amqp-connector-connect-timeout"
+	FlagAMQPConnectorWriteTimeout    string = "amqp-connector-write-timeout"
+	FlagAMQPConnectorIdleTimeout     string = "amqp-connector-idle-timeout"
+	FlagAMQPConnectorShutdownTimeout string = "amqp-connector-shutdown-timeout"
+)
+
+// amqp login attempts receiver
+const (
+	FlagLoginAttemptsReceiverTargetName      string = "login-attempts-receiver-target-name"
+	FlagLoginAttemptsReceiverConnectTimeout  string = "login-attempts-receiver-connect-timeout"
+	FlagLoginAttemptsReceiverShutdownTimeout string = "login-attempts-receiver-shutdown-timeout"
+)

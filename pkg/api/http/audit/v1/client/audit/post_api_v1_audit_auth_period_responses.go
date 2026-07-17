@@ -67,11 +67,9 @@ func NewPostAPIV1AuditAuthPeriodOK() *PostAPIV1AuditAuthPeriodOK {
 	return &PostAPIV1AuditAuthPeriodOK{}
 }
 
-/*
-PostAPIV1AuditAuthPeriodOK describes a response with status code 200, with default header values.
-
-список данных аудита
-*/
+// PostAPIV1AuditAuthPeriodOK describes a response with status code 200, with default header values.
+//
+// список данных аудита
 type PostAPIV1AuditAuthPeriodOK struct {
 	Payload []*models.AuthAuditDTO
 }
@@ -135,11 +133,9 @@ func NewPostAPIV1AuditAuthPeriodBadRequest() *PostAPIV1AuditAuthPeriodBadRequest
 	return &PostAPIV1AuditAuthPeriodBadRequest{}
 }
 
-/*
-PostAPIV1AuditAuthPeriodBadRequest describes a response with status code 400, with default header values.
-
-Кривые данные
-*/
+// PostAPIV1AuditAuthPeriodBadRequest describes a response with status code 400, with default header values.
+//
+// Кривые данные
 type PostAPIV1AuditAuthPeriodBadRequest struct {
 	Payload *models.ErrorDTO
 }
@@ -205,11 +201,9 @@ func NewPostAPIV1AuditAuthPeriodUnauthorized() *PostAPIV1AuditAuthPeriodUnauthor
 	return &PostAPIV1AuditAuthPeriodUnauthorized{}
 }
 
-/*
-PostAPIV1AuditAuthPeriodUnauthorized describes a response with status code 401, with default header values.
-
-Не авторизован
-*/
+// PostAPIV1AuditAuthPeriodUnauthorized describes a response with status code 401, with default header values.
+//
+// Не авторизован
 type PostAPIV1AuditAuthPeriodUnauthorized struct {
 	Payload *models.ErrorDTO
 }
@@ -275,11 +269,9 @@ func NewPostAPIV1AuditAuthPeriodForbidden() *PostAPIV1AuditAuthPeriodForbidden {
 	return &PostAPIV1AuditAuthPeriodForbidden{}
 }
 
-/*
-PostAPIV1AuditAuthPeriodForbidden describes a response with status code 403, with default header values.
-
-В доступе отказано
-*/
+// PostAPIV1AuditAuthPeriodForbidden describes a response with status code 403, with default header values.
+//
+// В доступе отказано
 type PostAPIV1AuditAuthPeriodForbidden struct {
 	Payload *models.ErrorDTO
 }
@@ -345,11 +337,9 @@ func NewPostAPIV1AuditAuthPeriodConflict() *PostAPIV1AuditAuthPeriodConflict {
 	return &PostAPIV1AuditAuthPeriodConflict{}
 }
 
-/*
-PostAPIV1AuditAuthPeriodConflict describes a response with status code 409, with default header values.
-
-Уже существует
-*/
+// PostAPIV1AuditAuthPeriodConflict describes a response with status code 409, with default header values.
+//
+// Уже существует
 type PostAPIV1AuditAuthPeriodConflict struct {
 	Payload *models.ErrorDTO
 }
@@ -415,11 +405,9 @@ func NewPostAPIV1AuditAuthPeriodInternalServerError() *PostAPIV1AuditAuthPeriodI
 	return &PostAPIV1AuditAuthPeriodInternalServerError{}
 }
 
-/*
-PostAPIV1AuditAuthPeriodInternalServerError describes a response with status code 500, with default header values.
-
-Внутренняя ошибка сервера (пустое тело)
-*/
+// PostAPIV1AuditAuthPeriodInternalServerError describes a response with status code 500, with default header values.
+//
+// Внутренняя ошибка сервера (пустое тело)
 type PostAPIV1AuditAuthPeriodInternalServerError struct {
 }
 
