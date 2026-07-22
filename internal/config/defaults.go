@@ -48,58 +48,16 @@ const (
 
 // amqp login attempts receiver (FQQN artemis style)
 const (
-	defaultLoginAttemptsReceiverTargetName string = "tiny.auth::login.attempts"
-)
-
-// app
-const (
-	keyAppNodeName           string = "app.node_name"
-	keyAppMaxListLimit       string = "app.max_list_limit"
-	keyAppTokenIssuer        string = "app.token_issuer"
-	keyAppCipherKey          string = "app.cipher_key"
-	keyAppAcceptTokenIssuers string = "app.accept_token_issuers"
-)
-
-// auth tail cutter
-const (
-	keyAuthTCStartInterval      string = "auth_tc.start_interval"
-	keyAuthTCScheduleInterval   string = "auth_tc.schedule_interval"
-	keyAuthTCWorkerCount        string = "auth_tc.worker_count"
-	keyAuthTCDataCapacity       string = "auth_tc.data_capacity"
-	keyAuthTCCompleteProcessing string = "auth_tc.complete_processing"
-	keyAuthTCShutdownTimeout    string = "auth_tc.shutdown_timeout"
-	keyAuthTCTailInterval       string = "auth_tc.tail_interval"
-	keyAuthTCTailCut            string = "auth_tc.tail_cut"
-)
-
-// data tail cutter
-const (
-	keyDataTCStartInterval      string = "data_tc.start_interval"
-	keyDataTCScheduleInterval   string = "data_tc.schedule_interval"
-	keyDataTCWorkerCount        string = "data_tc.worker_count"
-	keyDataTCDataCapacity       string = "data_tc.data_capacity"
-	keyDataTCCompleteProcessing string = "data_tc.complete_processing"
-	keyDataTCShutdownTimeout    string = "data_tc.shutdown_timeout"
-	keyDataTCTailInterval       string = "data_tc.tail_interval"
-	keyDataTCTailCut            string = "data_tc.tail_cut"
-)
-
-// amqp connector
-const (
-	keyAMQPConnectorURL             string = "amqp_connector.url"
-	keyAMQPConnectorUsername        string = "amqp_connector.username"
-	keyAMQPConnectorPassword        string = "amqp_connector.password"
-	keyAMQPConnectorConnectTimeout  string = "amqp_connector.connect_timeout"
-	keyAMQPConnectorWriteTimeout    string = "amqp_connector.write_timeout"
-	keyAMQPConnectorIdleTimeout     string = "amqp_connector.idle_timeout"
-	keyAMQPConnectorShutdownTimeout string = "amqp_connector.shutdown_timeout"
-)
-
-// amqp login attempts sender
-const (
-	keyLoginAttemptsReceiverTargetName      string = "login_attempts_receiver.target_name"
-	keyLoginAttemptsReceiverConnectTimeout  string = "login_attempts_receiver.connect_timeout"
-	keyLoginAttemptsReceiverShutdownTimeout string = "login_attempts_receiver.shutdown_timeout"
+	defaultLoginAttemptsReceiverTargetName      string        = "tiny.auth::login.attempts"
+	defaultLoginAttemptsReceiverConnectTimeout  time.Duration = 10 * time.Second
+	defaultLoginAttemptsReceiverShutdownTimeout time.Duration = 10 * time.Second
+	defaultLoginAttemptsReceiverPrefetchCredit  int           = 50
+	defaultLoginAttemptsStartInterval           time.Duration = 5 * time.Second
+	defaultLoginAttemptsScheduleInterval        time.Duration = 1 * time.Minute
+	defaultLoginAttemptsWorkerCount             int           = 2
+	defaultLoginAttemptsDataCapacity            int           = 128
+	defaultLoginAttemptsCompleteProcessing      bool          = false
+	defaultLoginAttemptsShutdownTimeout         time.Duration = 15 * time.Second
 )
 
 //goland:noinspection DuplicatedCode
@@ -176,4 +134,13 @@ func applyDefaults(v *viper.Viper) {
 	v.SetDefault(keyAMQPConnectorShutdownTimeout, conf.DefaultAMQPConnectorShutdownTimeout)
 	// amqp login attempts receiver
 	v.SetDefault(keyLoginAttemptsReceiverTargetName, defaultLoginAttemptsReceiverTargetName)
+	v.SetDefault(keyLoginAttemptsReceiverPrefetchCredit, defaultLoginAttemptsReceiverPrefetchCredit)
+	v.SetDefault(keyLoginAttemptsReceiverConnectTimeout, defaultLoginAttemptsReceiverConnectTimeout)
+	v.SetDefault(keyLoginAttemptsReceiverShutdownTimeout, defaultLoginAttemptsReceiverShutdownTimeout)
+	v.SetDefault(keyLoginAttemptsStartInterval, defaultLoginAttemptsStartInterval)
+	v.SetDefault(keyLoginAttemptsScheduleInterval, defaultLoginAttemptsScheduleInterval)
+	v.SetDefault(keyLoginAttemptsWorkerCount, defaultLoginAttemptsWorkerCount)
+	v.SetDefault(keyLoginAttemptsDataCapacity, defaultLoginAttemptsDataCapacity)
+	v.SetDefault(keyLoginAttemptsCompleteProcessing, defaultLoginAttemptsCompleteProcessing)
+	v.SetDefault(keyLoginAttemptsShutdownTimeout, defaultLoginAttemptsShutdownTimeout)
 }

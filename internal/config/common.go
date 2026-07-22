@@ -115,4 +115,69 @@ const (
 	FlagLoginAttemptsReceiverTargetName      string = "login-attempts-receiver-target-name"
 	FlagLoginAttemptsReceiverConnectTimeout  string = "login-attempts-receiver-connect-timeout"
 	FlagLoginAttemptsReceiverShutdownTimeout string = "login-attempts-receiver-shutdown-timeout"
+	FLagLoginAttemptsReceiverPrefetchCredit  string = "login-attempts-receiver-prefetch-credit"
+	FlagLoginAttemptsStartInterval           string = "login-attempts-start-interval"
+	FlagLoginAttemptsScheduleInterval        string = "login-attempts-schedule-interval"
+	FlagLoginAttemptsWorkerCount             string = "login-attempts-worker-count"
+	FlagLoginAttemptsDataCapacity            string = "login-attempts-data-capacity"
+	FlagLoginAttemptsCompleteProcessing      string = "login-attempts-complete-processing"
+	FlagLoginAttemptsShutdownTimeout         string = "login-attempts-shutdown-timeout"
+)
+
+// app
+const (
+	keyAppNodeName           string = "app.node_name"
+	keyAppMaxListLimit       string = "app.max_list_limit"
+	keyAppTokenIssuer        string = "app.token_issuer"
+	keyAppCipherKey          string = "app.cipher_key"
+	keyAppAcceptTokenIssuers string = "app.accept_token_issuers"
+)
+
+// auth tail cutter
+const (
+	keyAuthTCStartInterval      string = "auth_tc.start_interval"
+	keyAuthTCScheduleInterval   string = "auth_tc.schedule_interval"
+	keyAuthTCWorkerCount        string = "auth_tc.worker_count"
+	keyAuthTCDataCapacity       string = "auth_tc.data_capacity"
+	keyAuthTCCompleteProcessing string = "auth_tc.complete_processing"
+	keyAuthTCShutdownTimeout    string = "auth_tc.shutdown_timeout"
+	keyAuthTCTailInterval       string = "auth_tc.tail_interval"
+	keyAuthTCTailCut            string = "auth_tc.tail_cut"
+)
+
+// data tail cutter
+const (
+	keyDataTCStartInterval      string = "data_tc.start_interval"
+	keyDataTCScheduleInterval   string = "data_tc.schedule_interval"
+	keyDataTCWorkerCount        string = "data_tc.worker_count"
+	keyDataTCDataCapacity       string = "data_tc.data_capacity"
+	keyDataTCCompleteProcessing string = "data_tc.complete_processing"
+	keyDataTCShutdownTimeout    string = "data_tc.shutdown_timeout"
+	keyDataTCTailInterval       string = "data_tc.tail_interval"
+	keyDataTCTailCut            string = "data_tc.tail_cut"
+)
+
+// amqp connector
+const (
+	keyAMQPConnectorURL             string = "amqp_connector.url"
+	keyAMQPConnectorUsername        string = "amqp_connector.username"
+	keyAMQPConnectorPassword        string = "amqp_connector.password"
+	keyAMQPConnectorConnectTimeout  string = "amqp_connector.connect_timeout"
+	keyAMQPConnectorWriteTimeout    string = "amqp_connector.write_timeout"
+	keyAMQPConnectorIdleTimeout     string = "amqp_connector.idle_timeout"
+	keyAMQPConnectorShutdownTimeout string = "amqp_connector.shutdown_timeout"
+)
+
+// amqp login attempts receiver
+const (
+	keyLoginAttemptsReceiverTargetName      string = "login_attempts_receiver.receiver_conf.target_name"
+	keyLoginAttemptsReceiverConnectTimeout  string = "login_attempts_receiver.receiver_conf.connect_timeout"
+	keyLoginAttemptsReceiverShutdownTimeout string = "login_attempts_receiver.receiver_conf.shutdown_timeout"
+	keyLoginAttemptsReceiverPrefetchCredit  string = "login_attempts_receiver.receiver.conf.prefetch_credit"
+	keyLoginAttemptsStartInterval           string = "login_attempts_receiver.start_interval"
+	keyLoginAttemptsScheduleInterval        string = "login_attempts_receiver.schedule_interval"
+	keyLoginAttemptsWorkerCount             string = "login_attempts_receiver.worker_count"
+	keyLoginAttemptsDataCapacity            string = "login_attempts_receiver.data_capacity"
+	keyLoginAttemptsCompleteProcessing      string = "login_attempts_receiver.complete_processing"
+	keyLoginAttemptsShutdownTimeout         string = "login_attempts_receiver.shutdown_timeout"
 )

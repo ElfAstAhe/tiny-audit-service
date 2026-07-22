@@ -99,6 +99,21 @@ func initFLags() (res *pflag.FlagSet, err error) {
 		res.String(FlagTelemetryExporterEndpoint, conf.DefaultTelemetryExporterEndpoint, "telemetry exporter endpoint")
 		res.Float64(FlagTelemetrySampleRate, conf.DefaultTelemetrySampleRate, "telemetry sample rate")
 		res.Duration(FlagTelemetryTimeout, conf.DefaultTelemetryTimeout, "telemetry timeout")
+		// amqp connector
+		res.String(FlagAMQPConnectorURL, conf.DefaultAMQPConnectorURL, "amqp connector url")
+		res.String(FlagAMQPConnectorUsername, defaultAMQPConnectorUsername, "amqp connector username")
+		res.String(FlagAMQPConnectorPassword, defaultAMQPConnectorPassword, "amqp connector password")
+		res.Duration(FlagAMQPConnectorConnectTimeout, conf.DefaultAMQPConnectorConnectTimeout, "amqp connector connect timeout")
+		res.Duration(FlagAMQPConnectorIdleTimeout, conf.DefaultAMQPConnectorIdleTimeout, "amqp connector idle timeout")
+		res.Duration(FlagAMQPConnectorWriteTimeout, conf.DefaultAMQPConnectorWriteTimeout, "amqp connector write timeout")
+		res.Duration(FlagAMQPConnectorShutdownTimeout, conf.DefaultAMQPConnectorShutdownTimeout, "amqp connector shutdown timeout")
+		// login attempts receiver
+		res.Duration(FlagLoginAttemptsStartInterval, conf.DefaultLoginAttemptsStartInterval, "login attempts start interval")
+		res.Duration(FlagLoginAttemptsScheduleInterval, conf.DefaultLoginAttemptsScheduleInterval, "login attempts schedule interval")
+		res.Int(FlagLoginAttemptsWorkerCount, conf.DefaultLoginAttemptsWorkerCount, "login attempts worker count")
+		res.Int(FlagLoginAttemptsDataCapacity, conf.DefaultLoginAttemptsDataCapacity, "login attempts data capacity")
+		res.Bool(FlagLoginAttemptsCompleteProcessing, conf.DefaultLoginAttemptsCompleteProcessing, "login attempts complete processing")
+		res.Duration(FlagLoginAttemptsShutdownTimeout, conf.DefaultLoginAttemptsShutdownTimeout, "login attempts shutdown timeout")
 	}
 
 	// Парсинг

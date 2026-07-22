@@ -4,45 +4,26 @@ import (
 	"context"
 	"time"
 
+	"github.com/ElfAstAhe/go-service-template/pkg/container"
 	"github.com/ElfAstAhe/go-service-template/pkg/logger"
 	"github.com/ElfAstAhe/go-service-template/pkg/transport/worker"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/usecase"
 )
 
-type TailCutterConfig struct {
-	*worker.BaseSchedulerDispatcherConfig
-	dataInterval time.Duration
-	cutEnabled   bool
-}
-
-func NewTailCutterConfig(
-	schedulerDispatcherConf *worker.BaseSchedulerDispatcherConfig,
-	dataInterval time.Duration,
-	cutEnabled bool,
-) *TailCutterConfig {
-	return &TailCutterConfig{
-		BaseSchedulerDispatcherConfig: worker.NewBaseSchedulerDispatcherConfig(
-			schedulerDispatcherConf.SchedulerConfig,
-			schedulerDispatcherConf.PoolConfig,
-		),
-		dataInterval: dataInterval,
-		cutEnabled:   cutEnabled,
-	}
-}
-
 type TailCutter struct {
 	*worker.BaseSchedulerDispatcher[string]
-	config    *TailCutterConfig
+	config    *TailCutterOptions
 	tailGetUC usecase.TailGetUseCase[string]
 	tailCutUC usecase.TailCutUseCase[string]
 }
 
 var _ worker.Scheduler = (*TailCutter)(nil)
 var _ worker.CommonWorker = (*TailCutter)(nil)
+var _ container.Runner = (*TailCutter)(nil)
 
 func NewTailCutter(
 	name string,
-	config *TailCutterConfig,
+	config *TailCutterOptions,
 	tailGetUC usecase.TailGetUseCase[string],
 	tailCutUC usecase.TailCutUseCase[string],
 	log logger.Logger,
@@ -96,6 +77,6 @@ func (tc *TailCutter) cutTail(ctx context.Context, workerIndex int, data string)
 	return tc.tailCutUC.Cut(ctx, data)
 }
 
-func (tc *TailCutter) GetConfig() *TailCutterConfig {
+func (tc *TailCutter) GetConfig() *TailCutterOptions {
 	return tc.config
 }

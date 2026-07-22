@@ -31,7 +31,7 @@ func (wc *WorkerContainer) providerAuthAuditTailCutter() (any, error) {
 
 	return worker.NewTailCutter(
 		"auth-tail-cutter",
-		worker.NewTailCutterConfig(
+		worker.NewTailCutterOptions(
 			libworker.NewBaseSchedulerDispatcherConfig(
 				libworker.NewBaseSchedulerConfig(
 					confInst.AuthTC.StartInterval,
@@ -75,7 +75,7 @@ func (wc *WorkerContainer) providerDataAuditTailCutter() (any, error) {
 
 	return worker.NewTailCutter(
 		"data-tail-cutter",
-		worker.NewTailCutterConfig(
+		worker.NewTailCutterOptions(
 			libworker.NewBaseSchedulerDispatcherConfig(
 				libworker.NewBaseSchedulerConfig(
 					confInst.DataTC.StartInterval,
