@@ -7,17 +7,16 @@ import (
 	"github.com/Azure/go-amqp"
 	"github.com/ElfAstAhe/go-service-template/pkg/container"
 	"github.com/ElfAstAhe/go-service-template/pkg/errs"
-	"github.com/ElfAstAhe/go-service-template/pkg/logger"
 	libamqp "github.com/ElfAstAhe/go-service-template/pkg/transport/amqp"
 	"github.com/ElfAstAhe/go-service-template/pkg/transport/worker"
-	"github.com/ElfAstAhe/tiny-audit-service/internal/facade/dto"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/usecase"
+	"github.com/ElfAstAhe/tiny-audit-service/pkg/client/dto"
 )
 
 type LoginAttempts struct {
 	*worker.BaseSchedulerDispatcher[*dto.AuthAuditDTO]
 	opts        *LoginAttemptsOptions
-	receiver    libamqp.Receiver[*amqp.ReceiveOptions, *amqp.MessageHeader]
+	receiver    libamqp.Receiver[*amqp.ReceiveOptions]
 	authAuditUC usecase.AuthAuditUseCase
 }
 
@@ -27,11 +26,16 @@ var _ container.Runner = (*LoginAttempts)(nil)
 
 func NewLoginAttempts(
 	name string,
-	receiver libamqp.Receiver[*amqp.ReceiveOptions, *amqp.MessageHeader],
+	receiver libamqp.Receiver[*amqp.ReceiveOptions],
 	authAuditUC usecase.AuthAuditUseCase,
-	opts *LoginAttemptsOptions,
-	log logger.Logger,
+	opts ...LoginAttemptsOption,
 ) (*LoginAttempts, error) {
+	localOpts := NewLoginAttemptsOptions()
+
+	for _, opt := range opts {
+		opt(localOpts)
+	}
+
 	if err := opts.Validate(); err != nil {
 		return nil, errs.NewCommonError("login attempts scheduled dispatcher options validation failed", err)
 	}
@@ -57,8 +61,9 @@ func (la *LoginAttempts) dataProvider(ctx context.Context, eventTime time.Time) 
 	la.GetLogger().Debugf("login attempts receiver %s time event %s data provider start", la.GetName(), eventTime.Format(time.DateTime))
 	defer la.GetLogger().Debugf("login attempts receiver %s time event %s data provider finish", la.GetName(), eventTime.Format(time.DateTime))
 
-	messages := make([]*libamqp.Message[*amqp.MessageHeader], 0)
+	messages := make([]libamqp.Message, 0)
 
+	// timed context
 	receiveCtx, receiveCancel := context.WithTimeout(ctx, 1*time.Second)
 	defer receiveCancel()
 
