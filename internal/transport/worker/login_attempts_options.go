@@ -21,14 +21,15 @@ const (
 type LoginAttemptsOption func(*LoginAttemptsOptions)
 
 type LoginAttemptsOptions struct {
-	Name             string
-	DispatcherOpts   *worker.BaseSchedulerDispatcherConfig
-	ReceiveOpts      *amqp.ReceiveOptions
-	Receiver         libamqp.Receiver[*amqp.ReceiveOptions]
-	AuthAuditUC      usecase.AuthAuditUseCase
-	BatchSize        int
-	BatchReadTimeout time.Duration
-	Logger           logger.Logger
+	Name               string
+	DispatcherOpts     *worker.BaseSchedulerDispatcherConfig
+	ReceiveOpts        *amqp.ReceiveOptions
+	Receiver           libamqp.Receiver[*amqp.ReceiveOptions]
+	AuthAuditUC        usecase.AuthAuditUseCase
+	BatchSize          int
+	BatchReadTimeout   time.Duration
+	AcknowledgeTimeout time.Duration
+	Logger             logger.Logger
 }
 
 func NewLoginAttemptsOptions() *LoginAttemptsOptions {
@@ -59,6 +60,9 @@ func (lao LoginAttemptsOptions) Validate() error {
 	}
 	if !(lao.BatchReadTimeout > 0) {
 		return errs.NewCommonError("batch read timeout must be greater than 0", nil)
+	}
+	if !(lao.AcknowledgeTimeout > 0) {
+		return errs.NewCommonError("acknowledge timeout must be greater than 0", nil)
 	}
 
 	return nil
@@ -100,9 +104,15 @@ func WithLAOBatchSize(batchSize int) LoginAttemptsOption {
 	}
 }
 
-func WithLAOBatchReadTimeout(batchReadTimeout time.Duration) LoginAttemptsOption {
+func WithLAOBatchReadTimeout(timeout time.Duration) LoginAttemptsOption {
 	return func(opts *LoginAttemptsOptions) {
-		opts.BatchReadTimeout = batchReadTimeout
+		opts.BatchReadTimeout = timeout
+	}
+}
+
+func WithLAOAcknowledgeTimeout(timeout time.Duration) LoginAttemptsOption {
+	return func(opts *LoginAttemptsOptions) {
+		opts.AcknowledgeTimeout = timeout
 	}
 }
 

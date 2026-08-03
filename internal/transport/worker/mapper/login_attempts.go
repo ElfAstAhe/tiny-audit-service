@@ -20,7 +20,7 @@ func ToAuthAuditDTO(data amqp.Message) (*dto.AuthAuditDTO, error) {
 		AuthAuditDTO: &appdto.AuthAuditDTO{},
 		Message:      data,
 	}
-	if err := json.Unmarshal(data.GetPayload(), res); err != nil {
+	if err := json.Unmarshal(data.GetPayload(), res.AuthAuditDTO); err != nil {
 		return nil, err
 	}
 
