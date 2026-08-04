@@ -3,26 +3,60 @@ package mapper
 import (
 	"encoding/json"
 
+	"github.com/ElfAstAhe/go-service-template/pkg/errs"
 	"github.com/ElfAstAhe/go-service-template/pkg/transport/amqp"
 	"github.com/ElfAstAhe/go-service-template/pkg/utils"
-	appdto "github.com/ElfAstAhe/tiny-audit-service/internal/facade/dto"
+	"github.com/ElfAstAhe/tiny-audit-service/internal/domain"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/transport/worker/dto"
 )
 
-func ToAuthAuditDTO(data amqp.Message) (*dto.AuthAuditDTO, error) {
+func MapMessageToLoginAttemptWorkerJob(data amqp.Message) (*dto.LoginAttemptWorkerJob, error) {
 	if utils.IsNil(data) {
 		return nil, nil
 	}
-	if len(data.GetPayload()) == 0 {
-		return nil, nil
-	}
-	res := &dto.AuthAuditDTO{
-		AuthAuditDTO: &appdto.AuthAuditDTO{},
-		Message:      data,
-	}
-	if err := json.Unmarshal(data.GetPayload(), res.AuthAuditDTO); err != nil {
+
+	localDto, err := MapMessageBinDataToLoginAttemptDTO(data.GetPayload())
+	if err != nil {
 		return nil, err
 	}
 
+	return &dto.LoginAttemptWorkerJob{
+		Data:    localDto,
+		Message: data,
+	}, nil
+}
+
+func MapMessageBinDataToLoginAttemptDTO(data []byte) (*dto.LoginAttemptEventDTO, error) {
+	if len(data) == 0 {
+		return nil, errs.NewCommonError("empty data", nil)
+	}
+	res := &dto.LoginAttemptEventDTO{}
+
+	err := json.Unmarshal(data, res)
+	if err != nil {
+		return nil, errs.NewCommonError("unmarshal login attempt dto", err)
+	}
+
 	return res, nil
+}
+
+func MapLoginAttemptEventDTOToAuthAuditModel(data *dto.LoginAttemptEventDTO) *domain.AuthAudit {
+	if utils.IsNil(data) {
+		return nil
+	}
+
+	res := &domain.AuthAudit{
+		Source:    data.NodeName,
+		EventDate: data.EventDate,
+		Event:     domain.AuthEventLogin,
+		RequestID: data.RequestID,
+		TraceID:   data.TraceID,
+		Username:  data.Username,
+	}
+	res.Status = domain.AuditStatusFail
+	if data.Success {
+		res.Status = domain.AuditStatusSuccess
+	}
+
+	return res
 }

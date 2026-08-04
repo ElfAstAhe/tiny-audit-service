@@ -58,6 +58,9 @@ const (
 	defaultLoginAttemptsDataCapacity            int           = 128
 	defaultLoginAttemptsCompleteProcessing      bool          = false
 	defaultLoginAttemptsShutdownTimeout         time.Duration = 15 * time.Second
+	defaultLoginAttemptsBatchSize               int           = 50
+	defaultLoginAttemptsBatchReadTimeout        time.Duration = 2 * time.Second
+	defaultLoginAttemptsAcknowledgeTimeout      time.Duration = 1 * time.Second
 )
 
 //goland:noinspection DuplicatedCode
@@ -143,4 +146,7 @@ func applyDefaults(v *viper.Viper) {
 	v.SetDefault(keyLoginAttemptsDataCapacity, defaultLoginAttemptsDataCapacity)
 	v.SetDefault(keyLoginAttemptsCompleteProcessing, defaultLoginAttemptsCompleteProcessing)
 	v.SetDefault(keyLoginAttemptsShutdownTimeout, defaultLoginAttemptsShutdownTimeout)
+	v.SetDefault(keyLoginAttemptsBatchSize, defaultLoginAttemptsBatchSize)
+	v.SetDefault(keyLoginAttemptsBatchReadTimeout, defaultLoginAttemptsBatchReadTimeout)
+	v.SetDefault(keyLoginAttemptsAcknowledgeTimeout, defaultLoginAttemptsAcknowledgeTimeout)
 }

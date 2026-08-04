@@ -81,6 +81,28 @@ func bindFlags(flags *pflag.FlagSet, v *viper.Viper) error {
 		v.BindPFlag(conf.KeyTelemetryServiceName, flags.Lookup(FlagTelemetryServiceName)),
 		v.BindPFlag(conf.KeyTelemetrySampleRate, flags.Lookup(FlagTelemetrySampleRate)),
 		v.BindPFlag(conf.KeyTelemetryTimeout, flags.Lookup(FlagTelemetryTimeout)),
+		// amqp connector
+		v.BindPFlag(keyAMQPConnectorURL, flags.Lookup(FlagAMQPConnectorURL)),
+		v.BindPFlag(keyAMQPConnectorUsername, flags.Lookup(FlagAMQPConnectorUsername)),
+		v.BindPFlag(keyAMQPConnectorPassword, flags.Lookup(FlagAMQPConnectorPassword)),
+		v.BindPFlag(keyAMQPConnectorConnectTimeout, flags.Lookup(FlagAMQPConnectorConnectTimeout)),
+		v.BindPFlag(keyAMQPConnectorWriteTimeout, flags.Lookup(FlagAMQPConnectorWriteTimeout)),
+		v.BindPFlag(keyAMQPConnectorIdleTimeout, flags.Lookup(FlagAMQPConnectorIdleTimeout)),
+		v.BindPFlag(keyAMQPConnectorShutdownTimeout, flags.Lookup(FlagAMQPConnectorShutdownTimeout)),
+		// amqp login attempts receiver
+		v.BindPFlag(keyLoginAttemptsReceiverTargetName, flags.Lookup(FlagLoginAttemptsReceiverTargetName)),
+		v.BindPFlag(keyLoginAttemptsReceiverConnectTimeout, flags.Lookup(FlagLoginAttemptsReceiverConnectTimeout)),
+		v.BindPFlag(keyLoginAttemptsReceiverShutdownTimeout, flags.Lookup(FlagLoginAttemptsReceiverShutdownTimeout)),
+		v.BindPFlag(keyLoginAttemptsReceiverPrefetchCredit, flags.Lookup(FLagLoginAttemptsReceiverPrefetchCredit)),
+		v.BindPFlag(keyLoginAttemptsStartInterval, flags.Lookup(FlagLoginAttemptsStartInterval)),
+		v.BindPFlag(keyLoginAttemptsScheduleInterval, flags.Lookup(FlagLoginAttemptsScheduleInterval)),
+		v.BindPFlag(keyLoginAttemptsWorkerCount, flags.Lookup(FlagLoginAttemptsWorkerCount)),
+		v.BindPFlag(keyLoginAttemptsDataCapacity, flags.Lookup(FlagLoginAttemptsDataCapacity)),
+		v.BindPFlag(keyLoginAttemptsCompleteProcessing, flags.Lookup(FlagLoginAttemptsCompleteProcessing)),
+		v.BindPFlag(keyLoginAttemptsShutdownTimeout, flags.Lookup(FlagLoginAttemptsShutdownTimeout)),
+		v.BindPFlag(keyLoginAttemptsBatchSize, flags.Lookup(FlagLoginAttemptsBatchSize)),
+		v.BindPFlag(keyLoginAttemptsBatchReadTimeout, flags.Lookup(FlagLoginAttemptsBatchReadTimeout)),
+		v.BindPFlag(keyLoginAttemptsAcknowledgeTimeout, flags.Lookup(FlagLoginAttemptsAcknowledgeTimeout)),
 	)
 	if err != nil {
 		return errs.NewConfigError("bind flags with keys", err)

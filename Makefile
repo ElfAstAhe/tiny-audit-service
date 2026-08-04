@@ -74,7 +74,27 @@ run: build
 		--data-tc-data-capacity "128" \
 		--data-tc-shutdown-timeout "15s" \
 		--data-tc-tail-interval "8760h" \
-		--data-tc-tail-cut
+		--data-tc-tail-cut \
+		--amqp-connector-url "amqp://localhost:5672" \
+		--amqp-connector-username "svc-audit" \
+		--amqp-connector-password "test" \
+		--amqp-connector-connect-timeout "2s" \
+		--amqp-connector-write-timeout "2s" \
+		--amqp-connector-idle-timeout "30s" \
+		--amqp-connector-shutdown-timeout "3s" \
+		--login-attempts-receiver-target-name "tiny.auth::login.attempts" \
+		--login-attempts-receiver-connect-timeout "2s" \
+		--login-attempts-receiver-shutdown-timeout "3s" \
+		--login-attempts-receiver-prefetch-credit "50" \
+		--login-attempts-start-interval "3s" \
+		--login-attempts-schedule-interval "10s" \
+		--login-attempts-worker-count "3" \
+		--login-attempts-data-capacity "128" \
+		--login-attempts-complete-processing \
+		--login-attempts-shutdown-timeout "3s" \
+		--login-attempts-batch-size "25" \
+		--login-attempts-batch-read-timeout "3s" \
+		--login-attempts-ack-timeout "3s"
 
 # Запуск тестов
 test:

@@ -99,6 +99,7 @@ func (da *DataAuditPgRepository) ListByPeriod(ctx context.Context, from, till ti
 	return res, nil
 }
 
+//goland:noinspection DuplicatedCode
 func (da *DataAuditPgRepository) validateListByPeriod(from, till time.Time, limit, offset int) error {
 	if from.IsZero() {
 		return errs.NewInvalidArgumentError("from", "field is required")

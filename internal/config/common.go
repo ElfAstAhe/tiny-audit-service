@@ -122,6 +122,9 @@ const (
 	FlagLoginAttemptsDataCapacity            string = "login-attempts-data-capacity"
 	FlagLoginAttemptsCompleteProcessing      string = "login-attempts-complete-processing"
 	FlagLoginAttemptsShutdownTimeout         string = "login-attempts-shutdown-timeout"
+	FlagLoginAttemptsBatchSize               string = "login-attempts-batch-size"
+	FlagLoginAttemptsBatchReadTimeout        string = "login-attempts-batch-read-timeout"
+	FlagLoginAttemptsAcknowledgeTimeout      string = "login-attempts-ack-timeout"
 )
 
 // app
@@ -173,11 +176,14 @@ const (
 	keyLoginAttemptsReceiverTargetName      string = "login_attempts_receiver.receiver_conf.target_name"
 	keyLoginAttemptsReceiverConnectTimeout  string = "login_attempts_receiver.receiver_conf.connect_timeout"
 	keyLoginAttemptsReceiverShutdownTimeout string = "login_attempts_receiver.receiver_conf.shutdown_timeout"
-	keyLoginAttemptsReceiverPrefetchCredit  string = "login_attempts_receiver.receiver.conf.prefetch_credit"
+	keyLoginAttemptsReceiverPrefetchCredit  string = "login_attempts_receiver.receiver_conf.prefetch_credit"
 	keyLoginAttemptsStartInterval           string = "login_attempts_receiver.start_interval"
 	keyLoginAttemptsScheduleInterval        string = "login_attempts_receiver.schedule_interval"
 	keyLoginAttemptsWorkerCount             string = "login_attempts_receiver.worker_count"
 	keyLoginAttemptsDataCapacity            string = "login_attempts_receiver.data_capacity"
 	keyLoginAttemptsCompleteProcessing      string = "login_attempts_receiver.complete_processing"
 	keyLoginAttemptsShutdownTimeout         string = "login_attempts_receiver.shutdown_timeout"
+	keyLoginAttemptsBatchSize               string = "login_attempts_receiver.batch_size"
+	keyLoginAttemptsBatchReadTimeout        string = "login_attempts_receiver.batch_read_timeout"
+	keyLoginAttemptsAcknowledgeTimeout      string = "login_attempts_receiver.ack_timeout"
 )

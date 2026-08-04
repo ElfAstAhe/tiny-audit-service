@@ -108,12 +108,19 @@ func initFLags() (res *pflag.FlagSet, err error) {
 		res.Duration(FlagAMQPConnectorWriteTimeout, conf.DefaultAMQPConnectorWriteTimeout, "amqp connector write timeout")
 		res.Duration(FlagAMQPConnectorShutdownTimeout, conf.DefaultAMQPConnectorShutdownTimeout, "amqp connector shutdown timeout")
 		// login attempts receiver
-		res.Duration(FlagLoginAttemptsStartInterval, conf.DefaultLoginAttemptsStartInterval, "login attempts start interval")
-		res.Duration(FlagLoginAttemptsScheduleInterval, conf.DefaultLoginAttemptsScheduleInterval, "login attempts schedule interval")
-		res.Int(FlagLoginAttemptsWorkerCount, conf.DefaultLoginAttemptsWorkerCount, "login attempts worker count")
-		res.Int(FlagLoginAttemptsDataCapacity, conf.DefaultLoginAttemptsDataCapacity, "login attempts data capacity")
-		res.Bool(FlagLoginAttemptsCompleteProcessing, conf.DefaultLoginAttemptsCompleteProcessing, "login attempts complete processing")
-		res.Duration(FlagLoginAttemptsShutdownTimeout, conf.DefaultLoginAttemptsShutdownTimeout, "login attempts shutdown timeout")
+		res.String(FlagLoginAttemptsReceiverTargetName, defaultLoginAttemptsReceiverTargetName, "login attempts receiver queue/topic name")
+		res.Duration(FlagLoginAttemptsReceiverConnectTimeout, defaultLoginAttemptsReceiverConnectTimeout, "login attempts receiver connect timeout")
+		res.Duration(FlagLoginAttemptsReceiverShutdownTimeout, defaultLoginAttemptsReceiverShutdownTimeout, "login attempts receiver shutdown timeout")
+		res.Int(FLagLoginAttemptsReceiverPrefetchCredit, conf.DefaultAMQPReceiverPrefetchCredit, "login attempts receiver prefetch credit")
+		res.Duration(FlagLoginAttemptsStartInterval, defaultLoginAttemptsStartInterval, "login attempts scheduler start interval")
+		res.Duration(FlagLoginAttemptsScheduleInterval, defaultLoginAttemptsScheduleInterval, "login attempts scheduler schedule interval")
+		res.Duration(FlagLoginAttemptsShutdownTimeout, defaultLoginAttemptsShutdownTimeout, "login attempts scheduler shutdown timeout")
+		res.Int(FlagLoginAttemptsWorkerCount, defaultLoginAttemptsWorkerCount, "login attempts pool worker count")
+		res.Int(FlagLoginAttemptsDataCapacity, defaultLoginAttemptsDataCapacity, "login attempts pool data capacity")
+		res.Bool(FlagLoginAttemptsCompleteProcessing, defaultLoginAttemptsCompleteProcessing, "login attempts pool force complete processing")
+		res.Int(FlagLoginAttemptsBatchSize, defaultLoginAttemptsBatchSize, "login attempts batch size")
+		res.Duration(FlagLoginAttemptsBatchReadTimeout, defaultLoginAttemptsBatchReadTimeout, "login attempts batch read timeout")
+		res.Duration(FlagLoginAttemptsAcknowledgeTimeout, defaultLoginAttemptsAcknowledgeTimeout, "login attempts receiver acknowledge timeout")
 	}
 
 	// Парсинг

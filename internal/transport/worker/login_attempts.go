@@ -10,14 +10,13 @@ import (
 	"github.com/ElfAstAhe/go-service-template/pkg/errs"
 	libamqp "github.com/ElfAstAhe/go-service-template/pkg/transport/amqp"
 	"github.com/ElfAstAhe/go-service-template/pkg/transport/worker"
-	appmapper "github.com/ElfAstAhe/tiny-audit-service/internal/facade/mapper"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/transport/worker/dto"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/transport/worker/mapper"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/usecase"
 )
 
 type LoginAttempts struct {
-	*worker.BaseSchedulerDispatcher[*dto.AuthAuditDTO]
+	*worker.BaseSchedulerDispatcher[*dto.LoginAttemptWorkerJob]
 	opts               *LoginAttemptsOptions
 	receiver           libamqp.Receiver[*amqp.ReceiveOptions]
 	authAuditUC        usecase.AuthAuditUseCase
@@ -52,7 +51,7 @@ func NewLoginAttempts(
 		acknowledgeTimeout: localOpts.AcknowledgeTimeout,
 	}
 
-	res.BaseSchedulerDispatcher = worker.NewBaseSchedulerDispatcher[*dto.AuthAuditDTO](
+	res.BaseSchedulerDispatcher = worker.NewBaseSchedulerDispatcher[*dto.LoginAttemptWorkerJob](
 		localOpts.Name,
 		localOpts.DispatcherOpts,
 		res.dataProvider,
@@ -63,11 +62,11 @@ func NewLoginAttempts(
 	return res, nil
 }
 
-func (la *LoginAttempts) dataProvider(ctx context.Context, eventTime time.Time) ([]*dto.AuthAuditDTO, error) {
+func (la *LoginAttempts) dataProvider(ctx context.Context, eventTime time.Time) ([]*dto.LoginAttemptWorkerJob, error) {
 	la.GetLogger().Debugf("login attempts receiver %s time event %s data provider start", la.GetName(), eventTime.Format(time.DateTime))
 	defer la.GetLogger().Debugf("login attempts receiver %s time event %s data provider finish", la.GetName(), eventTime.Format(time.DateTime))
 
-	resData := make([]*dto.AuthAuditDTO, 0)
+	resData := make([]*dto.LoginAttemptWorkerJob, 0)
 
 	// timed context
 	brokerCtx, brokerCancel := context.WithTimeout(ctx, la.batchReadTimeout)
@@ -85,7 +84,7 @@ func (la *LoginAttempts) dataProvider(ctx context.Context, eventTime time.Time) 
 
 				// cancellation, return nothing and not errors
 				if errors.Is(brokerCtx.Err(), context.Canceled) {
-					return []*dto.AuthAuditDTO{}, nil
+					return []*dto.LoginAttemptWorkerJob{}, nil
 				}
 				// deadline exceeded, return all what we got by read timeout
 				if errors.Is(brokerCtx.Err(), context.DeadlineExceeded) {
@@ -102,7 +101,7 @@ func (la *LoginAttempts) dataProvider(ctx context.Context, eventTime time.Time) 
 				// handled errors
 				// context canceled
 				if errors.Is(err, context.Canceled) {
-					return []*dto.AuthAuditDTO{}, nil
+					return []*dto.LoginAttemptWorkerJob{}, nil
 				}
 				// read timeout
 				if errors.Is(err, context.DeadlineExceeded) {
@@ -113,7 +112,7 @@ func (la *LoginAttempts) dataProvider(ctx context.Context, eventTime time.Time) 
 				return nil, errs.NewCommonError("receiver receive failed", err)
 			}
 			// convert message to dto
-			data, err := mapper.ToAuthAuditDTO(message)
+			job, err := mapper.MapMessageToLoginAttemptWorkerJob(message)
 			if err != nil {
 				// reject message (send it into DLQ)
 				errReject := la.receiver.Reject(brokerCtx, message, err)
@@ -125,18 +124,18 @@ func (la *LoginAttempts) dataProvider(ctx context.Context, eventTime time.Time) 
 				continue
 			}
 			// add data
-			resData = append(resData, data)
+			resData = append(resData, job)
 		}
 	}
 
 	return resData, nil
 }
 
-func (la *LoginAttempts) storeAuthAudit(ctx context.Context, workerIndex int, data *dto.AuthAuditDTO) error {
+func (la *LoginAttempts) storeAuthAudit(ctx context.Context, workerIndex int, data *dto.LoginAttemptWorkerJob) error {
 	la.GetLogger().Debugf("login attempts receiver %s worker %v store auth audit start", la.GetName(), workerIndex)
 	defer la.GetLogger().Debugf("login attempts receiver %s worker %v store auth audit finish", la.GetName(), workerIndex)
 
-	err := la.authAuditUC.Audit(ctx, appmapper.MapAuthAuditDTOToModel(data.AuthAuditDTO))
+	err := la.authAuditUC.Audit(ctx, mapper.MapLoginAttemptEventDTOToAuthAuditModel(data.Data))
 
 	brokerCtx, brokerCancel := context.WithTimeout(ctx, la.acknowledgeTimeout)
 	defer brokerCancel()
