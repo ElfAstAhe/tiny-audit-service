@@ -62,7 +62,7 @@ type MockAuthAuditClient_Audit_Call struct {
 
 // Audit is a helper method to define mock.On call
 //   - data *dto.AuthAuditDTO
-func (_e *MockAuthAuditClient_Expecter) Audit(data interface{}) *MockAuthAuditClient_Audit_Call {
+func (_e *MockAuthAuditClient_Expecter) Audit(data any) *MockAuthAuditClient_Audit_Call {
 	return &MockAuthAuditClient_Audit_Call{Call: _e.mock.On("Audit", data)}
 }
 
@@ -113,7 +113,7 @@ type MockAuthAuditClient_Start_Call struct {
 
 // Start is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockAuthAuditClient_Expecter) Start(ctx interface{}) *MockAuthAuditClient_Start_Call {
+func (_e *MockAuthAuditClient_Expecter) Start(ctx any) *MockAuthAuditClient_Start_Call {
 	return &MockAuthAuditClient_Start_Call{Call: _e.mock.On("Start", ctx)}
 }
 
@@ -164,7 +164,7 @@ type MockAuthAuditClient_Stop_Call struct {
 
 // Stop is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockAuthAuditClient_Expecter) Stop(ctx interface{}) *MockAuthAuditClient_Stop_Call {
+func (_e *MockAuthAuditClient_Expecter) Stop(ctx any) *MockAuthAuditClient_Stop_Call {
 	return &MockAuthAuditClient_Stop_Call{Call: _e.mock.On("Stop", ctx)}
 }
 

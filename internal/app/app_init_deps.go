@@ -87,7 +87,7 @@ func (app *App) initDependencies() error {
 	{
 		app.authAuditTailCutter = worker.NewTailCutter(
 			"auth",
-			worker.NewTailCutterConfig(
+			worker.NewTailCutterOptions(
 				libworker.NewBaseSchedulerDispatcherConfig(
 					libworker.NewBaseSchedulerConfig(
 						app.config.AuthTC.StartInterval,
@@ -110,7 +110,7 @@ func (app *App) initDependencies() error {
 		)
 		app.dataAuditTailCutter = worker.NewTailCutter(
 			"data",
-			worker.NewTailCutterConfig(
+			worker.NewTailCutterOptions(
 				libworker.NewBaseSchedulerDispatcherConfig(
 					libworker.NewBaseSchedulerConfig(
 						app.config.DataTC.StartInterval,

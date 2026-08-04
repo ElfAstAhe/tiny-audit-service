@@ -63,7 +63,7 @@ type MockTailRepository_Delete_Call[ID comparable] struct {
 // Delete is a helper method to define mock.On call
 //   - ctx context.Context
 //   - id ID
-func (_e *MockTailRepository_Expecter[ID]) Delete(ctx interface{}, id interface{}) *MockTailRepository_Delete_Call[ID] {
+func (_e *MockTailRepository_Expecter[ID]) Delete(ctx any, id any) *MockTailRepository_Delete_Call[ID] {
 	return &MockTailRepository_Delete_Call[ID]{Call: _e.mock.On("Delete", ctx, id)}
 }
 
@@ -131,7 +131,7 @@ type MockTailRepository_GetTail_Call[ID comparable] struct {
 // GetTail is a helper method to define mock.On call
 //   - ctx context.Context
 //   - tailDate time.Time
-func (_e *MockTailRepository_Expecter[ID]) GetTail(ctx interface{}, tailDate interface{}) *MockTailRepository_GetTail_Call[ID] {
+func (_e *MockTailRepository_Expecter[ID]) GetTail(ctx any, tailDate any) *MockTailRepository_GetTail_Call[ID] {
 	return &MockTailRepository_GetTail_Call[ID]{Call: _e.mock.On("GetTail", ctx, tailDate)}
 }
 

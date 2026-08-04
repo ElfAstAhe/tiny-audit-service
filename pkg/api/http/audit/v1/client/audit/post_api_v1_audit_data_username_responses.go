@@ -67,11 +67,9 @@ func NewPostAPIV1AuditDataUsernameOK() *PostAPIV1AuditDataUsernameOK {
 	return &PostAPIV1AuditDataUsernameOK{}
 }
 
-/*
-PostAPIV1AuditDataUsernameOK describes a response with status code 200, with default header values.
-
-список данных аудита
-*/
+// PostAPIV1AuditDataUsernameOK describes a response with status code 200, with default header values.
+//
+// список данных аудита
 type PostAPIV1AuditDataUsernameOK struct {
 	Payload []*models.AuthAuditDTO
 }
@@ -135,11 +133,9 @@ func NewPostAPIV1AuditDataUsernameBadRequest() *PostAPIV1AuditDataUsernameBadReq
 	return &PostAPIV1AuditDataUsernameBadRequest{}
 }
 
-/*
-PostAPIV1AuditDataUsernameBadRequest describes a response with status code 400, with default header values.
-
-Кривые данные
-*/
+// PostAPIV1AuditDataUsernameBadRequest describes a response with status code 400, with default header values.
+//
+// Кривые данные
 type PostAPIV1AuditDataUsernameBadRequest struct {
 	Payload *models.ErrorDTO
 }
@@ -205,11 +201,9 @@ func NewPostAPIV1AuditDataUsernameUnauthorized() *PostAPIV1AuditDataUsernameUnau
 	return &PostAPIV1AuditDataUsernameUnauthorized{}
 }
 
-/*
-PostAPIV1AuditDataUsernameUnauthorized describes a response with status code 401, with default header values.
-
-Не авторизован
-*/
+// PostAPIV1AuditDataUsernameUnauthorized describes a response with status code 401, with default header values.
+//
+// Не авторизован
 type PostAPIV1AuditDataUsernameUnauthorized struct {
 	Payload *models.ErrorDTO
 }
@@ -275,11 +269,9 @@ func NewPostAPIV1AuditDataUsernameForbidden() *PostAPIV1AuditDataUsernameForbidd
 	return &PostAPIV1AuditDataUsernameForbidden{}
 }
 
-/*
-PostAPIV1AuditDataUsernameForbidden describes a response with status code 403, with default header values.
-
-В доступе отказано
-*/
+// PostAPIV1AuditDataUsernameForbidden describes a response with status code 403, with default header values.
+//
+// В доступе отказано
 type PostAPIV1AuditDataUsernameForbidden struct {
 	Payload *models.ErrorDTO
 }
@@ -345,11 +337,9 @@ func NewPostAPIV1AuditDataUsernameConflict() *PostAPIV1AuditDataUsernameConflict
 	return &PostAPIV1AuditDataUsernameConflict{}
 }
 
-/*
-PostAPIV1AuditDataUsernameConflict describes a response with status code 409, with default header values.
-
-Уже существует
-*/
+// PostAPIV1AuditDataUsernameConflict describes a response with status code 409, with default header values.
+//
+// Уже существует
 type PostAPIV1AuditDataUsernameConflict struct {
 	Payload *models.ErrorDTO
 }
@@ -415,11 +405,9 @@ func NewPostAPIV1AuditDataUsernameInternalServerError() *PostAPIV1AuditDataUsern
 	return &PostAPIV1AuditDataUsernameInternalServerError{}
 }
 
-/*
-PostAPIV1AuditDataUsernameInternalServerError describes a response with status code 500, with default header values.
-
-Внутренняя ошибка сервера (пустое тело)
-*/
+// PostAPIV1AuditDataUsernameInternalServerError describes a response with status code 500, with default header values.
+//
+// Внутренняя ошибка сервера (пустое тело)
 type PostAPIV1AuditDataUsernameInternalServerError struct {
 }
 

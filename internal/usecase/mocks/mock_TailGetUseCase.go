@@ -74,7 +74,7 @@ type MockTailGetUseCase_GetTail_Call[ID comparable] struct {
 // GetTail is a helper method to define mock.On call
 //   - ctx context.Context
 //   - tail time.Time
-func (_e *MockTailGetUseCase_Expecter[ID]) GetTail(ctx interface{}, tail interface{}) *MockTailGetUseCase_GetTail_Call[ID] {
+func (_e *MockTailGetUseCase_Expecter[ID]) GetTail(ctx any, tail any) *MockTailGetUseCase_GetTail_Call[ID] {
 	return &MockTailGetUseCase_GetTail_Call[ID]{Call: _e.mock.On("GetTail", ctx, tail)}
 }
 

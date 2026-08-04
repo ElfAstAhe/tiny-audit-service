@@ -63,10 +63,9 @@ PostAPIV1AuditAuthPeriodParams contains all the parameters to send to the API en
 */
 type PostAPIV1AuditAuthPeriodParams struct {
 
-	/* Input.
-
-	   Период аудита
-	*/
+	// Input.
+	//
+	// Период аудита
 	Input *models.AuditPeriodDTO
 
 	HTTPClient *http.Client

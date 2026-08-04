@@ -39,25 +39,27 @@ func NewApplication(opts ...Option) (*Application, error) {
 	// orchestrator and containers
 	err := errors.Join(
 		// app container
-		res.GetOrchestrator().Register(container.NewAppContainer(res.GetOrchestrator())),
+		res.GetOrchestrator().Register(container.NewAppContainer(res.GetOrchestrator(), res.log)),
 		// tools container
-		res.GetOrchestrator().Register(container.NewToolsContainer(res.GetOrchestrator())),
+		res.GetOrchestrator().Register(container.NewToolsContainer(res.GetOrchestrator(), res.log)),
+		// client container
+		res.GetOrchestrator().Register(container.NewClientContainer(res.GetOrchestrator(), res.log)),
 		// postgres container
-		res.GetOrchestrator().Register(container.NewPgContainer(res.GetOrchestrator())),
+		res.GetOrchestrator().Register(container.NewPgContainer(res.GetOrchestrator(), res.log)),
 		// repository container
-		res.GetOrchestrator().Register(container.NewRepositoryContainer(res.GetOrchestrator())),
+		res.GetOrchestrator().Register(container.NewRepositoryContainer(res.GetOrchestrator(), res.log)),
 		// use case container
-		res.GetOrchestrator().Register(container.NewUseCaseContainer(res.GetOrchestrator())),
+		res.GetOrchestrator().Register(container.NewUseCaseContainer(res.GetOrchestrator(), res.log)),
 		// facade container
-		res.GetOrchestrator().Register(container.NewFacadeContainer(res.GetOrchestrator())),
+		res.GetOrchestrator().Register(container.NewFacadeContainer(res.GetOrchestrator(), res.log)),
 		// services container (inner kitchen)
-		res.GetOrchestrator().Register(container.NewServiceContainer(res.GetOrchestrator())),
+		res.GetOrchestrator().Register(container.NewServiceContainer(res.GetOrchestrator(), res.log)),
 		// worker container
-		res.GetOrchestrator().Register(container.NewWorkerContainer(res.GetOrchestrator())),
+		res.GetOrchestrator().Register(container.NewWorkerContainer(res.GetOrchestrator(), res.log)),
 		// http container
-		res.GetOrchestrator().Register(container.NewHTTPContainer(res.GetOrchestrator())),
+		res.GetOrchestrator().Register(container.NewHTTPContainer(res.GetOrchestrator(), res.log)),
 		// gRPC container
-		res.GetOrchestrator().Register(container.NewGRPCContainer(res.GetOrchestrator())),
+		res.GetOrchestrator().Register(container.NewGRPCContainer(res.GetOrchestrator(), res.log)),
 	)
 	if err != nil {
 		return nil, errs.NewCommonError("application create failed", err)

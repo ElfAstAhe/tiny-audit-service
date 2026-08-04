@@ -14,15 +14,17 @@ const (
 )
 
 type Config struct {
-	App       *AppConfig              `mapstructure:"app" json:"app,omitempty" yaml:"app,omitempty"`
-	AuthTC    *TailCutterConfig       `mapstructure:"auth_tc" json:"auth_tc,omitempty" yaml:"auth_tc,omitempty"`
-	DataTC    *TailCutterConfig       `mapstructure:"data_tc" json:"data_tc,omitempty" yaml:"data_tc,omitempty"`
-	Auth      *config.AuthConfig      `mapstructure:"auth" json:"auth,omitempty" yaml:"auth,omitempty"`
-	HTTP      *config.HTTPConfig      `mapstructure:"http" json:"http,omitempty" yaml:"http,omitempty"`
-	GRPC      *config.GRPCConfig      `mapstructure:"grpc" json:"grpc,omitempty" yaml:"grpc,omitempty"`
-	Log       *config.LogConfig       `mapstructure:"log" json:"log,omitempty" yaml:"log,omitempty"`
-	DB        *config.DBConfig        `mapstructure:"db" json:"db,omitempty" yaml:"db,omitempty"`
-	Telemetry *config.TelemetryConfig `mapstructure:"telemetry" json:"telemetry,omitempty" yaml:"telemetry,omitempty"`
+	App           *AppConfig                  `mapstructure:"app" json:"app,omitempty" yaml:"app,omitempty"`
+	AuthTC        *TailCutterConfig           `mapstructure:"auth_tc" json:"auth_tc,omitempty" yaml:"auth_tc,omitempty"`
+	DataTC        *TailCutterConfig           `mapstructure:"data_tc" json:"data_tc,omitempty" yaml:"data_tc,omitempty"`
+	Auth          *config.AuthConfig          `mapstructure:"auth" json:"auth,omitempty" yaml:"auth,omitempty"`
+	HTTP          *config.HTTPConfig          `mapstructure:"http" json:"http,omitempty" yaml:"http,omitempty"`
+	GRPC          *config.GRPCConfig          `mapstructure:"grpc" json:"grpc,omitempty" yaml:"grpc,omitempty"`
+	Log           *config.LogConfig           `mapstructure:"log" json:"log,omitempty" yaml:"log,omitempty"`
+	DB            *config.DBConfig            `mapstructure:"db" json:"db,omitempty" yaml:"db,omitempty"`
+	Telemetry     *config.TelemetryConfig     `mapstructure:"telemetry" json:"telemetry,omitempty" yaml:"telemetry,omitempty"`
+	AMQPConnector *config.AMQPConnectorConfig `mapstructure:"amqp_connector" json:"amqp_connector,omitempty" yaml:"amqp_connector,omitempty"`
+	LoginAttempts *LoginAttemptsConfig        `mapstructure:"login_attempts_receiver" json:"login_attempts,omitempty" yaml:"login_attempts,omitempty"`
 }
 
 // linker params
@@ -42,17 +44,21 @@ func NewConfig(
 	log *config.LogConfig,
 	db *config.DBConfig,
 	telemetry *config.TelemetryConfig,
+	amqpConnector *config.AMQPConnectorConfig,
+	loginAttempts *LoginAttemptsConfig,
 ) *Config {
 	return &Config{
-		App:       app,
-		AuthTC:    authTC,
-		DataTC:    dataTC,
-		Auth:      auth,
-		HTTP:      HTTP,
-		GRPC:      GRPC,
-		Log:       log,
-		DB:        db,
-		Telemetry: telemetry,
+		App:           app,
+		AuthTC:        authTC,
+		DataTC:        dataTC,
+		Auth:          auth,
+		HTTP:          HTTP,
+		GRPC:          GRPC,
+		Log:           log,
+		DB:            db,
+		Telemetry:     telemetry,
+		AMQPConnector: amqpConnector,
+		LoginAttempts: loginAttempts,
 	}
 }
 
@@ -67,20 +73,24 @@ func NewDefaultConfig() *Config {
 		config.NewDefaultLogConfig(),
 		config.NewDefaultDBConfig(),
 		config.NewDefaultTelemetryConfig(),
+		config.NewDefaultAMQPConnectorConfig(),
+		NewDefaultLoginAttemptsConfig(),
 	)
 }
 
 func NewEmptyConfig() *Config {
 	return &Config{
-		App:       &AppConfig{},
-		AuthTC:    &TailCutterConfig{},
-		DataTC:    &TailCutterConfig{},
-		Auth:      &config.AuthConfig{},
-		HTTP:      &config.HTTPConfig{},
-		GRPC:      &config.GRPCConfig{},
-		Log:       &config.LogConfig{},
-		DB:        &config.DBConfig{},
-		Telemetry: &config.TelemetryConfig{},
+		App:           &AppConfig{},
+		AuthTC:        &TailCutterConfig{},
+		DataTC:        &TailCutterConfig{},
+		Auth:          &config.AuthConfig{},
+		HTTP:          &config.HTTPConfig{},
+		GRPC:          &config.GRPCConfig{},
+		Log:           &config.LogConfig{},
+		DB:            &config.DBConfig{},
+		Telemetry:     &config.TelemetryConfig{},
+		AMQPConnector: &config.AMQPConnectorConfig{},
+		LoginAttempts: &LoginAttemptsConfig{},
 	}
 }
 
@@ -97,6 +107,8 @@ func (c *Config) Validate() error {
 		c.Log,
 		c.DB,
 		c.Telemetry,
+		c.AMQPConnector,
+		c.LoginAttempts,
 	}
 
 	for _, validator := range validators {

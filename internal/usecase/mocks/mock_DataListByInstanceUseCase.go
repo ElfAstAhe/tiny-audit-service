@@ -77,7 +77,7 @@ type MockDataListByInstanceUseCase_List_Call struct {
 //   - instanceID string
 //   - limit int
 //   - offset int
-func (_e *MockDataListByInstanceUseCase_Expecter) List(ctx interface{}, typeName interface{}, instanceID interface{}, limit interface{}, offset interface{}) *MockDataListByInstanceUseCase_List_Call {
+func (_e *MockDataListByInstanceUseCase_Expecter) List(ctx any, typeName any, instanceID any, limit any, offset any) *MockDataListByInstanceUseCase_List_Call {
 	return &MockDataListByInstanceUseCase_List_Call{Call: _e.mock.On("List", ctx, typeName, instanceID, limit, offset)}
 }
 

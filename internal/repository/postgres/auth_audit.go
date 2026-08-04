@@ -21,6 +21,7 @@ var _ libdomain.CRUDRepository[*domain.AuthAudit, string] = (*AuthAuditPgReposit
 var _ domain.AuthAuditRepository = (*AuthAuditPgRepository)(nil)
 var _ domain.TailRepository[string] = (*AuthAuditPgRepository)(nil)
 
+//goland:noinspection DuplicatedCode
 func NewAuthAuditPgRepository(executor db.Executor, errDecipher db.ErrorDecipher) (*AuthAuditPgRepository, error) {
 	res := &AuthAuditPgRepository{}
 

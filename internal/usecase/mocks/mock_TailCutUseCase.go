@@ -62,7 +62,7 @@ type MockTailCutUseCase_Cut_Call[ID comparable] struct {
 // Cut is a helper method to define mock.On call
 //   - ctx context.Context
 //   - id ID
-func (_e *MockTailCutUseCase_Expecter[ID]) Cut(ctx interface{}, id interface{}) *MockTailCutUseCase_Cut_Call[ID] {
+func (_e *MockTailCutUseCase_Expecter[ID]) Cut(ctx any, id any) *MockTailCutUseCase_Cut_Call[ID] {
 	return &MockTailCutUseCase_Cut_Call[ID]{Call: _e.mock.On("Cut", ctx, id)}
 }
 

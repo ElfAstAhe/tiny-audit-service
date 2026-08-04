@@ -2,7 +2,6 @@ package grpc
 
 import (
 	"context"
-	"time"
 
 	"github.com/ElfAstAhe/go-service-template/pkg/errs"
 	"github.com/ElfAstAhe/go-service-template/pkg/logger"
@@ -47,14 +46,6 @@ func (acc *AuthAuditClient) Start(ctx context.Context) error {
 	}
 
 	acc.client = pb.NewAuthAuditServiceClient(acc.conn)
-
-	return nil
-}
-
-func (acc *AuthAuditClient) Stop(stopTimeout time.Duration) error {
-	if err := acc.BaseAuditClient.Stop(stopTimeout); err != nil {
-		return err
-	}
 
 	return nil
 }
