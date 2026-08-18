@@ -28,12 +28,12 @@ type AuditPeriodDTO struct {
 }
 
 // Validate validates this audit period d t o
-func (m *AuditPeriodDTO) Validate(formats strfmt.Registry) error {
+func (m *AuditPeriodDTO) Validate(_ strfmt.Registry) error {
 	return nil
 }
 
 // ContextValidate validates this audit period d t o based on context it is used
-func (m *AuditPeriodDTO) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+func (m *AuditPeriodDTO) ContextValidate(_ context.Context, _ strfmt.Registry) error {
 	return nil
 }
 

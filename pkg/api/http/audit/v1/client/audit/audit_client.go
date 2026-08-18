@@ -105,7 +105,7 @@ type ClientService interface {
 // If you need to pass a specific context, use [Client.PostAPIV1AuditAuthContext] instead.
 func (a *Client) PostAPIV1AuditAuth(params *PostAPIV1AuditAuthParams, opts ...ClientOption) (*PostAPIV1AuditAuthCreated, error) {
 	var ctx context.Context
-	if params.inner.ctx != nil {
+	if params != nil && params.inner.ctx != nil {
 		ctx = params.inner.ctx
 	} else {
 		ctx = context.Background()
@@ -171,7 +171,7 @@ func (a *Client) PostAPIV1AuditAuthContext(ctx context.Context, params *PostAPIV
 // If you need to pass a specific context, use [Client.PostAPIV1AuditAuthPeriodContext] instead.
 func (a *Client) PostAPIV1AuditAuthPeriod(params *PostAPIV1AuditAuthPeriodParams, opts ...ClientOption) (*PostAPIV1AuditAuthPeriodOK, error) {
 	var ctx context.Context
-	if params.inner.ctx != nil {
+	if params != nil && params.inner.ctx != nil {
 		ctx = params.inner.ctx
 	} else {
 		ctx = context.Background()
@@ -237,7 +237,7 @@ func (a *Client) PostAPIV1AuditAuthPeriodContext(ctx context.Context, params *Po
 // If you need to pass a specific context, use [Client.PostAPIV1AuditDataContext] instead.
 func (a *Client) PostAPIV1AuditData(params *PostAPIV1AuditDataParams, opts ...ClientOption) (*PostAPIV1AuditDataCreated, error) {
 	var ctx context.Context
-	if params.inner.ctx != nil {
+	if params != nil && params.inner.ctx != nil {
 		ctx = params.inner.ctx
 	} else {
 		ctx = context.Background()
@@ -303,7 +303,7 @@ func (a *Client) PostAPIV1AuditDataContext(ctx context.Context, params *PostAPIV
 // If you need to pass a specific context, use [Client.PostAPIV1AuditDataInstanceContext] instead.
 func (a *Client) PostAPIV1AuditDataInstance(params *PostAPIV1AuditDataInstanceParams, opts ...ClientOption) (*PostAPIV1AuditDataInstanceOK, error) {
 	var ctx context.Context
-	if params.inner.ctx != nil {
+	if params != nil && params.inner.ctx != nil {
 		ctx = params.inner.ctx
 	} else {
 		ctx = context.Background()
@@ -369,7 +369,7 @@ func (a *Client) PostAPIV1AuditDataInstanceContext(ctx context.Context, params *
 // If you need to pass a specific context, use [Client.PostAPIV1AuditDataPeriodContext] instead.
 func (a *Client) PostAPIV1AuditDataPeriod(params *PostAPIV1AuditDataPeriodParams, opts ...ClientOption) (*PostAPIV1AuditDataPeriodOK, error) {
 	var ctx context.Context
-	if params.inner.ctx != nil {
+	if params != nil && params.inner.ctx != nil {
 		ctx = params.inner.ctx
 	} else {
 		ctx = context.Background()
@@ -435,7 +435,7 @@ func (a *Client) PostAPIV1AuditDataPeriodContext(ctx context.Context, params *Po
 // If you need to pass a specific context, use [Client.PostAPIV1AuditDataUsernameContext] instead.
 func (a *Client) PostAPIV1AuditDataUsername(params *PostAPIV1AuditDataUsernameParams, opts ...ClientOption) (*PostAPIV1AuditDataUsernameOK, error) {
 	var ctx context.Context
-	if params.inner.ctx != nil {
+	if params != nil && params.inner.ctx != nil {
 		ctx = params.inner.ctx
 	} else {
 		ctx = context.Background()

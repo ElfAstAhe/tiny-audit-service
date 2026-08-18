@@ -52,12 +52,12 @@ type AuthAuditDTO struct {
 }
 
 // Validate validates this auth audit d t o
-func (m *AuthAuditDTO) Validate(formats strfmt.Registry) error {
+func (m *AuthAuditDTO) Validate(_ strfmt.Registry) error {
 	return nil
 }
 
 // ContextValidate validates this auth audit d t o based on context it is used
-func (m *AuthAuditDTO) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+func (m *AuthAuditDTO) ContextValidate(_ context.Context, _ strfmt.Registry) error {
 	return nil
 }
 

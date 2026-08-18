@@ -28,12 +28,12 @@ type DataAuditValueDTO struct {
 }
 
 // Validate validates this data audit value d t o
-func (m *DataAuditValueDTO) Validate(formats strfmt.Registry) error {
+func (m *DataAuditValueDTO) Validate(_ strfmt.Registry) error {
 	return nil
 }
 
 // ContextValidate validates this data audit value d t o based on context it is used
-func (m *DataAuditValueDTO) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+func (m *DataAuditValueDTO) ContextValidate(_ context.Context, _ strfmt.Registry) error {
 	return nil
 }
 

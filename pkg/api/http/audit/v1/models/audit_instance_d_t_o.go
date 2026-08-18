@@ -28,12 +28,12 @@ type AuditInstanceDTO struct {
 }
 
 // Validate validates this audit instance d t o
-func (m *AuditInstanceDTO) Validate(formats strfmt.Registry) error {
+func (m *AuditInstanceDTO) Validate(_ strfmt.Registry) error {
 	return nil
 }
 
 // ContextValidate validates this audit instance d t o based on context it is used
-func (m *AuditInstanceDTO) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+func (m *AuditInstanceDTO) ContextValidate(_ context.Context, _ strfmt.Registry) error {
 	return nil
 }
 
