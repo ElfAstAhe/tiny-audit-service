@@ -76,7 +76,7 @@ func TestLoginAttempts_DataProvider_SuccessBatchSize(t *testing.T) {
 		receiver:         mockReceiver,
 		opts:             NewLoginAttemptsOptions(),
 	}
-	la.BaseSchedulerDispatcher = libworker.NewBaseSchedulerDispatcher[*dto.AuthAuditDTO](
+	la.BaseSchedulerDispatcher = libworker.NewBaseSchedulerDispatcher[*dto.LoginAttemptWorkerJob](
 		"test", &libworker.BaseSchedulerDispatcherConfig{}, nil, nil, mockLog,
 	)
 
@@ -101,7 +101,7 @@ func TestLoginAttempts_DataProvider_ReadTimeout(t *testing.T) {
 		receiver:         mockReceiver,
 		opts:             NewLoginAttemptsOptions(),
 	}
-	la.BaseSchedulerDispatcher = libworker.NewBaseSchedulerDispatcher[*dto.AuthAuditDTO](
+	la.BaseSchedulerDispatcher = libworker.NewBaseSchedulerDispatcher[*dto.LoginAttemptWorkerJob](
 		"test", &libworker.BaseSchedulerDispatcherConfig{}, nil, nil, mockLog,
 	)
 
@@ -127,7 +127,7 @@ func TestLoginAttempts_DataProvider_ContextCanceled(t *testing.T) {
 		receiver:         mockReceiver,
 		opts:             NewLoginAttemptsOptions(),
 	}
-	la.BaseSchedulerDispatcher = libworker.NewBaseSchedulerDispatcher[*dto.AuthAuditDTO](
+	la.BaseSchedulerDispatcher = libworker.NewBaseSchedulerDispatcher[*dto.LoginAttemptWorkerJob](
 		"test", &libworker.BaseSchedulerDispatcherConfig{}, nil, nil, mockLog,
 	)
 
@@ -150,7 +150,7 @@ func TestLoginAttempts_DataProvider_MapperError_RejectSuccess(t *testing.T) {
 		receiver:         mockReceiver,
 		opts:             NewLoginAttemptsOptions(),
 	}
-	la.BaseSchedulerDispatcher = libworker.NewBaseSchedulerDispatcher[*dto.AuthAuditDTO](
+	la.BaseSchedulerDispatcher = libworker.NewBaseSchedulerDispatcher[*dto.LoginAttemptWorkerJob](
 		"test", &libworker.BaseSchedulerDispatcherConfig{}, nil, nil, mockLog,
 	)
 
@@ -182,11 +182,11 @@ func TestLoginAttempts_StoreAuthAudit_Success(t *testing.T) {
 		authAuditUC:        mockUC,
 		acknowledgeTimeout: 1 * time.Second,
 	}
-	la.BaseSchedulerDispatcher = libworker.NewBaseSchedulerDispatcher[*dto.AuthAuditDTO](
+	la.BaseSchedulerDispatcher = libworker.NewBaseSchedulerDispatcher[*dto.LoginAttemptWorkerJob](
 		"test", &libworker.BaseSchedulerDispatcherConfig{}, nil, nil, mockLog,
 	)
 
-	testDTO := &dto.AuthAuditDTO{
+	testDTO := &dto.LoginAttemptWorkerJob{
 		Message: azure.NewMessage([]byte(`{}`), nil),
 	}
 
@@ -209,11 +209,11 @@ func TestLoginAttempts_StoreAuthAudit_UniqueViolation_Accept(t *testing.T) {
 		authAuditUC:        mockUC,
 		acknowledgeTimeout: 1 * time.Second,
 	}
-	la.BaseSchedulerDispatcher = libworker.NewBaseSchedulerDispatcher[*dto.AuthAuditDTO](
+	la.BaseSchedulerDispatcher = libworker.NewBaseSchedulerDispatcher[*dto.LoginAttemptWorkerJob](
 		"test", &libworker.BaseSchedulerDispatcherConfig{}, nil, nil, mockLog,
 	)
 
-	testDTO := &dto.AuthAuditDTO{
+	testDTO := &dto.LoginAttemptWorkerJob{
 		Message: azure.NewMessage([]byte(`{}`), nil),
 	}
 
@@ -239,11 +239,11 @@ func TestLoginAttempts_StoreAuthAudit_DatabaseError_Release(t *testing.T) {
 		authAuditUC:        mockUC,
 		acknowledgeTimeout: 1 * time.Second,
 	}
-	la.BaseSchedulerDispatcher = libworker.NewBaseSchedulerDispatcher[*dto.AuthAuditDTO](
+	la.BaseSchedulerDispatcher = libworker.NewBaseSchedulerDispatcher[*dto.LoginAttemptWorkerJob](
 		"test", &libworker.BaseSchedulerDispatcherConfig{}, nil, nil, mockLog,
 	)
 
-	testDTO := &dto.AuthAuditDTO{
+	testDTO := &dto.LoginAttemptWorkerJob{
 		Message: azure.NewMessage([]byte(`{}`), nil),
 	}
 

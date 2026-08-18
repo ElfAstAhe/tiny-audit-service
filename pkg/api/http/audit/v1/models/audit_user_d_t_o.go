@@ -25,12 +25,12 @@ type AuditUserDTO struct {
 }
 
 // Validate validates this audit user d t o
-func (m *AuditUserDTO) Validate(formats strfmt.Registry) error {
+func (m *AuditUserDTO) Validate(_ strfmt.Registry) error {
 	return nil
 }
 
 // ContextValidate validates this audit user d t o based on context it is used
-func (m *AuditUserDTO) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+func (m *AuditUserDTO) ContextValidate(_ context.Context, _ strfmt.Registry) error {
 	return nil
 }
 

@@ -97,7 +97,7 @@ run: build
 		--login-attempts-ack-timeout "3s"
 
 # Запуск тестов
-test:
+test: gen-proto gen-mocks
 	go test -v ./...
 
 # Запуск static check
