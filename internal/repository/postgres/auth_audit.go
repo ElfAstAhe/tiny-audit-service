@@ -59,7 +59,7 @@ func NewAuthAuditPgRepository(executor db.Executor, errDecipher db.ErrorDecipher
 	base, err := repository.NewBaseCRUDRepository[*domain.AuthAudit, string](
 		executor,
 		errDecipher,
-		repository.NewEntityInfo("auth_audit_[index]", "AuditAudit"),
+		repository.NewEntityInfo("auth_audit", "AuthAudit"),
 		queryBuilders,
 		callbacks,
 	)
@@ -183,7 +183,7 @@ func (aa *AuthAuditPgRepository) validateCreate(entity *domain.AuthAudit, params
 
 func (aa *AuthAuditPgRepository) beforeCreate(entity *domain.AuthAudit, params ...any) error {
 	if err := entity.BeforeCreate(); err != nil {
-		return errs.NewDalError("AuthAuditPgRepository.beforeCreate", "before create entity", err)
+		return errs.NewDalError("AuthAuditPgRepository.beforeCreate", "before create failed", err)
 	}
 
 	return nil
@@ -215,7 +215,7 @@ func (aa *AuthAuditPgRepository) validateChange(entity *domain.AuthAudit, params
 
 func (aa *AuthAuditPgRepository) beforeChange(entity *domain.AuthAudit, params ...any) error {
 	if err := entity.BeforeChange(); err != nil {
-		return errs.NewDalError("AuthAuditPgRepository.beforeChange", "before change entity", err)
+		return errs.NewDalError("AuthAuditPgRepository.beforeChange", "before change failed", err)
 	}
 
 	return nil
