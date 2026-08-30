@@ -3,7 +3,7 @@ package domain
 import (
 	"time"
 
-	"github.com/ElfAstAhe/go-service-template/pkg/domain"
+	libdomain "github.com/ElfAstAhe/go-service-template/pkg/domain"
 	"github.com/ElfAstAhe/go-service-template/pkg/errs"
 )
 
@@ -22,7 +22,7 @@ type AuthAudit struct {
 	UpdatedAt    time.Time
 }
 
-var _ domain.Entity[string] = (*AuthAudit)(nil)
+var _ libdomain.Entity[string] = (*AuthAudit)(nil)
 var _ commonAudit = (*AuthAudit)(nil)
 
 func NewEmptyAuthAudit() *AuthAudit {
@@ -45,7 +45,7 @@ func (aa *AuthAudit) IsExists() bool {
 }
 
 func (aa *AuthAudit) BeforeCreate() error {
-	if err := defaultBeforeCreate(aa); err != nil {
+	if err := libdomain.AssignUUIDv7(aa); err != nil {
 		return errs.NewBllError("AuthAudit.BeforeCreate", "default before create failed", err)
 	}
 
