@@ -4,7 +4,7 @@ go 1.26.0
 
 require (
 	github.com/Azure/go-amqp v1.7.0
-	github.com/ElfAstAhe/go-service-template v0.0.87
+	github.com/ElfAstAhe/go-service-template v0.0.90
 	github.com/ElfAstAhe/tiny-auth-service v0.0.19
 	github.com/XSAM/otelsql v0.43.0
 	github.com/go-chi/chi/v5 v5.3.2
@@ -71,7 +71,7 @@ require (
 	github.com/pelletier/go-toml/v2 v2.4.3 // indirect
 	github.com/prometheus/client_model v0.6.2 // indirect
 	github.com/prometheus/common v0.70.1 // indirect
-	github.com/prometheus/procfs v0.21.1 // indirect
+	github.com/prometheus/procfs v0.22.0 // indirect
 	github.com/sagikazarmark/locafero v0.12.0 // indirect
 	github.com/sethvargo/go-retry v0.4.0 // indirect
 	github.com/spf13/afero v1.15.0 // indirect
