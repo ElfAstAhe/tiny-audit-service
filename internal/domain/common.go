@@ -4,9 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/ElfAstAhe/go-service-template/pkg/domain"
 	"github.com/ElfAstAhe/go-service-template/pkg/errs"
-	"github.com/google/uuid"
 )
 
 type commonAudit interface {
@@ -77,17 +75,6 @@ func validateDataEvent(event string) error {
 	}
 
 	return errs.NewBllValidateError("validateDataEvent", fmt.Sprintf("unknown data event '%s'", event), nil)
-}
-
-func defaultBeforeCreate(entity domain.Entity[string]) error {
-	newID, err := uuid.NewV7()
-	if err != nil {
-		return errs.NewBllError("defaultBeforeCreate", "generate new id", err)
-	}
-
-	entity.SetID(newID.String())
-
-	return nil
 }
 
 func validateCommon(commonAudit commonAudit) error {

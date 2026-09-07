@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/ElfAstAhe/go-service-template/pkg/domain"
+	libdomain "github.com/ElfAstAhe/go-service-template/pkg/domain"
 	"github.com/ElfAstAhe/go-service-template/pkg/errs"
 )
 
@@ -27,7 +27,7 @@ type DataAudit struct {
 	UpdatedAt        time.Time
 }
 
-var _ domain.Entity[string] = (*DataAudit)(nil)
+var _ libdomain.Entity[string] = (*DataAudit)(nil)
 var _ commonAudit = (*DataAudit)(nil)
 
 func NewEmptyDataAudit() *DataAudit {
@@ -93,7 +93,7 @@ func (da *DataAudit) ValidateChange() error {
 }
 
 func (da *DataAudit) BeforeCreate() error {
-	if err := defaultBeforeCreate(da); err != nil {
+	if err := libdomain.AssignUUIDv7(da); err != nil {
 		return errs.NewBllError("DataAudit.BeforeCreate", "default before create failed", err)
 	}
 
