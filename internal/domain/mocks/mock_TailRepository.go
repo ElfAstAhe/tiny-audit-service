@@ -17,10 +17,19 @@ func NewMockTailRepository[ID comparable](t interface {
 	mock.TestingT
 	Cleanup(func())
 }) *MockTailRepository[ID] {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockTailRepository[ID]{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
