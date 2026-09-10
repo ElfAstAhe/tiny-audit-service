@@ -116,8 +116,8 @@ static-check: ## Запустить статический анализ кода
 	staticcheck $$(go list ./... | grep -vE "pkg/api")
 
 # Запуск линтера
-lint: ## Запустить линтер
-	revive ./...
+lint: ## Запустить линтер revive (пропуская автогенерируемый код)
+	revive $$(go list ./... | grep -vE "pkg/api|cmd/gen-tz")
 
 # Очистка бинарников
 clean: ## Очистить скомпилированные файлы из папки ./bin
