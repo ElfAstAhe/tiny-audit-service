@@ -10,10 +10,16 @@ VERSION=1.0.0
 BUILD_TIME=$(shell date +'%Y/%m/%d_%H:%M:%S')
 STAGE=DEV
 
-.PHONY: build run test clean
+.PHONY: gen-proto gen-swagger gen-http-client gen-mocks build run test static-check lint clean update-deps
+
+help:
+	@echo "Доступные команды для сборки и тестирования:"
+	@echo "------------------------------------------------------------------------"
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-18s\033[0m %s\n", $$1, $$2}'
+	@echo "------------------------------------------------------------------------"
 
 # Генерация gRPC кода
-gen-proto:
+gen-proto: ## Сгенерировать gRPC код (Go & gRPC) из Protobuf файлов
 	mkdir -p $(PROTO_OUT)
 	protoc \
         -I $(PROTO_ROOT) \
@@ -24,7 +30,7 @@ gen-proto:
 		$(PROTO_PATH)/*.proto
 
 # Генерация swagger
-gen-swagger:
+gen-swagger: ## Сгенерировать Swagger-документацию (swag init)
 	swag init \
 		-g $(SERVER_BUILD_DIR)/main.go \
 		--parseDependency \
@@ -34,23 +40,23 @@ gen-swagger:
 		--parseDepth 3
 
 # Генерация http client
-gen-http-client:
+gen-http-client: ## Сгенерировать HTTP-клиент на основе swagger.json
 #	oapi-codegen -package client -generate client docs/swagger.json > pkg/client/rest/api_client.gen.go
 	mkdir -p $(OPEN_API_OUT)
 	swagger generate client -f ./docs/swagger.json -A tiny-audit-service -t $(OPEN_API_OUT)
 
-# Генерирует моки для всех интерфейсов в указанной папке
-gen-mocks:
+# Генерирует моки для интерфейсов в указанной папке, см. {project_root}/.mockery.yml конфиг
+gen-mocks: ## Сгенерировать моки для интерфейсов (mockery)
 	mockery
 
 # Сборка проекта с прокидыванием переменных
-build: gen-proto gen-swagger gen-http-client gen-mocks
+build: gen-proto gen-swagger gen-http-client gen-mocks ## Полная сборка: генерация всего кода + компиляция бинарника
 	go build -ldflags "-X '$(MODULE_NAME)/internal/config.AppVersion=$(VERSION)' \
 	-X '$(MODULE_NAME)/internal/config.AppBuildTime=$(BUILD_TIME)'" \
 	-o ./bin/$(SERVER_BINARY_NAME) $(SERVER_BUILD_DIR)/main.go
 
-# Запуск проекта (сборка, затем запуск)
-run: build
+# Запуск проекта (сначала соберет, потом запустит)
+run: build ## Собрать проект и запустить бинарник с локальными флагами (БД, логи)
 	./bin/$(SERVER_BINARY_NAME) \
 		--http-address "localhost:8081" \
 		--grpc-address "localhost:51052" \
@@ -97,19 +103,28 @@ run: build
 		--login-attempts-ack-timeout "3s"
 
 # Запуск тестов
-test: gen-proto gen-mocks
+test: gen-proto gen-mocks ## Запустить модульные и интеграционные тесты проекта
 	go test -v ./...
 
+# Запуск бенчмарков (сюда добавляем все вызовы) или разные параметры под один пакет
+bench: gen-proto gen-mocks ## Запустить утилиты с замером памяти
+#	go test -bench=BenchmarkManager_FullCycle -benchmem ./pkg/infra/cache/test/...
+	go test -bench=. -benchmem ./...
+
 # Запуск static check
-static-check:
+static-check: ## Запустить статический анализ кода (пропуская автогенерируемый pkg/api)
 	staticcheck $$(go list ./... | grep -vE "pkg/api")
 
+# Запуск линтера
+lint: ## Запустить линтер
+	revive ./...
+
 # Очистка бинарников
-clean:
+clean: ## Очистить скомпилированные файлы из папки ./bin
 	rm -rf ./bin/*
 
 # обновление зависимостей
-update-deps:
+update-deps: ## Принудительно обновить и скачать все Go-зависимости проекта
 	go get -u -x all
 
 #
