@@ -1,4 +1,4 @@
-package tiny_audit_service
+package audit
 
 import (
 	"context"

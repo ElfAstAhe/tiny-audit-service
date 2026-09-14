@@ -3,17 +3,16 @@ package config
 import (
 	"time"
 
-	"github.com/ElfAstAhe/go-service-template/pkg/config"
 	conf "github.com/ElfAstAhe/go-service-template/pkg/config"
 	"github.com/spf13/viper"
 )
 
 // app
 const (
-	defaultAppEnv       config.AppEnv = config.AppEnvDevelopment
-	defaultAppNodeName  string        = ApplicationName
-	defaultMaxListLimit int           = 100
-	defaultTokenIssuer  string        = "tiny-auth-service"
+	defaultAppEnv       conf.AppEnv = conf.AppEnvDevelopment
+	defaultAppNodeName  string      = ApplicationName
+	defaultMaxListLimit int         = 100
+	defaultTokenIssuer  string      = "tiny-auth-service"
 )
 
 // auth tail cutter

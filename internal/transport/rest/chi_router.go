@@ -132,7 +132,8 @@ func (cr *AppChiRouter) setupMiddleware(
 	// audit trace id
 	cr.router.Use(pkgmware.NewDefaultAuditTraceIDExtractor().Handle)
 	// realIP
-	cr.router.Use(middleware.RealIP)
+	//	cr.router.Use(middleware.RealIP)
+	cr.router.Use(libmware.NewDefaultRealIPExtractor().Handler)
 	// recoverer
 	cr.router.Use(middleware.Recoverer)
 	// timeout

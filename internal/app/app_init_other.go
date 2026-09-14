@@ -13,7 +13,7 @@ import (
 	"github.com/ElfAstAhe/go-service-template/pkg/utils"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/config"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/repository/postgres"
-	_ "github.com/ElfAstAhe/tiny-audit-service/migrations/tiny-audit-service"
+	_ "github.com/ElfAstAhe/tiny-audit-service/migrations/audit"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 	"github.com/hellofresh/health-go/v5"
