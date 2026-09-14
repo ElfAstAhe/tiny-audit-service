@@ -2,15 +2,12 @@ package repository
 
 import (
 	"context"
-
-	"github.com/ElfAstAhe/go-service-template/pkg/domain"
-	"github.com/ElfAstAhe/tiny-audit-service/pkg/client"
 )
 
 type AuditOwnedRepository[E AuditableEntity[ID], ID comparable, OwnerID comparable] struct {
-	next        domain.OwnedRepository[E, ID, OwnerID]
-	source      string
-	auditClient client.DataAuditClient
+	//	next        domain.OwnedRepository[E, ID, OwnerID]
+	//	source      string
+	//	auditClient client.DataAuditClient
 }
 
 func (aor *AuditOwnedRepository[E, ID, OwnerID]) Find(ctx context.Context, ownerID OwnerID, id ID) (E, error) {

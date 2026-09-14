@@ -248,8 +248,8 @@ func TestLoginAttempts_StoreAuthAudit_DatabaseError_Release(t *testing.T) {
 	}
 
 	// Имитируем падение коннекта к СУБД Postgres
-	criticalDbErr := errors.New("postgres connection timeout")
-	mockUC.On("Audit", mock.Anything, mock.Anything).Return(criticalDbErr).Once()
+	criticalDBErr := errors.New("postgres connection timeout")
+	mockUC.On("Audit", mock.Anything, mock.Anything).Return(criticalDBErr).Once()
 
 	// Метод должен сделать Release, чтобы брокер вернул сообщение обратно в очередь
 	mockReceiver.On("Release", mock.Anything, testDTO.Message).Return(nil).Once()
