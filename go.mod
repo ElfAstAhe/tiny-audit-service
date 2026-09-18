@@ -5,7 +5,7 @@ go 1.26.0
 require (
 	github.com/Azure/go-amqp v1.7.0
 	github.com/ElfAstAhe/go-service-template v0.0.98
-	github.com/ElfAstAhe/tiny-auth-service v0.0.23
+	github.com/ElfAstAhe/tiny-auth-service v0.0.24
 	github.com/XSAM/otelsql v0.44.0
 	github.com/go-chi/chi/v5 v5.3.2
 	github.com/go-openapi/errors v0.22.8
@@ -32,7 +32,7 @@ require (
 	go.opentelemetry.io/otel v1.46.0
 	go.opentelemetry.io/otel/trace v1.46.0
 	golang.org/x/sync v0.23.0
-	google.golang.org/grpc v1.83.2
+	google.golang.org/grpc v1.84.0
 	google.golang.org/protobuf v1.36.12
 )
 
@@ -95,7 +95,7 @@ require (
 	golang.org/x/sys v0.48.0 // indirect
 	golang.org/x/text v0.42.0 // indirect
 	golang.org/x/tools v0.50.0 // indirect
-	google.golang.org/genproto/googleapis/api v0.0.0-20260911204522-f61a6ca850bd // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20260911204522-f61a6ca850bd // indirect
+	google.golang.org/genproto/googleapis/api v0.0.0-20260917231906-eeb232e0883d // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20260917231906-eeb232e0883d // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1 // indirect
 )
