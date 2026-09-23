@@ -10,7 +10,7 @@ VERSION=1.0.0
 BUILD_TIME=$(shell date +'%Y/%m/%d_%H:%M:%S')
 STAGE=DEV
 
-.PHONY: gen-proto gen-swagger gen-http-client gen-mocks build run test static-check lint clean update-deps  kafka-local-start kafka-local-stop kafka-docker-start kafka-docker-stop kafka-docker-logs
+.PHONY: gen-proto gen-swagger gen-http-client gen-mocks build run test static-check lint clean update-deps artemis-local-start artemis-local-stop kafka-local-start kafka-local-stop brokers-all-start kafka-docker-start kafka-docker-stop kafka-docker-logs
 
 help:
 	@echo "Доступные команды для сборки и тестирования:"
@@ -55,8 +55,12 @@ build: gen-proto gen-swagger gen-http-client gen-mocks ## Полная сбор�
 	-X '$(MODULE_NAME)/internal/config.AppBuildTime=$(BUILD_TIME)'" \
 	-o ./bin/$(SERVER_BINARY_NAME) $(SERVER_BUILD_DIR)/main.go
 
+# запуск проекта с выводом информации о параметрах
+run-help: build ## Собрать проект и запустить бинарник с информацией о параметрах
+	./bin/$(SERVER_BINARY_NAME) --help
+
 # Запуск проекта (сначала соберет, потом запустит)
-run: build ## Собрать проект и запустить бинарник с локальными флагами (БД, логи)
+run: build ## Собрать проект и запустить бинарник с локальными флагами (AMQP, БД, логи)
 	./bin/$(SERVER_BINARY_NAME) \
 		--http-address "localhost:8081" \
 		--grpc-address "localhost:51052" \
@@ -102,14 +106,34 @@ run: build ## Собрать проект и запустить бинарник
 		--login-attempts-batch-read-timeout "3s" \
 		--login-attempts-ack-timeout "3s"
 
+# Запуск проекта (сначала соберет, потом запустит)
+run-kafka: build ## Собрать проект и запустить бинарник с локальными флагами (Kafka, БД, логи)
+	./bin/$(SERVER_BINARY_NAME) \
+		--http-address "localhost:8081" \
+		--grpc-address "localhost:51052" \
+		--log-level "debug" \
+		--db-driver "postgres" \
+		--db-dsn "postgres://svc_audit:password@localhost:5432/test?sslmode=disable&search_path=audit_db" \
+		--auth-jwt-secret "jwt-key" \
+		--app-cipher-key "12345" \
+		--app-max-list-limit 500 \
+		--app-accept-token-issuers "tiny-auth-service,test-issuer" \
+		--data-tc-start-interval "5s" \
+		--data-tc-schedule-interval "66s" \
+		--data-tc-worker-count "2" \
+		--data-tc-data-capacity "128" \
+		--data-tc-shutdown-timeout "15s" \
+		--data-tc-tail-interval "8760h" \
+		--data-tc-tail-cut \
+
 # Запуск тестов
 test: gen-proto gen-mocks ## Запустить модульные и интеграционные тесты проекта
-	go test -v ./...
+	go test -v $$(go list ./... | grep -vE "mocks")
 
 # Запуск бенчмарков (сюда добавляем все вызовы) или разные параметры под один пакет
 bench: gen-proto gen-mocks ## Запустить утилиты с замером памяти
 #	go test -bench=BenchmarkManager_FullCycle -benchmem ./pkg/infra/cache/test/...
-	go test -bench=. -benchmem ./...
+	go test -bench=. -benchmem $$(go list ./... | grep -vE "mocks")
 
 # Запуск static check
 static-check: ## Запустить статический анализ кода (пропуская автогенерируемый pkg/api)
@@ -127,11 +151,20 @@ clean: ## Очистить скомпилированные файлы из па
 update-deps: ## Принудительно обновить и скачать все Go-зависимости проекта
 	go get -u -x all
 
-kafka-local-start: ## start kafka local
-	/opt/kafka_2.13-4.3.1/bin/kafka-server-start.sh /opt/kafka_2.13-4.3.1/config/server.properties
+artemis-local-start: ## start artemis local (ubuntu, in separate terminal)
+	gnome-terminal -- bash -c "sudo $(ARTEMIS_RUN) run; exec bash"
+
+artemis-local-stop: ## stop artemis local (not implemented)
+	echo "not implemented :-)"
+
+kafka-local-start: ## start kafka local (ubuntu, in separate terminal)
+	gnome-terminal -- bash -c "$(KAFKA_DIR)/bin/kafka-server-start.sh $(KAFKA_DIR)/config/server.properties; exec bash"
 
 kafka-local-stop: ## stop kafka local (not implemented)
 	echo "not implemented :-)"
+
+brokers-all-start: kafka-local-start artemis-local-start ## start both brokers simultaneously in separate windows
+
 # start kafka (docker compose)
 kafka-docker-start: ## start kafka docker container (docker compose)
 	docker compose -f kafka-docker-compose.yml up -d

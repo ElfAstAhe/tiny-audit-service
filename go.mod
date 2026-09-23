@@ -4,8 +4,8 @@ go 1.26.0
 
 require (
 	github.com/Azure/go-amqp v1.7.0
-	github.com/ElfAstAhe/go-service-template v0.0.99
-	github.com/ElfAstAhe/tiny-auth-service v0.0.24
+	github.com/ElfAstAhe/go-service-template v0.0.105
+	github.com/ElfAstAhe/tiny-auth-service v0.0.26
 	github.com/XSAM/otelsql v0.44.0
 	github.com/go-chi/chi/v5 v5.3.2
 	github.com/go-openapi/errors v0.22.8
@@ -27,7 +27,7 @@ require (
 	github.com/stretchr/testify v1.12.1
 	github.com/swaggo/http-swagger v1.3.4
 	github.com/swaggo/swag v1.16.6
-	github.com/xo/dburl v0.25.1
+	github.com/xo/dburl v0.25.3
 	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.71.0
 	go.opentelemetry.io/otel v1.46.0
 	go.opentelemetry.io/otel/trace v1.46.0
@@ -98,7 +98,7 @@ require (
 	golang.org/x/sys v0.48.0 // indirect
 	golang.org/x/text v0.42.0 // indirect
 	golang.org/x/tools v0.50.0 // indirect
-	google.golang.org/genproto/googleapis/api v0.0.0-20260917231906-eeb232e0883d // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20260917231906-eeb232e0883d // indirect
+	google.golang.org/genproto/googleapis/api v0.0.0-20260921155816-b14227669459 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20260921155816-b14227669459 // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1 // indirect
 )
