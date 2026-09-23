@@ -92,19 +92,20 @@ run: build ## Собрать проект и запустить бинарник
 		--amqp-connector-write-timeout "2s" \
 		--amqp-connector-idle-timeout "30s" \
 		--amqp-connector-shutdown-timeout "3s" \
-		--login-attempts-receiver-target-name "tiny.auth::login.attempts" \
-		--login-attempts-receiver-connect-timeout "2s" \
-		--login-attempts-receiver-shutdown-timeout "3s" \
-		--login-attempts-receiver-prefetch-credit "50" \
-		--login-attempts-start-interval "3s" \
-		--login-attempts-schedule-interval "10s" \
-		--login-attempts-worker-count "3" \
-		--login-attempts-data-capacity "128" \
-		--login-attempts-complete-processing \
-		--login-attempts-shutdown-timeout "3s" \
-		--login-attempts-batch-size "25" \
-		--login-attempts-batch-read-timeout "3s" \
-		--login-attempts-ack-timeout "3s"
+		--login-attempts-receiver-kind "amqp" \
+		--login-attempts-receiver-amqp-target-name "tiny.auth::login.attempts" \
+		--login-attempts-receiver-amqp-connect-timeout "2s" \
+		--login-attempts-receiver-amqp-shutdown-timeout "3s" \
+		--login-attempts-receiver-amqp-prefetch-credit "50" \
+		--login-attempts-worker-start-interval "3s" \
+		--login-attempts-worker-schedule-interval "10s" \
+		--login-attempts-worker-worker-count "3" \
+		--login-attempts-worker-data-capacity "128" \
+		--login-attempts-worker-complete-processing \
+		--login-attempts-worker-shutdown-timeout "3s" \
+		--login-attempts-worker-batch-size "25" \
+		--login-attempts-worker-batch-read-timeout "3s" \
+		--login-attempts-worker-ack-timeout "3s"
 
 # Запуск проекта (сначала соберет, потом запустит)
 run-kafka: build ## Собрать проект и запустить бинарник с локальными флагами (Kafka, БД, логи)
