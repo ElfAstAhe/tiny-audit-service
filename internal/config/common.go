@@ -110,21 +110,52 @@ const (
 	FlagAMQPConnectorShutdownTimeout string = "amqp-connector-shutdown-timeout"
 )
 
+// login attempts common
+const (
+	// FlagLoginAttemptsReceiverKind - receiver kind, accepted values: amqp, kafka
+	FlagLoginAttemptsReceiverKind string = "login-attempts-receiver-kind"
+)
+
+// login attempts worker
+const (
+	FlagLoginAttemptsWorkerStartInterval      string = "login-attempts-worker-start-interval"
+	FlagLoginAttemptsWorkerScheduleInterval   string = "login-attempts-worker-schedule-interval"
+	FlagLoginAttemptsWorkerWorkerCount        string = "login-attempts-worker-worker-count"
+	FlagLoginAttemptsWorkerDataCapacity       string = "login-attempts-worker-data-capacity"
+	FlagLoginAttemptsWorkerCompleteProcessing string = "login-attempts-worker-complete-processing"
+	FlagLoginAttemptsWorkerShutdownTimeout    string = "login-attempts-worker-shutdown-timeout"
+	FlagLoginAttemptsWorkerBatchSize          string = "login-attempts-worker-batch-size"
+	FlagLoginAttemptsWorkerBatchReadTimeout   string = "login-attempts-worker-batch-read-timeout"
+	FlagLoginAttemptsWorkerAcknowledgeTimeout string = "login-attempts-worker-ack-timeout"
+)
+
 // amqp login attempts receiver
 const (
-	FlagLoginAttemptsReceiverTargetName      string = "login-attempts-receiver-target-name"
-	FlagLoginAttemptsReceiverConnectTimeout  string = "login-attempts-receiver-connect-timeout"
-	FlagLoginAttemptsReceiverShutdownTimeout string = "login-attempts-receiver-shutdown-timeout"
-	FLagLoginAttemptsReceiverPrefetchCredit  string = "login-attempts-receiver-prefetch-credit"
-	FlagLoginAttemptsStartInterval           string = "login-attempts-start-interval"
-	FlagLoginAttemptsScheduleInterval        string = "login-attempts-schedule-interval"
-	FlagLoginAttemptsWorkerCount             string = "login-attempts-worker-count"
-	FlagLoginAttemptsDataCapacity            string = "login-attempts-data-capacity"
-	FlagLoginAttemptsCompleteProcessing      string = "login-attempts-complete-processing"
-	FlagLoginAttemptsShutdownTimeout         string = "login-attempts-shutdown-timeout"
-	FlagLoginAttemptsBatchSize               string = "login-attempts-batch-size"
-	FlagLoginAttemptsBatchReadTimeout        string = "login-attempts-batch-read-timeout"
-	FlagLoginAttemptsAcknowledgeTimeout      string = "login-attempts-ack-timeout"
+	FlagLoginAttemptsReceiverAMQPConfigTargetName      string = "login-attempts-receiver-amqp-target-name"
+	FlagLoginAttemptsReceiverAMQPConfigConnectTimeout  string = "login-attempts-receiver-amqp-connect-timeout"
+	FlagLoginAttemptsReceiverAMQPConfigShutdownTimeout string = "login-attempts-receiver-amqp-shutdown-timeout"
+	FLagLoginAttemptsReceiverAMQPConfigPrefetchCredit  string = "login-attempts-receiver-amqp-prefetch-credit"
+)
+
+// kafka login attempts receiver
+const (
+	FlagLoginAttemptsReceiverKafkaConfigBrokers           string = "login-attempts-receiver-kafka-brokers"
+	FlagLoginAttemptsReceiverKafkaConfigTargetName        string = "login-attempts-receiver-kafka-target-name"
+	FlagLoginAttemptsReceiverKafkaConfigPartition         string = "login-attempts-receiver-kafka-partition"
+	FlagLoginAttemptsReceiverKafkaConfigConnectTimeout    string = "login-attempts-receiver-kafka-connect-timeout"
+	FlagLoginAttemptsReceiverKafkaConfigShutdownTimeout   string = "login-attempts-receiver-kafka-shutdown-timeout"
+	FlagLoginAttemptsReceiverKafkaConfigMinBytes          string = "login-attempts-receiver-kafka-min-bytes"
+	FlagLoginAttemptsReceiverKafkaConfigMaxBytes          string = "login-attempts-receiver-kafka-max-bytes"
+	FlagLoginAttemptsReceiverKafkaConfigMaxWait           string = "login-attempts-receiver-kafka-max-wait"
+	FlagLoginAttemptsReceiverKafkaConfigUsername          string = "login-attempts-receiver-kafka-username"
+	FlagLoginAttemptsReceiverKafkaConfigPassword          string = "login-attempts-receiver-kafka-password"
+	FlagLoginAttemptsReceiverKafkaConfigHeartbeatInterval string = "login-attempts-receiver-kafka-heartbeat-interval"
+	FlagLoginAttemptsReceiverKafkaConfigSessionTimeout    string = "login-attempts-receiver-kafka-session-timeout"
+	FlagLoginAttemptsReceiverKafkaConfigRebalanceTimeout  string = "login-attempts-receiver-kafka-rebalance-timeout"
+	FlagLoginAttemptsReceiverKafkaConfigReadTimeout       string = "login-attempts-receiver-kafka-read-timeout"
+	FlagLoginAttemptsReceiverKafkaConfigMaxAttempts       string = "login-attempts-receiver-kafka-max-attempts"
+	FlagLoginAttemptsReceiverKafkaConfigQueueCapacity     string = "login-attempts-receiver-kafka-queue-capacity"
+	FlagLoginAttemptsReceiverKafkaConfigStartOffset       string = "login-attempts-receiver-kafka-start-offset"
 )
 
 // app
@@ -171,19 +202,48 @@ const (
 	keyAMQPConnectorShutdownTimeout string = "amqp_connector.shutdown_timeout"
 )
 
+// login attempts worker
+const (
+	keyLoginAttemptsWorkerStartInterval      string = "login_attempts_receiver.worker_start_interval"
+	keyLoginAttemptsWorkerScheduleInterval   string = "login_attempts_receiver.worker_schedule_interval"
+	keyLoginAttemptsWorkerWorkerCount        string = "login_attempts_receiver.worker_worker_count"
+	keyLoginAttemptsWorkerDataCapacity       string = "login_attempts_receiver.worker_data_capacity"
+	keyLoginAttemptsWorkerCompleteProcessing string = "login_attempts_receiver.worker_complete_processing"
+	keyLoginAttemptsWorkerShutdownTimeout    string = "login_attempts_receiver.worker_shutdown_timeout"
+	keyLoginAttemptsWorkerBatchSize          string = "login_attempts_receiver.worker_batch_size"
+	keyLoginAttemptsWorkerBatchReadTimeout   string = "login_attempts_receiver.worker_batch_read_timeout"
+	keyLoginAttemptsWorkerAcknowledgeTimeout string = "login_attempts_receiver.worker_ack_timeout"
+)
+
+// login attempts common
+const (
+	keyLoginAttemptsReceiverKind string = "login_attempts_receiver.receiver_kind"
+)
+
 // amqp login attempts receiver
 const (
-	keyLoginAttemptsReceiverTargetName      string = "login_attempts_receiver.receiver_conf.target_name"
-	keyLoginAttemptsReceiverConnectTimeout  string = "login_attempts_receiver.receiver_conf.connect_timeout"
-	keyLoginAttemptsReceiverShutdownTimeout string = "login_attempts_receiver.receiver_conf.shutdown_timeout"
-	keyLoginAttemptsReceiverPrefetchCredit  string = "login_attempts_receiver.receiver_conf.prefetch_credit"
-	keyLoginAttemptsStartInterval           string = "login_attempts_receiver.start_interval"
-	keyLoginAttemptsScheduleInterval        string = "login_attempts_receiver.schedule_interval"
-	keyLoginAttemptsWorkerCount             string = "login_attempts_receiver.worker_count"
-	keyLoginAttemptsDataCapacity            string = "login_attempts_receiver.data_capacity"
-	keyLoginAttemptsCompleteProcessing      string = "login_attempts_receiver.complete_processing"
-	keyLoginAttemptsShutdownTimeout         string = "login_attempts_receiver.shutdown_timeout"
-	keyLoginAttemptsBatchSize               string = "login_attempts_receiver.batch_size"
-	keyLoginAttemptsBatchReadTimeout        string = "login_attempts_receiver.batch_read_timeout"
-	keyLoginAttemptsAcknowledgeTimeout      string = "login_attempts_receiver.ack_timeout"
+	keyLoginAttemptsReceiverAMQPConfigTargetName      string = "login_attempts_receiver.amqp_config.target_name"
+	keyLoginAttemptsReceiverAMQPConfigConnectTimeout  string = "login_attempts_receiver.amqp_config.connect_timeout"
+	keyLoginAttemptsReceiverAMQPConfigShutdownTimeout string = "login_attempts_receiver.amqp_config.shutdown_timeout"
+	keyLoginAttemptsReceiverAMQPConfigPrefetchCredit  string = "login_attempts_receiver.amqp_config.prefetch_credit"
+)
+
+const (
+	keyLoginAttemptsReceiverKafkaConfigBrokers           string = "login_attempts_receiver.kafka_config.brokers"
+	keyLoginAttemptsReceiverKafkaConfigTargetName        string = "login_attempts_receiver.kafka_config.target_name"
+	keyLoginAttemptsReceiverKafkaConfigPartition         string = "login_attempts_receiver.kafka_config.partition"
+	keyLoginAttemptsReceiverKafkaConfigConnectTimeout    string = "login_attempts_receiver.kafka_config.connect_timeout"
+	keyLoginAttemptsReceiverKafkaConfigShutdownTimeout   string = "login_attempts_receiver.kafka_config.shutdown_timeout"
+	keyLoginAttemptsReceiverKafkaConfigMinBytes          string = "login_attempts_receiver.kafka_config.min_bytes"
+	keyLoginAttemptsReceiverKafkaConfigMaxBytes          string = "login_attempts_receiver.kafka_config.max_bytes"
+	keyLoginAttemptsReceiverKafkaConfigMaxWait           string = "login_attempts_receiver.kafka_config.max_wait"
+	keyLoginAttemptsReceiverKafkaConfigUsername          string = "login_attempts_receiver.kafka_config.username"
+	keyLoginAttemptsReceiverKafkaConfigPassword          string = "login_attempts_receiver.kafka_config.password"
+	keyLoginAttemptsReceiverKafkaConfigHeartbeatInterval string = "login_attempts_receiver.kafka_config.heartbeat_interval"
+	keyLoginAttemptsReceiverKafkaConfigSessionTimeout    string = "login_attempts_receiver.kafka_config.session_timeout"
+	keyLoginAttemptsReceiverKafkaConfigRebalanceTimeout  string = "login_attempts_receiver.kafka_config.rebalance_timeout"
+	keyLoginAttemptsReceiverKafkaConfigReadTimeout       string = "login_attempts_receiver.kafka_config.read_timeout"
+	keyLoginAttemptsReceiverKafkaConfigMaxAttempts       string = "login_attempts_receiver.kafka_config.max_attempts"
+	keyLoginAttemptsReceiverKafkaConfigQueueCapacity     string = "login_attempts_receiver.kafka_config.queue_capacity"
+	keyLoginAttemptsReceiverKafkaConfigStartOffset       string = "login_attempts_receiver.kafka_config.start_offset"
 )

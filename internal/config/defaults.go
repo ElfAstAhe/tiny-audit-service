@@ -45,21 +45,37 @@ const (
 	defaultAMQPConnectorPassword string = "test"
 )
 
+// login attempts receiver worker
+const (
+	defaultLoginAttemptsWorkerStartInterval      time.Duration = 5 * time.Second
+	defaultLoginAttemptsWorkerScheduleInterval   time.Duration = 1 * time.Minute
+	defaultLoginAttemptsWorkerWorkerCount        int           = 2
+	defaultLoginAttemptsWorkerDataCapacity       int           = 128
+	defaultLoginAttemptsWorkerCompleteProcessing bool          = false
+	defaultLoginAttemptsWorkerShutdownTimeout    time.Duration = 15 * time.Second
+	defaultLoginAttemptsWorkerBatchSize          int           = 50
+	defaultLoginAttemptsWorkerBatchReadTimeout   time.Duration = 2 * time.Second
+	defaultLoginAttemptsWorkerAcknowledgeTimeout time.Duration = 1 * time.Second
+)
+
+// login attempts receiver common
+const (
+	defaultLoginAttemptsReceiverKind string = "amqp"
+)
+
 // amqp login attempts receiver (FQQN artemis style)
 const (
-	defaultLoginAttemptsReceiverTargetName      string        = "tiny.auth::login.attempts"
-	defaultLoginAttemptsReceiverConnectTimeout  time.Duration = 10 * time.Second
-	defaultLoginAttemptsReceiverShutdownTimeout time.Duration = 10 * time.Second
-	defaultLoginAttemptsReceiverPrefetchCredit  int           = 50
-	defaultLoginAttemptsStartInterval           time.Duration = 5 * time.Second
-	defaultLoginAttemptsScheduleInterval        time.Duration = 1 * time.Minute
-	defaultLoginAttemptsWorkerCount             int           = 2
-	defaultLoginAttemptsDataCapacity            int           = 128
-	defaultLoginAttemptsCompleteProcessing      bool          = false
-	defaultLoginAttemptsShutdownTimeout         time.Duration = 15 * time.Second
-	defaultLoginAttemptsBatchSize               int           = 50
-	defaultLoginAttemptsBatchReadTimeout        time.Duration = 2 * time.Second
-	defaultLoginAttemptsAcknowledgeTimeout      time.Duration = 1 * time.Second
+	// defaultLoginAttemptsReceiverAMQPConfigTargetName - queue/topic (FQQN artemis style)
+	defaultLoginAttemptsReceiverAMQPConfigTargetName      string        = "tiny.auth::login.attempts"
+	defaultLoginAttemptsReceiverAMQPConfigConnectTimeout  time.Duration = 10 * time.Second
+	defaultLoginAttemptsReceiverAMQPConfigShutdownTimeout time.Duration = 10 * time.Second
+	defaultLoginAttemptsReceiverAMQPConfigPrefetchCredit  int           = 50
+)
+
+// kafka login attempts receiver
+const (
+	defaultLoginAttemptsReceiverKafkaConfigTargetName string = "tiny.auth.login.attempts"
+	defaultLoginAttemptsReceiverKafkaConfigPartition  int    = -1
 )
 
 //goland:noinspection DuplicatedCode
@@ -134,18 +150,37 @@ func applyDefaults(v *viper.Viper) {
 	v.SetDefault(keyAMQPConnectorWriteTimeout, conf.DefaultAMQPConnectorWriteTimeout)
 	v.SetDefault(keyAMQPConnectorIdleTimeout, conf.DefaultAMQPConnectorIdleTimeout)
 	v.SetDefault(keyAMQPConnectorShutdownTimeout, conf.DefaultAMQPConnectorShutdownTimeout)
+	// login attempts worker
+	v.SetDefault(keyLoginAttemptsWorkerStartInterval, defaultLoginAttemptsWorkerStartInterval)
+	v.SetDefault(keyLoginAttemptsWorkerScheduleInterval, defaultLoginAttemptsWorkerScheduleInterval)
+	v.SetDefault(keyLoginAttemptsWorkerWorkerCount, defaultLoginAttemptsWorkerWorkerCount)
+	v.SetDefault(keyLoginAttemptsWorkerDataCapacity, defaultLoginAttemptsWorkerDataCapacity)
+	v.SetDefault(keyLoginAttemptsWorkerCompleteProcessing, defaultLoginAttemptsWorkerCompleteProcessing)
+	v.SetDefault(keyLoginAttemptsWorkerShutdownTimeout, defaultLoginAttemptsWorkerShutdownTimeout)
+	v.SetDefault(keyLoginAttemptsWorkerBatchSize, defaultLoginAttemptsWorkerBatchSize)
+	v.SetDefault(keyLoginAttemptsWorkerBatchReadTimeout, defaultLoginAttemptsWorkerBatchReadTimeout)
+	v.SetDefault(keyLoginAttemptsWorkerAcknowledgeTimeout, defaultLoginAttemptsWorkerAcknowledgeTimeout)
+	// login attempts common
+	v.SetDefault(keyLoginAttemptsReceiverKind, defaultLoginAttemptsReceiverKind)
 	// amqp login attempts receiver
-	v.SetDefault(keyLoginAttemptsReceiverTargetName, defaultLoginAttemptsReceiverTargetName)
-	v.SetDefault(keyLoginAttemptsReceiverPrefetchCredit, defaultLoginAttemptsReceiverPrefetchCredit)
-	v.SetDefault(keyLoginAttemptsReceiverConnectTimeout, defaultLoginAttemptsReceiverConnectTimeout)
-	v.SetDefault(keyLoginAttemptsReceiverShutdownTimeout, defaultLoginAttemptsReceiverShutdownTimeout)
-	v.SetDefault(keyLoginAttemptsStartInterval, defaultLoginAttemptsStartInterval)
-	v.SetDefault(keyLoginAttemptsScheduleInterval, defaultLoginAttemptsScheduleInterval)
-	v.SetDefault(keyLoginAttemptsWorkerCount, defaultLoginAttemptsWorkerCount)
-	v.SetDefault(keyLoginAttemptsDataCapacity, defaultLoginAttemptsDataCapacity)
-	v.SetDefault(keyLoginAttemptsCompleteProcessing, defaultLoginAttemptsCompleteProcessing)
-	v.SetDefault(keyLoginAttemptsShutdownTimeout, defaultLoginAttemptsShutdownTimeout)
-	v.SetDefault(keyLoginAttemptsBatchSize, defaultLoginAttemptsBatchSize)
-	v.SetDefault(keyLoginAttemptsBatchReadTimeout, defaultLoginAttemptsBatchReadTimeout)
-	v.SetDefault(keyLoginAttemptsAcknowledgeTimeout, defaultLoginAttemptsAcknowledgeTimeout)
+	v.SetDefault(keyLoginAttemptsReceiverAMQPConfigTargetName, defaultLoginAttemptsReceiverAMQPConfigTargetName)
+	v.SetDefault(keyLoginAttemptsReceiverAMQPConfigPrefetchCredit, defaultLoginAttemptsReceiverAMQPConfigPrefetchCredit)
+	v.SetDefault(keyLoginAttemptsReceiverAMQPConfigConnectTimeout, defaultLoginAttemptsReceiverAMQPConfigConnectTimeout)
+	v.SetDefault(keyLoginAttemptsReceiverAMQPConfigShutdownTimeout, defaultLoginAttemptsReceiverAMQPConfigShutdownTimeout)
+	// kafka login attempts receiver
+	v.SetDefault(keyLoginAttemptsReceiverKafkaConfigBrokers, conf.DefaultKafkaBrokers)
+	v.SetDefault(keyLoginAttemptsReceiverKafkaConfigTargetName, defaultLoginAttemptsReceiverKafkaConfigTargetName)
+	v.SetDefault(keyLoginAttemptsReceiverKafkaConfigPartition, defaultLoginAttemptsReceiverKafkaConfigPartition)
+	v.SetDefault(keyLoginAttemptsReceiverKafkaConfigConnectTimeout, conf.DefaultKafkaReceiverConnectTimeout)
+	v.SetDefault(keyLoginAttemptsReceiverKafkaConfigShutdownTimeout, conf.DefaultKafkaReceiverShutdownTimeout)
+	v.SetDefault(keyLoginAttemptsReceiverKafkaConfigMinBytes, conf.DefaultKafkaReceiverMinBytes)
+	v.SetDefault(keyLoginAttemptsReceiverKafkaConfigMaxBytes, conf.DefaultKafkaReceiverMaxBytes)
+	v.SetDefault(keyLoginAttemptsReceiverKafkaConfigMaxWait, conf.DefaultKafkaReceiverMaxWait)
+	v.SetDefault(keyLoginAttemptsReceiverKafkaConfigHeartbeatInterval, conf.DefaultKafkaReceiverHeartbeatInterval)
+	v.SetDefault(keyLoginAttemptsReceiverKafkaConfigSessionTimeout, conf.DefaultKafkaReceiverSessionTimeout)
+	v.SetDefault(keyLoginAttemptsReceiverKafkaConfigRebalanceTimeout, conf.DefaultKafkaReceiverRebalanceTimeout)
+	v.SetDefault(keyLoginAttemptsReceiverKafkaConfigReadTimeout, conf.DefaultKafkaReceiverReadTimeout)
+	v.SetDefault(keyLoginAttemptsReceiverKafkaConfigMaxAttempts, conf.DefaultKafkaReceiverMaxAttempts)
+	v.SetDefault(keyLoginAttemptsReceiverKafkaConfigQueueCapacity, conf.DefaultKafkaReceiverQueueCapacity)
+	v.SetDefault(keyLoginAttemptsReceiverKafkaConfigStartOffset, conf.DefaultKafkaReceiverStartOffset)
 }

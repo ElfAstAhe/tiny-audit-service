@@ -32,10 +32,10 @@ func (cc *ClientContainer) providerLoginAttemptsReceiver() (any, error) {
 
 	receiver, err := azure.NewReceiver(
 		azure.WithReceiverConnector(connectorInst),
-		azure.WithReceiverTargetName(confInst.LoginAttempts.ReceiverConf.TargetName),
-		azure.WithReceiverLinkCredit(int32(confInst.LoginAttempts.ReceiverConf.PrefetchCredit)),
-		azure.WithReceiverConnectTimeout(confInst.LoginAttempts.ReceiverConf.ConnectTimeout),
-		azure.WithReceiverShutdownTimeout(confInst.LoginAttempts.ReceiverConf.ShutdownTimeout),
+		azure.WithReceiverTargetName(confInst.LoginAttempts.AMQPConfig.TargetName),
+		azure.WithReceiverLinkCredit(int32(confInst.LoginAttempts.AMQPConfig.PrefetchCredit)),
+		azure.WithReceiverConnectTimeout(confInst.LoginAttempts.AMQPConfig.ConnectTimeout),
+		azure.WithReceiverShutdownTimeout(confInst.LoginAttempts.AMQPConfig.ShutdownTimeout),
 		azure.WithReceiverOpts(receiverConfInst),
 		azure.WithReceiverLogger(logInst),
 	)
@@ -54,7 +54,7 @@ func (cc *ClientContainer) providerLoginAttemptsReceiverReceiverOpts() (any, err
 
 	return &amqp.ReceiverOptions{
 		Name:   confInst.App.NodeName,
-		Credit: int32(confInst.LoginAttempts.ReceiverConf.PrefetchCredit),
+		Credit: int32(confInst.LoginAttempts.AMQPConfig.PrefetchCredit),
 	}, nil
 }
 
