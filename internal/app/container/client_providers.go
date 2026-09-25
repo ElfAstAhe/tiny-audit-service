@@ -9,10 +9,58 @@ import (
 	"github.com/ElfAstAhe/go-service-template/pkg/logger"
 	libamqp "github.com/ElfAstAhe/go-service-template/pkg/transport/amqp"
 	"github.com/ElfAstAhe/go-service-template/pkg/transport/amqp/azure"
+	"github.com/ElfAstAhe/go-service-template/pkg/transport/amqp/kafka"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/config"
 )
 
-func (cc *ClientContainer) providerLoginAttemptsReceiver() (any, error) {
+func (cc *ClientContainer) providerLoginAttemptsKafkaReceiver() (any, error) {
+	confInst, err := container.GetInstance[*config.Config](InstanceConfig)
+	if err != nil {
+		return nil, errs.NewContainerError(cc.GetName(), "provider: retrieve instance failed", err)
+	}
+	logInst, err := container.GetInstance[logger.Logger](InstanceLogger)
+	if err != nil {
+		return nil, errs.NewContainerError(cc.GetName(), "provider: retrieve instance failed", err)
+	}
+
+	receiver, err := kafka.NewReceiver(
+		kafka.WithReceiverClientID(confInst.App.NodeName),
+		kafka.WithReceiverBrokers(confInst.LoginAttempts.KafkaConfig.Brokers),
+		kafka.WithReceiverTargetName(confInst.LoginAttempts.KafkaConfig.TargetName),
+		kafka.WithReceiverGroupID(confInst.LoginAttempts.KafkaConfig.GroupID),
+		kafka.WithReceiverPartition(confInst.LoginAttempts.KafkaConfig.Partition),
+		kafka.WithReceiverConnectTimeout(confInst.LoginAttempts.KafkaConfig.ConnectTimeout),
+		kafka.WithReceiverShutdownTimeout(confInst.LoginAttempts.KafkaConfig.ShutdownTimeout),
+		kafka.WithReceiverLogger(logInst),
+		kafka.WithReceiverGroupTimeouts(
+			confInst.LoginAttempts.KafkaConfig.HeartbeatInterval,
+			confInst.LoginAttempts.KafkaConfig.SessionTimeout,
+			confInst.LoginAttempts.KafkaConfig.RebalanceTimeout,
+			confInst.LoginAttempts.KafkaConfig.ReadTimeout,
+		),
+		kafka.WithReceiverRuntimePerformance(
+			confInst.LoginAttempts.KafkaConfig.MaxAttempts,
+			confInst.LoginAttempts.KafkaConfig.QueueCapacity,
+			confInst.LoginAttempts.KafkaConfig.StartOffset,
+		),
+		kafka.WithReceiverSecurity(
+			confInst.LoginAttempts.KafkaConfig.Username,
+			confInst.LoginAttempts.KafkaConfig.Password,
+		),
+		kafka.WithReceiverFetchBounds(
+			confInst.LoginAttempts.KafkaConfig.MinBytes,
+			confInst.LoginAttempts.KafkaConfig.MaxBytes,
+			confInst.LoginAttempts.KafkaConfig.MaxWait,
+		),
+	)
+	if err != nil {
+		return nil, errs.NewContainerError(cc.GetName(), fmt.Sprintf("provider: create %s instance failed", InstanceLoginAttemptsKafkaReceiver), err)
+	}
+
+	return receiver, nil
+}
+
+func (cc *ClientContainer) providerLoginAttemptsAMQPReceiver() (any, error) {
 	confInst, err := container.GetInstance[*config.Config](InstanceConfig)
 	if err != nil {
 		return nil, errs.NewContainerError(cc.GetName(), "provider: retrieve instance failed", err)
@@ -25,7 +73,7 @@ func (cc *ClientContainer) providerLoginAttemptsReceiver() (any, error) {
 	if err != nil {
 		return nil, errs.NewContainerError(cc.GetName(), "provider: retrieve instance failed", err)
 	}
-	receiverConfInst, err := container.GetInstance[*amqp.ReceiverOptions](InstanceLoginAttemptsReceiverReceiverOpts)
+	receiverConfInst, err := container.GetInstance[*amqp.ReceiverOptions](InstanceLoginAttemptsAMQPReceiverReceiverOpts)
 	if err != nil {
 		return nil, errs.NewContainerError(cc.GetName(), "provider: retrieve instance failed", err)
 	}
@@ -40,13 +88,13 @@ func (cc *ClientContainer) providerLoginAttemptsReceiver() (any, error) {
 		azure.WithReceiverLogger(logInst),
 	)
 	if err != nil {
-		return nil, errs.NewContainerError(cc.GetName(), fmt.Sprintf("provider: create %s instance failed", InstanceLoginAttemptsReceiver), err)
+		return nil, errs.NewContainerError(cc.GetName(), fmt.Sprintf("provider: create %s instance failed", InstanceLoginAttemptsAMQPReceiver), err)
 	}
 
 	return receiver, nil
 }
 
-func (cc *ClientContainer) providerLoginAttemptsReceiverReceiverOpts() (any, error) {
+func (cc *ClientContainer) providerLoginAttemptsAMQPReceiverReceiverOpts() (any, error) {
 	confInst, err := container.GetInstance[*config.Config](InstanceConfig)
 	if err != nil {
 		return nil, errs.NewContainerError(cc.GetName(), "provider: retrieve instance failed", err)

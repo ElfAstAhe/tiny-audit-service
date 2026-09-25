@@ -127,6 +127,7 @@ func initFLags() (res *pflag.FlagSet, err error) {
 		// kafka login attempts receiver
 		res.StringSlice(FlagLoginAttemptsReceiverKafkaConfigBrokers, conf.DefaultKafkaBrokers, "kafka brokers, separated by comma, like: localhost:9092,localhost:9093")
 		res.String(FlagLoginAttemptsReceiverKafkaConfigTargetName, defaultLoginAttemptsReceiverKafkaConfigTargetName, "kafka login attempts receiver queue/topic name")
+		res.String(FlagLoginAttemptsReceiverKafkaConfigGroupID, "", "kafka login attempts receiver queue/topic group id")
 		res.Int(FlagLoginAttemptsReceiverKafkaConfigPartition, defaultLoginAttemptsReceiverKafkaConfigPartition, "kafka login attempts receiver partition (direct consumer")
 		res.Duration(FlagLoginAttemptsReceiverKafkaConfigConnectTimeout, conf.DefaultKafkaReceiverConnectTimeout, "kafka login attempts receiver connect timeout")
 		res.Duration(FlagLoginAttemptsReceiverKafkaConfigShutdownTimeout, conf.DefaultKafkaReceiverShutdownTimeout, "kafka login attempts receiver shutdown timeout")

@@ -141,6 +141,7 @@ const (
 const (
 	FlagLoginAttemptsReceiverKafkaConfigBrokers           string = "login-attempts-receiver-kafka-brokers"
 	FlagLoginAttemptsReceiverKafkaConfigTargetName        string = "login-attempts-receiver-kafka-target-name"
+	FlagLoginAttemptsReceiverKafkaConfigGroupID           string = "login-attempts-receiver-kafka-group-id"
 	FlagLoginAttemptsReceiverKafkaConfigPartition         string = "login-attempts-receiver-kafka-partition"
 	FlagLoginAttemptsReceiverKafkaConfigConnectTimeout    string = "login-attempts-receiver-kafka-connect-timeout"
 	FlagLoginAttemptsReceiverKafkaConfigShutdownTimeout   string = "login-attempts-receiver-kafka-shutdown-timeout"
@@ -231,6 +232,7 @@ const (
 const (
 	keyLoginAttemptsReceiverKafkaConfigBrokers           string = "login_attempts_receiver.kafka_config.brokers"
 	keyLoginAttemptsReceiverKafkaConfigTargetName        string = "login_attempts_receiver.kafka_config.target_name"
+	keyLoginAttemptsReceiverKafkaConfigGroupID           string = "login_attempts_receiver.kafka_config.group_id"
 	keyLoginAttemptsReceiverKafkaConfigPartition         string = "login_attempts_receiver.kafka_config.partition"
 	keyLoginAttemptsReceiverKafkaConfigConnectTimeout    string = "login_attempts_receiver.kafka_config.connect_timeout"
 	keyLoginAttemptsReceiverKafkaConfigShutdownTimeout   string = "login_attempts_receiver.kafka_config.shutdown_timeout"

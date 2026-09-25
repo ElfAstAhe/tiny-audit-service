@@ -10,9 +10,9 @@ import (
 )
 
 const (
-	InstanceAuthAuditTailCutter       string = "authAuditTailCutter"
-	InstanceDataAuditTailCutter       string = "dataAuditTailCutter"
-	InstanceLoginAttemptsAMQPListener string = "login-attempts-amqp-listener"
+	InstanceAuthAuditTailCutter   string = "authAuditTailCutter"
+	InstanceDataAuditTailCutter   string = "dataAuditTailCutter"
+	InstanceLoginAttemptsListener string = "login-attempts-listener"
 )
 
 type WorkerContainer struct {
@@ -39,7 +39,7 @@ func (wc *WorkerContainer) Init(initCtx context.Context) error {
 	err := errors.Join(
 		wc.RegisterProvider(InstanceAuthAuditTailCutter, wc.providerAuthAuditTailCutter),
 		wc.RegisterProvider(InstanceDataAuditTailCutter, wc.providerDataAuditTailCutter),
-		wc.RegisterProvider(InstanceLoginAttemptsAMQPListener, wc.providerLoginAttemptsAMQPListener),
+		wc.RegisterProvider(InstanceLoginAttemptsListener, wc.providerLoginAttemptsListener),
 	)
 	if err != nil {
 		return errs.NewContainerError(wc.GetName(), "container init: register providers failed", err)

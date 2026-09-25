@@ -109,6 +109,7 @@ func bindFlags(flags *pflag.FlagSet, v *viper.Viper) error {
 		// kafka login attempts receiver
 		v.BindPFlag(keyLoginAttemptsReceiverKafkaConfigBrokers, flags.Lookup(FlagLoginAttemptsReceiverKafkaConfigBrokers)),
 		v.BindPFlag(keyLoginAttemptsReceiverAMQPConfigTargetName, flags.Lookup(FlagLoginAttemptsReceiverAMQPConfigTargetName)),
+		v.BindPFlag(keyLoginAttemptsReceiverKafkaConfigGroupID, flags.Lookup(FlagLoginAttemptsReceiverKafkaConfigGroupID)),
 		v.BindPFlag(keyLoginAttemptsReceiverKafkaConfigPartition, flags.Lookup(FlagLoginAttemptsReceiverKafkaConfigPartition)),
 		v.BindPFlag(keyLoginAttemptsReceiverKafkaConfigConnectTimeout, flags.Lookup(FlagLoginAttemptsReceiverKafkaConfigConnectTimeout)),
 		v.BindPFlag(keyLoginAttemptsReceiverKafkaConfigShutdownTimeout, flags.Lookup(FlagLoginAttemptsReceiverKafkaConfigShutdownTimeout)),
