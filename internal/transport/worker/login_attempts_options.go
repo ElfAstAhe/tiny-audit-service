@@ -4,7 +4,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Azure/go-amqp"
 	"github.com/ElfAstAhe/go-service-template/pkg/errs"
 	"github.com/ElfAstAhe/go-service-template/pkg/logger"
 	libamqp "github.com/ElfAstAhe/go-service-template/pkg/transport/amqp"
@@ -23,8 +22,7 @@ type LoginAttemptsOption func(*LoginAttemptsOptions)
 type LoginAttemptsOptions struct {
 	Name               string
 	DispatcherOpts     *worker.BaseSchedulerDispatcherConfig
-	ReceiveOpts        *amqp.ReceiveOptions
-	Receiver           libamqp.Receiver[*amqp.ReceiveOptions]
+	Receiver           libamqp.Receiver
 	AuthAuditUC        usecase.AuthAuditUseCase
 	BatchSize          int
 	BatchReadTimeout   time.Duration
@@ -80,13 +78,7 @@ func WithLAODispatcherOpts(dispatcherOpts *worker.BaseSchedulerDispatcherConfig)
 	}
 }
 
-func WithLAOReceiveOpts(receiveOpts *amqp.ReceiveOptions) LoginAttemptsOption {
-	return func(opts *LoginAttemptsOptions) {
-		opts.ReceiveOpts = receiveOpts
-	}
-}
-
-func WithLAOReceiver(receiver libamqp.Receiver[*amqp.ReceiveOptions]) LoginAttemptsOption {
+func WithLAOReceiver(receiver libamqp.Receiver) LoginAttemptsOption {
 	return func(opts *LoginAttemptsOptions) {
 		opts.Receiver = receiver
 	}

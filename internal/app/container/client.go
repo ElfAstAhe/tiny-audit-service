@@ -10,11 +10,12 @@ import (
 )
 
 const (
-	InstanceLoginAttemptsReceiver             string = "login-attempts-receiver"
-	InstanceLoginAttemptsReceiverReceiverOpts string = "login-attempts-receiver-receiver-opts"
-	InstanceAMQPConnector                     string = "amqp-connector"
-	InstanceAMQPConnectorConnOpts             string = "amqp-connector-conn-opts"
-	InstanceAMQPConnectorSessOpts             string = "amqp-connector-sess-opts"
+	InstanceAMQPConnector                         string = "amqp-connector"
+	InstanceAMQPConnectorConnOpts                 string = "amqp-connector-conn-opts"
+	InstanceAMQPConnectorSessOpts                 string = "amqp-connector-sess-opts"
+	InstanceLoginAttemptsAMQPReceiver             string = "login-attempts-amqp-receiver"
+	InstanceLoginAttemptsAMQPReceiverReceiverOpts string = "login-attempts-amqp-receiver-receiver-opts"
+	InstanceLoginAttemptsKafkaReceiver            string = "login-attempts-kafka-receiver"
 )
 
 type ClientContainer struct {
@@ -39,8 +40,9 @@ func NewClientContainer(
 
 func (cc *ClientContainer) Init(ctx context.Context) error {
 	err := errors.Join(
-		cc.RegisterProvider(InstanceLoginAttemptsReceiver, cc.providerLoginAttemptsReceiver),
-		cc.RegisterProvider(InstanceLoginAttemptsReceiverReceiverOpts, cc.providerLoginAttemptsReceiverReceiverOpts),
+		cc.RegisterProvider(InstanceLoginAttemptsKafkaReceiver, cc.providerLoginAttemptsKafkaReceiver),
+		cc.RegisterProvider(InstanceLoginAttemptsAMQPReceiver, cc.providerLoginAttemptsAMQPReceiver),
+		cc.RegisterProvider(InstanceLoginAttemptsAMQPReceiverReceiverOpts, cc.providerLoginAttemptsAMQPReceiverReceiverOpts),
 		cc.RegisterProvider(InstanceAMQPConnector, cc.providerAMQPConnector),
 		cc.RegisterProvider(InstanceAMQPConnectorConnOpts, cc.providerAMQPConnectorConnOpts),
 		cc.RegisterProvider(InstanceAMQPConnectorSessOpts, cc.providerAMQPConnectorSessOpts),

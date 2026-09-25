@@ -1,11 +1,13 @@
 package container
 
 import (
-	"github.com/Azure/go-amqp"
+	"fmt"
+
 	"github.com/ElfAstAhe/go-service-template/pkg/container"
 	"github.com/ElfAstAhe/go-service-template/pkg/errs"
 	"github.com/ElfAstAhe/go-service-template/pkg/logger"
 	libamqp "github.com/ElfAstAhe/go-service-template/pkg/transport/amqp"
+	libamqpazure "github.com/ElfAstAhe/go-service-template/pkg/transport/amqp/azure"
 	libworker "github.com/ElfAstAhe/go-service-template/pkg/transport/worker"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/config"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/transport/worker"
@@ -101,7 +103,7 @@ func (wc *WorkerContainer) providerDataAuditTailCutter() (any, error) {
 }
 
 //goland:noinspection DuplicatedCode
-func (wc *WorkerContainer) providerLoginAttemptsAMQPListener() (any, error) {
+func (wc *WorkerContainer) providerLoginAttemptsListener() (any, error) {
 	confInst, err := container.GetInstance[*config.Config](InstanceConfig)
 	if err != nil {
 		return nil, errs.NewContainerError(wc.GetName(), "provider: retrieve instance failed", err)
@@ -114,7 +116,7 @@ func (wc *WorkerContainer) providerLoginAttemptsAMQPListener() (any, error) {
 	if err != nil {
 		return nil, errs.NewContainerError(wc.GetName(), "provider: retrieve instance failed", err)
 	}
-	receiverInst, err := container.GetInstance[libamqp.Receiver[*amqp.ReceiveOptions]](InstanceLoginAttemptsReceiver)
+	receiverInst, err := wc.getLoginAttemptsReceiver(confInst.LoginAttempts.ReceiverKind)
 	if err != nil {
 		return nil, errs.NewContainerError(wc.GetName(), "provider: retrieve instance failed", err)
 	}
@@ -127,7 +129,6 @@ func (wc *WorkerContainer) providerLoginAttemptsAMQPListener() (any, error) {
 		worker.WithLAOBatchSize(confInst.LoginAttempts.BatchSize),
 		worker.WithLAOBatchReadTimeout(confInst.LoginAttempts.BatchReadTimeout),
 		worker.WithLAOAcknowledgeTimeout(confInst.LoginAttempts.AcknowledgeTimeout),
-		worker.WithLAOReceiveOpts(&amqp.ReceiveOptions{}),
 		worker.WithLAODispatcherOpts(libworker.NewBaseSchedulerDispatcherConfig(
 			libworker.NewBaseSchedulerConfig(
 				confInst.LoginAttempts.StartInterval,
@@ -142,4 +143,15 @@ func (wc *WorkerContainer) providerLoginAttemptsAMQPListener() (any, error) {
 			),
 		)),
 	)
+}
+
+func (wc *WorkerContainer) getLoginAttemptsReceiver(receiverKind string) (libamqp.Receiver, error) {
+	switch receiverKind {
+	case "amqp":
+		return container.GetInstance[libamqpazure.AMQPReceiver](InstanceLoginAttemptsAMQPReceiver)
+	case "kafka":
+		return container.GetInstance[libamqp.Receiver](InstanceLoginAttemptsKafkaReceiver)
+	default:
+		return nil, errs.NewContainerError(wc.GetName(), fmt.Sprintf("provider: unknown receiver kind %s", receiverKind), nil)
+	}
 }

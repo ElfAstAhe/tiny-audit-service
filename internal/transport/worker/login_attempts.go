@@ -5,7 +5,6 @@ import (
 	"errors"
 	"time"
 
-	"github.com/Azure/go-amqp"
 	"github.com/ElfAstAhe/go-service-template/pkg/container"
 	"github.com/ElfAstAhe/go-service-template/pkg/errs"
 	libamqp "github.com/ElfAstAhe/go-service-template/pkg/transport/amqp"
@@ -18,7 +17,7 @@ import (
 type LoginAttempts struct {
 	*worker.BaseSchedulerDispatcher[*dto.LoginAttemptWorkerJob]
 	opts               *LoginAttemptsOptions
-	receiver           libamqp.Receiver[*amqp.ReceiveOptions]
+	receiver           libamqp.Receiver
 	authAuditUC        usecase.AuthAuditUseCase
 	batchSize          int
 	batchReadTimeout   time.Duration
@@ -66,7 +65,7 @@ func (la *LoginAttempts) dataProvider(ctx context.Context, eventTime time.Time) 
 	la.GetLogger().Debugf("login attempts receiver %s time event %s data provider start", la.GetName(), eventTime.Format(time.DateTime))
 	defer la.GetLogger().Debugf("login attempts receiver %s time event %s data provider finish", la.GetName(), eventTime.Format(time.DateTime))
 
-	resData := make([]*dto.LoginAttemptWorkerJob, 0)
+	resData := make([]*dto.LoginAttemptWorkerJob, 0, la.batchSize)
 
 	// timed context
 	brokerCtx, brokerCancel := context.WithTimeout(ctx, la.batchReadTimeout)
@@ -95,7 +94,7 @@ func (la *LoginAttempts) dataProvider(ctx context.Context, eventTime time.Time) 
 			return resData, nil
 		default:
 			// receive message
-			message, err := la.receiver.Receive(brokerCtx, la.opts.ReceiveOpts)
+			message, err := la.receiver.Receive(brokerCtx)
 			// got error ?
 			if err != nil {
 				// handled errors
@@ -142,7 +141,7 @@ func (la *LoginAttempts) storeAuthAudit(ctx context.Context, workerIndex int, da
 
 	if err != nil {
 		la.GetLogger().Debugf("login attempts receiver %s worker %v store auth audit failed %v", la.GetName(), workerIndex, err)
-		// unique violation, pass it, data already exists in ms storage
+		// unique violation, pass it, data already exists in microservice storage
 		if _, ok := errors.AsType[*errs.BllUniqueError](err); ok {
 			if acceptErr := la.receiver.Accept(brokerCtx, data.Message); acceptErr != nil {
 				return errs.NewCommonError("receiver accept failed", acceptErr)

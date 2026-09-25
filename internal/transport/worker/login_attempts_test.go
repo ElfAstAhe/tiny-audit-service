@@ -6,7 +6,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Azure/go-amqp"
 	"github.com/ElfAstAhe/go-service-template/pkg/errs"
 	mocks2 "github.com/ElfAstAhe/go-service-template/pkg/logger/mocks"
 	"github.com/ElfAstAhe/go-service-template/pkg/transport/amqp/azure"
@@ -42,7 +41,7 @@ func TestNewLoginAttempts_ValidationFailed(t *testing.T) {
 }
 
 func TestNewLoginAttempts_Success(t *testing.T) {
-	mockReceiver := mocks.NewMockReceiver[*amqp.ReceiveOptions](t)
+	mockReceiver := mocks.NewMockReceiver(t)
 	mockUC := mocks3.NewMockAuthAuditUseCase(t)
 	mockLog := setupMockLogger(t)
 
@@ -67,7 +66,7 @@ func TestNewLoginAttempts_Success(t *testing.T) {
 // ============================================================================
 
 func TestLoginAttempts_DataProvider_SuccessBatchSize(t *testing.T) {
-	mockReceiver := mocks.NewMockReceiver[*amqp.ReceiveOptions](t)
+	mockReceiver := mocks.NewMockReceiver(t)
 	mockLog := setupMockLogger(t)
 
 	la := &LoginAttempts{
@@ -92,7 +91,7 @@ func TestLoginAttempts_DataProvider_SuccessBatchSize(t *testing.T) {
 }
 
 func TestLoginAttempts_DataProvider_ReadTimeout(t *testing.T) {
-	mockReceiver := mocks.NewMockReceiver[*amqp.ReceiveOptions](t)
+	mockReceiver := mocks.NewMockReceiver(t)
 	mockLog := setupMockLogger(t)
 
 	la := &LoginAttempts{
@@ -118,7 +117,7 @@ func TestLoginAttempts_DataProvider_ReadTimeout(t *testing.T) {
 }
 
 func TestLoginAttempts_DataProvider_ContextCanceled(t *testing.T) {
-	mockReceiver := mocks.NewMockReceiver[*amqp.ReceiveOptions](t)
+	mockReceiver := mocks.NewMockReceiver(t)
 	mockLog := setupMockLogger(t)
 
 	la := &LoginAttempts{
@@ -141,7 +140,7 @@ func TestLoginAttempts_DataProvider_ContextCanceled(t *testing.T) {
 }
 
 func TestLoginAttempts_DataProvider_MapperError_RejectSuccess(t *testing.T) {
-	mockReceiver := mocks.NewMockReceiver[*amqp.ReceiveOptions](t)
+	mockReceiver := mocks.NewMockReceiver(t)
 	mockLog := setupMockLogger(t)
 
 	la := &LoginAttempts{
@@ -173,7 +172,7 @@ func TestLoginAttempts_DataProvider_MapperError_RejectSuccess(t *testing.T) {
 // ============================================================================
 
 func TestLoginAttempts_StoreAuthAudit_Success(t *testing.T) {
-	mockReceiver := mocks.NewMockReceiver[*amqp.ReceiveOptions](t)
+	mockReceiver := mocks.NewMockReceiver(t)
 	mockUC := mocks3.NewMockAuthAuditUseCase(t)
 	mockLog := setupMockLogger(t)
 
@@ -200,7 +199,7 @@ func TestLoginAttempts_StoreAuthAudit_Success(t *testing.T) {
 }
 
 func TestLoginAttempts_StoreAuthAudit_UniqueViolation_Accept(t *testing.T) {
-	mockReceiver := mocks.NewMockReceiver[*amqp.ReceiveOptions](t)
+	mockReceiver := mocks.NewMockReceiver(t)
 	mockUC := mocks3.NewMockAuthAuditUseCase(t)
 	mockLog := setupMockLogger(t)
 
@@ -230,7 +229,7 @@ func TestLoginAttempts_StoreAuthAudit_UniqueViolation_Accept(t *testing.T) {
 }
 
 func TestLoginAttempts_StoreAuthAudit_DatabaseError_Release(t *testing.T) {
-	mockReceiver := mocks.NewMockReceiver[*amqp.ReceiveOptions](t)
+	mockReceiver := mocks.NewMockReceiver(t)
 	mockUC := mocks3.NewMockAuthAuditUseCase(t)
 	mockLog := setupMockLogger(t)
 

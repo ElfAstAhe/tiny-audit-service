@@ -4,11 +4,11 @@ go 1.26.0
 
 require (
 	github.com/Azure/go-amqp v1.7.0
-	github.com/ElfAstAhe/go-service-template v0.0.99
-	github.com/ElfAstAhe/tiny-auth-service v0.0.24
+	github.com/ElfAstAhe/go-service-template v0.0.108
+	github.com/ElfAstAhe/tiny-auth-service v0.0.27
 	github.com/XSAM/otelsql v0.44.0
 	github.com/go-chi/chi/v5 v5.3.2
-	github.com/go-openapi/errors v0.22.8
+	github.com/go-openapi/errors v0.22.9
 	github.com/go-openapi/runtime v0.33.2
 	github.com/go-openapi/strfmt v0.27.2
 	github.com/go-openapi/swag/jsonutils v0.29.2
@@ -27,7 +27,7 @@ require (
 	github.com/stretchr/testify v1.12.1
 	github.com/swaggo/http-swagger v1.3.4
 	github.com/swaggo/swag v1.16.6
-	github.com/xo/dburl v0.25.1
+	github.com/xo/dburl v0.26.1
 	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.71.0
 	go.opentelemetry.io/otel v1.46.0
 	go.opentelemetry.io/otel/trace v1.46.0
@@ -38,7 +38,7 @@ require (
 
 require (
 	github.com/KyleBanks/depth v1.2.1 // indirect
-	github.com/andybalholm/brotli v1.2.4 // indirect
+	github.com/andybalholm/brotli v1.2.5 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/cenkalti/backoff/v5 v5.0.3 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
@@ -47,7 +47,7 @@ require (
 	github.com/go-logr/logr v1.4.4 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-openapi/analysis v1.0.0 // indirect
-	github.com/go-openapi/jsonpointer v1.0.1 // indirect
+	github.com/go-openapi/jsonpointer v1.0.2 // indirect
 	github.com/go-openapi/jsonreference v1.0.2 // indirect
 	github.com/go-openapi/loads v0.25.3 // indirect
 	github.com/go-openapi/runtime/server-middleware v0.33.2 // indirect
@@ -65,7 +65,7 @@ require (
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20240606120523-5a60cdf6a761 // indirect
 	github.com/jackc/puddle/v2 v2.2.2 // indirect
-	github.com/klauspost/compress v1.20.0 // indirect
+	github.com/klauspost/compress v1.20.1 // indirect
 	github.com/mfridman/interpolate v0.0.2 // indirect
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
 	github.com/oklog/ulid/v2 v2.1.2 // indirect
@@ -98,7 +98,7 @@ require (
 	golang.org/x/sys v0.48.0 // indirect
 	golang.org/x/text v0.42.0 // indirect
 	golang.org/x/tools v0.50.0 // indirect
-	google.golang.org/genproto/googleapis/api v0.0.0-20260917231906-eeb232e0883d // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20260917231906-eeb232e0883d // indirect
+	google.golang.org/genproto/googleapis/api v0.0.0-20260921155816-b14227669459 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20260921155816-b14227669459 // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1 // indirect
 )
