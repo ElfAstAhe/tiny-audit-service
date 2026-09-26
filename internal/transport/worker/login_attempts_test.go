@@ -8,8 +8,8 @@ import (
 
 	"github.com/ElfAstAhe/go-service-template/pkg/errs"
 	mocks2 "github.com/ElfAstAhe/go-service-template/pkg/logger/mocks"
-	"github.com/ElfAstAhe/go-service-template/pkg/transport/amqp/azure"
-	"github.com/ElfAstAhe/go-service-template/pkg/transport/amqp/mocks"
+	"github.com/ElfAstAhe/go-service-template/pkg/transport/broker/amqp"
+	"github.com/ElfAstAhe/go-service-template/pkg/transport/broker/mocks"
 	libworker "github.com/ElfAstAhe/go-service-template/pkg/transport/worker"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/transport/worker/dto"
 	mocks3 "github.com/ElfAstAhe/tiny-audit-service/internal/usecase/mocks"
@@ -79,7 +79,7 @@ func TestLoginAttempts_DataProvider_SuccessBatchSize(t *testing.T) {
 		"test", &libworker.BaseSchedulerDispatcherConfig{}, nil, nil, mockLog,
 	)
 
-	fakeMsg := azure.NewMessage([]byte(`{"id":"1","value":"test"}`), nil)
+	fakeMsg := amqp.NewMessage([]byte(`{"id":"1","value":"test"}`), nil)
 
 	// Настраиваем Mockery: Receive должен вернуть валидные данные 2 раза
 	mockReceiver.On("Receive", mock.Anything, mock.Anything).Return(fakeMsg, nil).Times(2)
@@ -104,7 +104,7 @@ func TestLoginAttempts_DataProvider_ReadTimeout(t *testing.T) {
 		"test", &libworker.BaseSchedulerDispatcherConfig{}, nil, nil, mockLog,
 	)
 
-	fakeMsg := azure.NewMessage([]byte(`{"id":"1"}`), nil)
+	fakeMsg := amqp.NewMessage([]byte(`{"id":"1"}`), nil)
 
 	mockReceiver.On("Receive", mock.Anything, mock.Anything).Return(fakeMsg, nil).Once()
 	// На второй итерации имитируем, что брокер пуст и время вышло
@@ -153,7 +153,7 @@ func TestLoginAttempts_DataProvider_MapperError_RejectSuccess(t *testing.T) {
 		"test", &libworker.BaseSchedulerDispatcherConfig{}, nil, nil, mockLog,
 	)
 
-	badMsg := azure.NewMessage([]byte(`{ broken json }`), nil)
+	badMsg := amqp.NewMessage([]byte(`{ broken json }`), nil)
 
 	mockReceiver.On("Receive", mock.Anything, mock.Anything).Return(badMsg, nil).Once()
 	// Проверяем, что сработал Reject сообщения в DLQ
@@ -186,7 +186,7 @@ func TestLoginAttempts_StoreAuthAudit_Success(t *testing.T) {
 	)
 
 	testDTO := &dto.LoginAttemptWorkerJob{
-		Message: azure.NewMessage([]byte(`{}`), nil),
+		Message: amqp.NewMessage([]byte(`{}`), nil),
 	}
 
 	// Успешный аудит в БД тянет за собой успешное подтверждение (Accept) в Azure
@@ -213,7 +213,7 @@ func TestLoginAttempts_StoreAuthAudit_UniqueViolation_Accept(t *testing.T) {
 	)
 
 	testDTO := &dto.LoginAttemptWorkerJob{
-		Message: azure.NewMessage([]byte(`{}`), nil),
+		Message: amqp.NewMessage([]byte(`{}`), nil),
 	}
 
 	// База сообщает о дубликате записи (UniqueViolation)
@@ -243,7 +243,7 @@ func TestLoginAttempts_StoreAuthAudit_DatabaseError_Release(t *testing.T) {
 	)
 
 	testDTO := &dto.LoginAttemptWorkerJob{
-		Message: azure.NewMessage([]byte(`{}`), nil),
+		Message: amqp.NewMessage([]byte(`{}`), nil),
 	}
 
 	// Имитируем падение коннекта к СУБД Postgres

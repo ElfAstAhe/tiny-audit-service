@@ -6,8 +6,8 @@ import (
 	"github.com/ElfAstAhe/go-service-template/pkg/container"
 	"github.com/ElfAstAhe/go-service-template/pkg/errs"
 	"github.com/ElfAstAhe/go-service-template/pkg/logger"
-	libamqp "github.com/ElfAstAhe/go-service-template/pkg/transport/amqp"
-	libamqpazure "github.com/ElfAstAhe/go-service-template/pkg/transport/amqp/azure"
+	"github.com/ElfAstAhe/go-service-template/pkg/transport/broker"
+	libamqp "github.com/ElfAstAhe/go-service-template/pkg/transport/broker/amqp"
 	libworker "github.com/ElfAstAhe/go-service-template/pkg/transport/worker"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/config"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/transport/worker"
@@ -145,12 +145,12 @@ func (wc *WorkerContainer) providerLoginAttemptsListener() (any, error) {
 	)
 }
 
-func (wc *WorkerContainer) getLoginAttemptsReceiver(receiverKind string) (libamqp.Receiver, error) {
+func (wc *WorkerContainer) getLoginAttemptsReceiver(receiverKind string) (broker.Receiver, error) {
 	switch receiverKind {
 	case "amqp":
-		return container.GetInstance[libamqpazure.AMQPReceiver](InstanceLoginAttemptsAMQPReceiver)
+		return container.GetInstance[libamqp.AMQPReceiver](InstanceLoginAttemptsAMQPReceiver)
 	case "kafka":
-		return container.GetInstance[libamqp.Receiver](InstanceLoginAttemptsKafkaReceiver)
+		return container.GetInstance[broker.Receiver](InstanceLoginAttemptsKafkaReceiver)
 	default:
 		return nil, errs.NewContainerError(wc.GetName(), fmt.Sprintf("provider: unknown receiver kind %s", receiverKind), nil)
 	}

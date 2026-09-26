@@ -7,7 +7,7 @@ import (
 
 	"github.com/ElfAstAhe/go-service-template/pkg/container"
 	"github.com/ElfAstAhe/go-service-template/pkg/errs"
-	libamqp "github.com/ElfAstAhe/go-service-template/pkg/transport/amqp"
+	"github.com/ElfAstAhe/go-service-template/pkg/transport/broker"
 	"github.com/ElfAstAhe/go-service-template/pkg/transport/worker"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/transport/worker/dto"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/transport/worker/mapper"
@@ -17,7 +17,7 @@ import (
 type LoginAttempts struct {
 	*worker.BaseSchedulerDispatcher[*dto.LoginAttemptWorkerJob]
 	opts               *LoginAttemptsOptions
-	receiver           libamqp.Receiver
+	receiver           broker.Receiver
 	authAuditUC        usecase.AuthAuditUseCase
 	batchSize          int
 	batchReadTimeout   time.Duration
