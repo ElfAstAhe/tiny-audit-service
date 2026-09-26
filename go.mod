@@ -4,8 +4,8 @@ go 1.26.0
 
 require (
 	github.com/Azure/go-amqp v1.7.0
-	github.com/ElfAstAhe/go-service-template v0.0.108
-	github.com/ElfAstAhe/tiny-auth-service v0.0.27
+	github.com/ElfAstAhe/go-service-template v0.0.109
+	github.com/ElfAstAhe/tiny-auth-service v0.0.28
 	github.com/XSAM/otelsql v0.44.0
 	github.com/go-chi/chi/v5 v5.3.2
 	github.com/go-openapi/errors v0.22.9
@@ -27,7 +27,7 @@ require (
 	github.com/stretchr/testify v1.12.1
 	github.com/swaggo/http-swagger v1.3.4
 	github.com/swaggo/swag v1.16.6
-	github.com/xo/dburl v0.26.1
+	github.com/xo/dburl v0.27.1
 	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.71.0
 	go.opentelemetry.io/otel v1.46.0
 	go.opentelemetry.io/otel/trace v1.46.0
@@ -48,7 +48,7 @@ require (
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-openapi/analysis v1.0.0 // indirect
 	github.com/go-openapi/jsonpointer v1.0.2 // indirect
-	github.com/go-openapi/jsonreference v1.0.2 // indirect
+	github.com/go-openapi/jsonreference v1.0.3 // indirect
 	github.com/go-openapi/loads v0.25.3 // indirect
 	github.com/go-openapi/runtime/server-middleware v0.33.2 // indirect
 	github.com/go-openapi/spec v1.0.1 // indirect
@@ -61,7 +61,7 @@ require (
 	github.com/go-openapi/swag/yamlutils v0.29.2 // indirect
 	github.com/go-openapi/validate v1.0.0 // indirect
 	github.com/go-viper/mapstructure/v2 v2.5.0 // indirect
-	github.com/grpc-ecosystem/grpc-gateway/v2 v2.30.0 // indirect
+	github.com/grpc-ecosystem/grpc-gateway/v2 v2.31.0 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20240606120523-5a60cdf6a761 // indirect
 	github.com/jackc/puddle/v2 v2.2.2 // indirect

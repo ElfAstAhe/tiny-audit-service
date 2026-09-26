@@ -4,13 +4,13 @@ import (
 	"encoding/json"
 
 	"github.com/ElfAstAhe/go-service-template/pkg/errs"
-	"github.com/ElfAstAhe/go-service-template/pkg/transport/amqp"
+	"github.com/ElfAstAhe/go-service-template/pkg/transport/broker"
 	"github.com/ElfAstAhe/go-service-template/pkg/utils"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/domain"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/transport/worker/dto"
 )
 
-func MapMessageToLoginAttemptWorkerJob(data amqp.Message) (*dto.LoginAttemptWorkerJob, error) {
+func MapMessageToLoginAttemptWorkerJob(data broker.Message) (*dto.LoginAttemptWorkerJob, error) {
 	if utils.IsNil(data) {
 		return nil, nil
 	}
