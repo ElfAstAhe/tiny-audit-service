@@ -4,24 +4,23 @@ import (
 	"context"
 	"time"
 
-	libdomain "github.com/ElfAstAhe/go-service-template/pkg/domain"
-	"github.com/ElfAstAhe/go-service-template/pkg/infra/metrics"
-	"github.com/ElfAstAhe/go-service-template/pkg/repository"
+	libdom "github.com/ElfAstAhe/go-service-template/pkg/domain"
+	"github.com/ElfAstAhe/go-service-template/pkg/repository/metrics"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/domain"
 )
 
 type AuthAuditMetricsRepository struct {
-	*repository.BaseCRUDMetricsRepository[*domain.AuthAudit, string]
+	*metrics.BaseCRUDMetricsRepository[*domain.AuthAudit, string]
 	next domain.AuthAuditRepository
 }
 
-var _ libdomain.CRUDRepository[*domain.AuthAudit, string] = (*AuthAuditMetricsRepository)(nil)
+var _ libdom.CRUDRepository[*domain.AuthAudit, string] = (*AuthAuditMetricsRepository)(nil)
 var _ domain.AuthAuditRepository = (*AuthAuditMetricsRepository)(nil)
 
 func NewAuthAuditMetricsRepository(next domain.AuthAuditRepository) *AuthAuditMetricsRepository {
 	return &AuthAuditMetricsRepository{
 		next:                      next,
-		BaseCRUDMetricsRepository: repository.NewBaseCRUDMetricsRepository[*domain.AuthAudit, string]("AuthAuditRepository", next),
+		BaseCRUDMetricsRepository: metrics.NewBaseCRUDMetricsRepository[*domain.AuthAudit, string]("AuthAuditRepository", next),
 	}
 }
 

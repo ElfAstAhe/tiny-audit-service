@@ -104,8 +104,8 @@ func (aem *AuthExtractor) isAcceptIssuer(issuer string) bool {
 }
 
 func (aem *AuthExtractor) extractTokenString(r *http.Request) (*jwt.Token, error) {
-	tokenHeaderStr, errHeader := aem.jwtHTTPHelper.ExtractTokenStringFromRequestHeader(auth.DefaultHeaderName, r)
-	tokenCookieStr, errCookie := aem.jwtHTTPHelper.ExtractTokenStringFromRequestCookie(auth.DefaultCookieName, r)
+	tokenHeaderStr, errHeader := aem.jwtHTTPHelper.ExtractTokenStringFromRequestHeader(r, auth.DefaultHeaderName)
+	tokenCookieStr, errCookie := aem.jwtHTTPHelper.ExtractTokenStringFromRequestCookie(r, auth.DefaultCookieName)
 	if errHeader != nil && errCookie != nil {
 		return nil, errors.Join(errHeader, errCookie)
 	}

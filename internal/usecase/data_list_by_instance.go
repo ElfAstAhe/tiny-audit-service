@@ -3,6 +3,7 @@ package usecase
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/ElfAstAhe/go-service-template/pkg/errs"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/domain"
@@ -38,16 +39,16 @@ func (dli *DataListByInstanceInteractor) List(ctx context.Context, typeName, ins
 }
 
 func (dli *DataListByInstanceInteractor) validate(typeName, instanceID string, limit, offset int) error {
-	if typeName == "" {
+	if strings.TrimSpace(typeName) == "" {
 		return errs.NewInvalidArgumentError("typeName", "typeName is required")
 	}
 	if instanceID == "" {
 		return errs.NewInvalidArgumentError("instanceID", "instanceID is required")
 	}
-	if !(limit > 0) {
+	if limit <= 0 {
 		return errs.NewInvalidArgumentError("limit", "limit must be grater than zero")
 	}
-	if !(offset >= 0) {
+	if offset < 0 {
 		return errs.NewInvalidArgumentError("offset", "offset must be greater or equal than zero")
 	}
 

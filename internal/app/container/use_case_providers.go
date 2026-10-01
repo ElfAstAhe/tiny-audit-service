@@ -3,23 +3,25 @@ package container
 import (
 	"github.com/ElfAstAhe/go-service-template/pkg/container"
 	"github.com/ElfAstAhe/go-service-template/pkg/db"
+	libdom "github.com/ElfAstAhe/go-service-template/pkg/domain"
 	"github.com/ElfAstAhe/go-service-template/pkg/errs"
+	libuc "github.com/ElfAstAhe/go-service-template/pkg/usecase"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/domain"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/usecase"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/usecase/telemetry"
 )
 
-func (ucc *UseCaseContainer) providerTM() (any, error) {
-	dbInst, err := container.GetInstance[db.DB](InstanceDB)
+func (ucc *UseCaseContainer) providerUnitOfWork() (any, error) {
+	tmInst, err := container.GetInstance[db.TransactionManager](InstanceTM)
 	if err != nil {
 		return nil, errs.NewContainerError(ucc.GetName(), "provider: retrieve instance failed", err)
 	}
 
-	return db.NewTxManager(dbInst), nil
+	return libuc.NewUnitOfWork(tmInst, nil), nil
 }
 
 func (ucc *UseCaseContainer) providerAuthAuditUC() (any, error) {
-	tmInst, err := container.GetInstance[db.TransactionManager](InstanceTM)
+	uwInst, err := container.GetInstance[libdom.UnitOfWork](InstanceTM)
 	if err != nil {
 		return nil, errs.NewContainerError(ucc.GetName(), "provider: retrieve instance failed", err)
 	}
@@ -28,7 +30,7 @@ func (ucc *UseCaseContainer) providerAuthAuditUC() (any, error) {
 		return nil, errs.NewContainerError(ucc.GetName(), "provider: retrieve instance failed", err)
 	}
 
-	return telemetry.NewAuthAuditUseCase("AuthAuditUseCase", usecase.NewAuthAuditUseCase(tmInst, authAuditRepoInst)), nil
+	return telemetry.NewAuthAuditUseCase("AuthAuditUseCase", usecase.NewAuthAuditUseCase(uwInst, authAuditRepoInst)), nil
 }
 
 func (ucc *UseCaseContainer) providerAuthListByPeriodUC() (any, error) {
@@ -50,7 +52,7 @@ func (ucc *UseCaseContainer) providerAuthListByUsernameUC() (any, error) {
 }
 
 func (ucc *UseCaseContainer) providerDataAuditUC() (any, error) {
-	tmInst, err := container.GetInstance[db.TransactionManager](InstanceTM)
+	uwInst, err := container.GetInstance[libdom.UnitOfWork](InstanceTM)
 	if err != nil {
 		return nil, errs.NewContainerError(ucc.GetName(), "provider: retrieve instance failed", err)
 	}
@@ -59,7 +61,7 @@ func (ucc *UseCaseContainer) providerDataAuditUC() (any, error) {
 		return nil, errs.NewContainerError(ucc.GetName(), "provider: retrieve instance failed", err)
 	}
 
-	return telemetry.NewDataAuditUseCase("DataAuditUseCase", usecase.NewDataAuditUseCase(tmInst, dataAuditRepoInst)), nil
+	return telemetry.NewDataAuditUseCase("DataAuditUseCase", usecase.NewDataAuditUseCase(uwInst, dataAuditRepoInst)), nil
 }
 
 func (ucc *UseCaseContainer) providerDataListByPeriodUC() (any, error) {
@@ -90,12 +92,16 @@ func (ucc *UseCaseContainer) providerAuthAuditTailGetUC() (any, error) {
 }
 
 func (ucc *UseCaseContainer) providerAuthAuditTailCutUC() (any, error) {
+	uwInst, err := container.GetInstance[libdom.UnitOfWork](InstanceTM)
+	if err != nil {
+		return nil, errs.NewContainerError(ucc.GetName(), "provider: retrieve instance failed", err)
+	}
 	tailRepoInst, err := container.GetInstance[domain.TailRepository[string]](InstanceAuthAuditRepo)
 	if err != nil {
 		return nil, errs.NewContainerError(ucc.GetName(), "provider: retrieve instance failed", err)
 	}
 
-	return usecase.NewTailCutUseCase[string](tailRepoInst), nil
+	return usecase.NewTailCutUseCase[string](uwInst, tailRepoInst), nil
 }
 
 func (ucc *UseCaseContainer) providerDataAuditTailGetUC() (any, error) {
@@ -108,10 +114,14 @@ func (ucc *UseCaseContainer) providerDataAuditTailGetUC() (any, error) {
 }
 
 func (ucc *UseCaseContainer) providerDataAuditTailCutUC() (any, error) {
+	uwInst, err := container.GetInstance[libdom.UnitOfWork](InstanceTM)
+	if err != nil {
+		return nil, errs.NewContainerError(ucc.GetName(), "provider: retrieve instance failed", err)
+	}
 	tailRepoInst, err := container.GetInstance[domain.TailRepository[string]](InstanceDataAuditRepo)
 	if err != nil {
 		return nil, errs.NewContainerError(ucc.GetName(), "provider: retrieve instance failed", err)
 	}
 
-	return usecase.NewTailCutUseCase[string](tailRepoInst), nil
+	return usecase.NewTailCutUseCase[string](uwInst, tailRepoInst), nil
 }

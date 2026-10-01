@@ -3,6 +3,7 @@ package usecase
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/ElfAstAhe/go-service-template/pkg/errs"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/domain"
@@ -38,13 +39,13 @@ func (alu *AuthListByUsernameInteractor) List(ctx context.Context, username stri
 }
 
 func (alu *AuthListByUsernameInteractor) validate(username string, limit, offset int) error {
-	if username == "" {
+	if strings.TrimSpace(username) == "" {
 		return errs.NewInvalidArgumentError("username", "field is required")
 	}
-	if !(limit > 0) {
+	if limit <= 0 {
 		return errs.NewInvalidArgumentError("limit", "limit must be grater than zero")
 	}
-	if !(offset >= 0) {
+	if offset < 0 {
 		return errs.NewInvalidArgumentError("offset", "offset must be greater or equal than zero")
 	}
 

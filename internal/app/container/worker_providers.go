@@ -122,7 +122,7 @@ func (wc *WorkerContainer) providerLoginAttemptsListener() (any, error) {
 	}
 
 	return worker.NewLoginAttempts(
-		worker.WithLAOName("login-attempts-amqp-listener"),
+		worker.WithLAOName("login-attempts-listener"),
 		worker.WithLAOReceiver(receiverInst),
 		worker.WithLAOAuthAuditUseCase(authAuditUCInst),
 		worker.WithLAOLogger(logInst),
@@ -148,7 +148,7 @@ func (wc *WorkerContainer) providerLoginAttemptsListener() (any, error) {
 func (wc *WorkerContainer) getLoginAttemptsReceiver(receiverKind string) (broker.Receiver, error) {
 	switch receiverKind {
 	case "amqp":
-		return container.GetInstance[libamqp.AMQPReceiver](InstanceLoginAttemptsAMQPReceiver)
+		return container.GetInstance[libamqp.Receiver](InstanceLoginAttemptsAMQPReceiver)
 	case "kafka":
 		return container.GetInstance[broker.Receiver](InstanceLoginAttemptsKafkaReceiver)
 	default:

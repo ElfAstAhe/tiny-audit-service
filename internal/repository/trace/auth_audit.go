@@ -5,25 +5,25 @@ import (
 	"fmt"
 	"time"
 
-	libdomain "github.com/ElfAstAhe/go-service-template/pkg/domain"
-	"github.com/ElfAstAhe/go-service-template/pkg/repository"
+	libdom "github.com/ElfAstAhe/go-service-template/pkg/domain"
+	"github.com/ElfAstAhe/go-service-template/pkg/repository/trace"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/domain"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
 )
 
 type AuthAuditTraceRepository struct {
-	*repository.BaseCRUDTraceRepository[*domain.AuthAudit, string]
+	*trace.BaseCRUDTraceRepository[*domain.AuthAudit, string]
 	next domain.AuthAuditRepository
 }
 
-var _ libdomain.CRUDRepository[*domain.AuthAudit, string] = (*AuthAuditTraceRepository)(nil)
+var _ libdom.CRUDRepository[*domain.AuthAudit, string] = (*AuthAuditTraceRepository)(nil)
 var _ domain.AuthAuditRepository = (*AuthAuditTraceRepository)(nil)
 
 func NewAuthAuditTraceRepository(next domain.AuthAuditRepository) *AuthAuditTraceRepository {
 	return &AuthAuditTraceRepository{
 		next:                    next,
-		BaseCRUDTraceRepository: repository.NewBaseCRUDTraceRepository[*domain.AuthAudit, string]("AuthAuditRepository", next),
+		BaseCRUDTraceRepository: trace.NewBaseCRUDTraceRepository[*domain.AuthAudit, string]("AuthAuditRepository", next),
 	}
 }
 

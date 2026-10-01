@@ -67,7 +67,7 @@ func (ae *AuthExtractor) UnaryServerInterceptor(ctx context.Context, req any, in
 	}
 
 	// extract token
-	token, err := ae.jwtGRPCHelper.ExtractTokenFromContext(auth.DefaultMetadataName, ctx)
+	token, err := ae.jwtGRPCHelper.ExtractTokenFromContext(ctx, auth.DefaultMetadataName)
 	if err != nil {
 		return nil, status.Errorf(codes.Unauthenticated, "invalid auth token: %v", err)
 	}
@@ -103,7 +103,7 @@ func (ae *AuthExtractor) StreamServerInterceptor(srv interface{}, stream grpc.Se
 	}
 
 	// extract token
-	token, err := ae.jwtGRPCHelper.ExtractTokenFromContext(auth.DefaultMetadataName, stream.Context())
+	token, err := ae.jwtGRPCHelper.ExtractTokenFromContext(stream.Context(), auth.DefaultMetadataName)
 	if err != nil {
 		return status.Errorf(codes.Unauthenticated, "invalid auth token: %v", err)
 	}

@@ -3,8 +3,9 @@ package usecase
 import (
 	"context"
 
-	usecase "github.com/ElfAstAhe/go-service-template/pkg/db"
+	libdom "github.com/ElfAstAhe/go-service-template/pkg/domain"
 	"github.com/ElfAstAhe/go-service-template/pkg/errs"
+	"github.com/ElfAstAhe/go-service-template/pkg/utils"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/domain"
 )
 
@@ -13,15 +14,18 @@ type AuthAuditUseCase interface {
 }
 
 type AuthAuditInteractor struct {
-	tm       usecase.TransactionManager
+	uw       libdom.UnitOfWork
 	authRepo domain.AuthAuditRepository
 }
 
 var _ AuthAuditUseCase = (*AuthAuditInteractor)(nil)
 
-func NewAuthAuditUseCase(tm usecase.TransactionManager, authRepo domain.AuthAuditRepository) *AuthAuditInteractor {
+func NewAuthAuditUseCase(
+	uw libdom.UnitOfWork,
+	authRepo domain.AuthAuditRepository,
+) *AuthAuditInteractor {
 	return &AuthAuditInteractor{
-		tm:       tm,
+		uw:       uw,
 		authRepo: authRepo,
 	}
 }
@@ -31,8 +35,8 @@ func (aai *AuthAuditInteractor) Audit(ctx context.Context, data *domain.AuthAudi
 		return errs.NewBllValidateError("AuthAuditInteractor.Audit", "validate failed", err)
 	}
 
-	err := aai.tm.WithinTransaction(ctx, nil, func(ctx context.Context) error {
-		_, txErr := aai.authRepo.Create(ctx, data)
+	err := aai.uw.Execute(ctx, func(txCtx context.Context) error {
+		_, txErr := aai.authRepo.Create(txCtx, data)
 
 		return txErr
 	})
@@ -44,7 +48,7 @@ func (aai *AuthAuditInteractor) Audit(ctx context.Context, data *domain.AuthAudi
 }
 
 func (aai *AuthAuditInteractor) validate(data *domain.AuthAudit) error {
-	if data == nil {
+	if utils.IsNil(data) {
 		return errs.NewInvalidArgumentError("data", "data is nil")
 	}
 

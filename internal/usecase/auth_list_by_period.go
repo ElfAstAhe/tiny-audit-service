@@ -38,6 +38,7 @@ func (alp *AuthListByPeriodInteractor) List(ctx context.Context, from, till time
 	return res, nil
 }
 
+//goland:noinspection DuplicatedCode
 func (alp *AuthListByPeriodInteractor) validate(from, till time.Time, limit int, offset int) error {
 	if from.IsZero() {
 		return errs.NewInvalidArgumentError("from", "field is required")
@@ -45,10 +46,10 @@ func (alp *AuthListByPeriodInteractor) validate(from, till time.Time, limit int,
 	if till.IsZero() {
 		return errs.NewInvalidArgumentError("till", "field is required")
 	}
-	if !(limit > 0) {
+	if limit <= 0 {
 		return errs.NewInvalidArgumentError("limit", "limit must be grater than zero")
 	}
-	if !(offset >= 0) {
+	if offset < 0 {
 		return errs.NewInvalidArgumentError("offset", "offset must be greater or equal than zero")
 	}
 

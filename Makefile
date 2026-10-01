@@ -12,7 +12,7 @@ STAGE=DEV
 KAFKA_DIR   = /opt/kafka_2.13-4.3.1
 ARTEMIS_RUN = /var/lib/artemis-test-cluster/bin/artemis
 
-.PHONY: gen-proto gen-swagger gen-http-client gen-mocks build run run-amqp run-kafka test static-check lint clean update-deps artemis-local-start artemis-local-stop kafka-local-start kafka-local-stop brokers-all-start kafka-docker-start kafka-docker-stop kafka-docker-logs
+.PHONY: gen-proto gen-swagger gen-http-client gen-mocks build github-build run run-amqp run-kafka test github-test static-check lint lint-revive clean update-deps artemis-start artemis-stop kafka-start kafka-stop brokers-all-start kafka-docker-start kafka-docker-stop kafka-docker-logs
 
 help:
 	@echo "Доступные команды для сборки и тестирования:"
@@ -24,8 +24,7 @@ help:
 gen-proto: ## Сгенерировать gRPC код (Go & gRPC) из Protobuf файлов
 	mkdir -p $(PROTO_OUT)
 	protoc \
-        -I $(PROTO_ROOT) \
-		--proto_path=$(PROTO_PATH) \
+		-I $(PROTO_ROOT) \
 		--go_out=$(PROTO_OUT) --go_opt=paths=source_relative \
 		--go-grpc_out=$(PROTO_OUT) --go-grpc_opt=paths=source_relative \
 		--go_opt=default_api_level=API_OPAQUE \
@@ -54,6 +53,13 @@ gen-mocks: ## Сгенерировать моки для интерфейсов 
 # Сборка проекта с прокидыванием переменных
 build: gen-proto gen-swagger gen-http-client gen-mocks ## Полная сборка: генерация всего кода + компиляция бинарника
 	go build -ldflags "-X '$(MODULE_NAME)/internal/config.AppVersion=$(VERSION)' \
+	-X '$(MODULE_NAME)/internal/config.AppBuildTime=$(BUILD_TIME)'" \
+	-o ./bin/$(SERVER_BINARY_NAME) $(SERVER_BUILD_DIR)/main.go
+
+# Сборка проекта с прокидыванием переменных
+github-build: ## Быстрая сборка: компиляция бинарника (github actions)
+	go build -ldflags \
+	"-X '$(MODULE_NAME)/internal/config.AppVersion=$(VERSION)' \
 	-X '$(MODULE_NAME)/internal/config.AppBuildTime=$(BUILD_TIME)'" \
 	-o ./bin/$(SERVER_BINARY_NAME) $(SERVER_BUILD_DIR)/main.go
 
@@ -223,6 +229,10 @@ run-kafka: build ## Собрать проект и запустить бинар
 test: gen-proto gen-mocks ## Запустить модульные и интеграционные тесты проекта
 	go test -v $$(go list ./... | grep -vE "mocks")
 
+# Запуск тестов (github actions)
+github-test: gen-mocks ## Запустить модульные и интеграционные тесты проекта (github actions)
+	go test -v $$(go list ./... | grep -vE "mocks")
+
 # Запуск бенчмарков (сюда добавляем все вызовы) или разные параметры под один пакет
 bench: gen-proto gen-mocks ## Запустить утилиты с замером памяти
 #	go test -bench=BenchmarkManager_FullCycle -benchmem ./pkg/infra/cache/test/...
@@ -232,8 +242,12 @@ bench: gen-proto gen-mocks ## Запустить утилиты с замеро�
 static-check: ## Запустить статический анализ кода (пропуская автогенерируемый pkg/api)
 	staticcheck $$(go list ./... | grep -vE "pkg/api|mocks")
 
+# Запуск линтера golangci-lint
+lint: ## Запустить линтер golangci-lint (пропуск internal, pkg/api, cmd/gen-tz)
+	golangci-lint run
+
 # Запуск линтера
-lint: ## Запустить линтер revive (пропуская автогенерируемый код)
+lint-revive: ## Запустить линтер revive (пропуская автогенерируемый код)
 	revive -exclude "_test\.go$$" $$(go list ./... | grep -vE "pkg/api|mocks")
 
 # Очистка бинарников
@@ -244,19 +258,19 @@ clean: ## Очистить скомпилированные файлы из па
 update-deps: ## Принудительно обновить и скачать все Go-зависимости проекта
 	go get -u -x all
 
-artemis-local-start: ## start artemis local (ubuntu, in separate terminal)
+artemis-start: ## start artemis local (ubuntu, in separate terminal)
 	gnome-terminal -- bash -c "sudo $(ARTEMIS_RUN) run; exec bash"
 
-artemis-local-stop: ## stop artemis local (not implemented)
+artemis-stop: ## stop artemis local (not implemented)
 	echo "not implemented :-)"
 
-kafka-local-start: ## start kafka local (ubuntu, in separate terminal)
+kafka-start: ## start kafka local (ubuntu, in separate terminal)
 	gnome-terminal -- bash -c "$(KAFKA_DIR)/bin/kafka-server-start.sh $(KAFKA_DIR)/config/server.properties; exec bash"
 
-kafka-local-stop: ## stop kafka local (not implemented)
+kafka-stop: ## stop kafka local (not implemented)
 	echo "not implemented :-)"
 
-brokers-all-start: kafka-local-start artemis-local-start ## start both brokers simultaneously in separate windows
+brokers-all-start: kafka-start artemis-start ## start both brokers simultaneously in separate windows
 
 # start kafka (docker compose)
 kafka-docker-start: ## start kafka docker container (docker compose)
