@@ -26,7 +26,7 @@ func NewAuthAuditMetricsRepository(next domain.AuthAuditRepository) *AuthAuditMe
 
 func (aam *AuthAuditMetricsRepository) ListByPeriod(ctx context.Context, from, till time.Time, limit, offset int) (res []*domain.AuthAudit, err error) {
 	defer func(start time.Time) {
-		metrics.ObserveRepositoryOp(aam.BaseCRUDMetricsRepository.GetRepositoryName(), "ListByPeriod", err, start)
+		metrics.ObserveRepositoryOp(aam.GetRepositoryName(), "ListByPeriod", err, start)
 	}(time.Now())
 
 	return aam.next.ListByPeriod(ctx, from, till, limit, offset)
@@ -34,7 +34,7 @@ func (aam *AuthAuditMetricsRepository) ListByPeriod(ctx context.Context, from, t
 
 func (aam *AuthAuditMetricsRepository) ListByUsername(ctx context.Context, username string, offset, limit int) (res []*domain.AuthAudit, err error) {
 	defer func(start time.Time) {
-		metrics.ObserveRepositoryOp(aam.BaseCRUDMetricsRepository.GetRepositoryName(), "ListByUsername", err, start)
+		metrics.ObserveRepositoryOp(aam.GetRepositoryName(), "ListByUsername", err, start)
 	}(time.Now())
 
 	return aam.next.ListByUsername(ctx, username, offset, limit)

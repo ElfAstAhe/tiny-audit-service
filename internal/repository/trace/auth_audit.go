@@ -28,7 +28,7 @@ func NewAuthAuditTraceRepository(next domain.AuthAuditRepository) *AuthAuditTrac
 }
 
 func (aat *AuthAuditTraceRepository) ListByPeriod(ctx context.Context, from, till time.Time, limit, offset int) ([]*domain.AuthAudit, error) {
-	ctx, span := aat.StartSpan(ctx, fmt.Sprintf("%s.ListByPeriod", aat.BaseCRUDTraceRepository.GetRepositoryName()))
+	ctx, span := aat.StartSpan(ctx, fmt.Sprintf("%s.ListByPeriod", aat.GetRepositoryName()))
 	defer span.End()
 
 	span.SetAttributes(
@@ -49,7 +49,7 @@ func (aat *AuthAuditTraceRepository) ListByPeriod(ctx context.Context, from, til
 }
 
 func (aat *AuthAuditTraceRepository) ListByUsername(ctx context.Context, username string, offset, limit int) ([]*domain.AuthAudit, error) {
-	ctx, span := aat.StartSpan(ctx, fmt.Sprintf("%s.ListByUsername", aat.BaseCRUDTraceRepository.GetRepositoryName()))
+	ctx, span := aat.StartSpan(ctx, fmt.Sprintf("%s.ListByUsername", aat.GetRepositoryName()))
 	defer span.End()
 
 	span.SetAttributes(

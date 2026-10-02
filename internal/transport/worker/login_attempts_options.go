@@ -53,13 +53,13 @@ func (lao LoginAttemptsOptions) Validate() error {
 	if utils.IsNil(lao.AuthAuditUC) {
 		return errs.NewCommonError("auth audit use case not provided (nil)", nil)
 	}
-	if !(lao.BatchSize > 0) {
+	if lao.BatchSize <= 0 {
 		return errs.NewCommonError("batch size must be greater than 0", nil)
 	}
-	if !(lao.BatchReadTimeout > 0) {
+	if lao.BatchReadTimeout <= 0 {
 		return errs.NewCommonError("batch read timeout must be greater than 0", nil)
 	}
-	if !(lao.AcknowledgeTimeout > 0) {
+	if lao.AcknowledgeTimeout <= 0 {
 		return errs.NewCommonError("acknowledge timeout must be greater than 0", nil)
 	}
 

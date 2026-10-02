@@ -21,7 +21,7 @@ func (ucc *UseCaseContainer) providerUnitOfWork() (any, error) {
 }
 
 func (ucc *UseCaseContainer) providerAuthAuditUC() (any, error) {
-	uwInst, err := container.GetInstance[libdom.UnitOfWork](InstanceTM)
+	uwInst, err := container.GetInstance[libdom.UnitOfWork](InstanceUnitOfWork)
 	if err != nil {
 		return nil, errs.NewContainerError(ucc.GetName(), "provider: retrieve instance failed", err)
 	}
@@ -52,7 +52,7 @@ func (ucc *UseCaseContainer) providerAuthListByUsernameUC() (any, error) {
 }
 
 func (ucc *UseCaseContainer) providerDataAuditUC() (any, error) {
-	uwInst, err := container.GetInstance[libdom.UnitOfWork](InstanceTM)
+	uwInst, err := container.GetInstance[libdom.UnitOfWork](InstanceUnitOfWork)
 	if err != nil {
 		return nil, errs.NewContainerError(ucc.GetName(), "provider: retrieve instance failed", err)
 	}
@@ -92,7 +92,7 @@ func (ucc *UseCaseContainer) providerAuthAuditTailGetUC() (any, error) {
 }
 
 func (ucc *UseCaseContainer) providerAuthAuditTailCutUC() (any, error) {
-	uwInst, err := container.GetInstance[libdom.UnitOfWork](InstanceTM)
+	uwInst, err := container.GetInstance[libdom.UnitOfWork](InstanceUnitOfWork)
 	if err != nil {
 		return nil, errs.NewContainerError(ucc.GetName(), "provider: retrieve instance failed", err)
 	}
@@ -113,8 +113,9 @@ func (ucc *UseCaseContainer) providerDataAuditTailGetUC() (any, error) {
 	return usecase.NewTailGetUseCase[string](tailRepoInst), nil
 }
 
+//goland:noinspection DuplicatedCode
 func (ucc *UseCaseContainer) providerDataAuditTailCutUC() (any, error) {
-	uwInst, err := container.GetInstance[libdom.UnitOfWork](InstanceTM)
+	uwInst, err := container.GetInstance[libdom.UnitOfWork](InstanceUnitOfWork)
 	if err != nil {
 		return nil, errs.NewContainerError(ucc.GetName(), "provider: retrieve instance failed", err)
 	}

@@ -29,7 +29,7 @@ func NewDataAuditTraceRepository(next domain.DataAuditRepository) *DataAuditTrac
 
 //goland:noinspection DuplicatedCode
 func (dat *DataAuditTraceRepository) ListByPeriod(ctx context.Context, from, till time.Time, limit, offset int) ([]*domain.DataAudit, error) {
-	ctx, span := dat.StartSpan(ctx, fmt.Sprintf("%s.ListByPeriod", dat.BaseCRUDTraceRepository.GetRepositoryName()))
+	ctx, span := dat.StartSpan(ctx, fmt.Sprintf("%s.ListByPeriod", dat.GetRepositoryName()))
 	defer span.End()
 
 	span.SetAttributes(
@@ -50,7 +50,7 @@ func (dat *DataAuditTraceRepository) ListByPeriod(ctx context.Context, from, til
 }
 
 func (dat *DataAuditTraceRepository) ListByInstance(ctx context.Context, typeName, instanceID string, limit, offset int) ([]*domain.DataAudit, error) {
-	ctx, span := dat.StartSpan(ctx, fmt.Sprintf("%s.ListByInstance", dat.BaseCRUDTraceRepository.GetRepositoryName()))
+	ctx, span := dat.StartSpan(ctx, fmt.Sprintf("%s.ListByInstance", dat.GetRepositoryName()))
 	defer span.End()
 
 	span.SetAttributes(

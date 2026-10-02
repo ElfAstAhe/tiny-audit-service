@@ -137,10 +137,10 @@ func (aa *AuthAuditPgRepository) validateListByUsername(username string, offset,
 	if username == "" {
 		return errs.NewInvalidArgumentError("username", "field is required")
 	}
-	if !(limit > 0) {
+	if limit <= 0 {
 		return errs.NewInvalidArgumentError("limit", "limit must be grater than zero")
 	}
-	if !(offset >= 0) {
+	if offset < 0 {
 		return errs.NewInvalidArgumentError("offset", "offset must be greater or equal than zero")
 	}
 

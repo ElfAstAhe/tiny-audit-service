@@ -72,6 +72,7 @@ func (la *LoginAttempts) dataProvider(ctx context.Context, eventTime time.Time) 
 	defer brokerCancel()
 
 	for {
+		//nolint:staticcheck // GF1006: exit loop by context timeout
 		if len(resData) >= la.batchSize {
 			break
 		}

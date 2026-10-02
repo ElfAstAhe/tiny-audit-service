@@ -26,7 +26,7 @@ func NewDataAuditMetricsRepository(next domain.DataAuditRepository) *DataAuditMe
 
 func (dam *DataAuditMetricsRepository) ListByPeriod(ctx context.Context, from, till time.Time, limit, offset int) (res []*domain.DataAudit, err error) {
 	defer func(start time.Time) {
-		metrics.ObserveRepositoryOp(dam.BaseCRUDMetricsRepository.GetRepositoryName(), "ListByPeriod", err, start)
+		metrics.ObserveRepositoryOp(dam.GetRepositoryName(), "ListByPeriod", err, start)
 	}(time.Now())
 
 	return dam.next.ListByPeriod(ctx, from, till, limit, offset)
@@ -34,7 +34,7 @@ func (dam *DataAuditMetricsRepository) ListByPeriod(ctx context.Context, from, t
 
 func (dam *DataAuditMetricsRepository) ListByInstance(ctx context.Context, typeName string, instanceID string, limit, offset int) (res []*domain.DataAudit, err error) {
 	defer func(start time.Time) {
-		metrics.ObserveRepositoryOp(dam.BaseCRUDMetricsRepository.GetRepositoryName(), "ListByInstance", err, start)
+		metrics.ObserveRepositoryOp(dam.GetRepositoryName(), "ListByInstance", err, start)
 	}(time.Now())
 
 	return dam.next.ListByInstance(ctx, typeName, instanceID, limit, offset)
