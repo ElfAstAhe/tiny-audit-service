@@ -8,6 +8,8 @@ import (
 )
 
 // app
+//
+//nolint:gosec // G101 : dev/test default conf vals
 const (
 	defaultAppEnv       conf.AppEnv = conf.AppEnvDevelopment
 	defaultAppNodeName  string      = ApplicationName

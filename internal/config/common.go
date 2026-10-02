@@ -4,6 +4,8 @@ package config
 const FlagConfig = "config-path"
 
 // App config flags
+//
+//nolint:gosec // G101 : app params
 const (
 	FlagAppNodeName           string = "node-name"
 	FlagAppMaxListLimit       string = "app-max-list-limit"
@@ -37,6 +39,8 @@ const (
 )
 
 // Auth config flags
+//
+//nolint:gosec // G101 : app params
 const (
 	FlagAuthJWTSecret          string = "auth-jwt-secret"
 	FlagAuthJWTSigningMethod   string = "auth-jwt-signing-method"
@@ -69,6 +73,8 @@ const (
 )
 
 // http config flags
+//
+//nolint:gosec // G101 : app params
 const (
 	FlagHTTPAddress            string = "http-address"
 	FlagHTTPReadTimeout        string = "http-read-timeout"
@@ -100,6 +106,8 @@ const (
 const EnvConfig string = "CONFIG_PATH"
 
 // amqp connector
+//
+//nolint:gosec // G101 : app params
 const (
 	FlagAMQPConnectorURL             string = "amqp-connector-url"
 	FlagAMQPConnectorUsername        string = "amqp-connector-username"
@@ -160,6 +168,8 @@ const (
 )
 
 // app
+//
+//nolint:gosec // G101 : app params
 const (
 	keyAppNodeName           string = "app.node_name"
 	keyAppMaxListLimit       string = "app.max_list_limit"
@@ -193,6 +203,8 @@ const (
 )
 
 // amqp connector
+//
+//nolint:gosec // G101 : dev/test default conf vals
 const (
 	keyAMQPConnectorURL             string = "amqp_connector.url"
 	keyAMQPConnectorUsername        string = "amqp_connector.username"

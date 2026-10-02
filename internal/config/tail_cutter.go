@@ -53,22 +53,22 @@ func NewDefaultTailCutterConfig() *TailCutterConfig {
 }
 
 func (tcc *TailCutterConfig) Validate() error {
-	if !(tcc.StartInterval > 0) {
+	if tcc.StartInterval <= 0 {
 		return errs.NewConfigValidateError("_tc", "start_interval", "must be greater zero", nil)
 	}
-	if !(tcc.ScheduleInterval > 0) {
+	if tcc.ScheduleInterval <= 0 {
 		return errs.NewConfigValidateError("_tc", "schedule_interval", "must be greater zero", nil)
 	}
-	if !(tcc.WorkerCount > 0) {
+	if tcc.WorkerCount <= 0 {
 		return errs.NewConfigValidateError("_tc", "worker_count", "must be greater zero", nil)
 	}
-	if !(tcc.DataCapacity > 0) {
+	if tcc.DataCapacity <= 0 {
 		return errs.NewConfigValidateError("_tc", "data_capacity", "must be greater zero", nil)
 	}
-	if !(tcc.ShutdownTimeout > 0) {
+	if tcc.ShutdownTimeout <= 0 {
 		return errs.NewConfigValidateError("_tc", "shutdown_timeout", "must be greater zero", nil)
 	}
-	if !(tcc.TailInterval > 0) {
+	if tcc.TailInterval <= 0 {
 		return errs.NewConfigValidateError("_tc", "tail_interval", "must be greater zero", nil)
 	}
 

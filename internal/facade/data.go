@@ -5,6 +5,7 @@ import (
 
 	"github.com/ElfAstAhe/go-service-template/pkg/auth"
 	"github.com/ElfAstAhe/go-service-template/pkg/errs"
+	"github.com/ElfAstAhe/go-service-template/pkg/utils"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/domain"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/facade/dto"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/facade/mapper"
@@ -47,11 +48,11 @@ func (daf *DataAuditFacadeImpl) Audit(ctx context.Context, data *dto.DataAuditDT
 		return errs.NewBllForbiddenError("DataAuditFacadeImpl.Audit", "retrieve subject", err)
 	}
 	// rbac
-	if !(subj.HasRole(domain.RoleWriter) || subj.HasRole(domain.RoleAdmin)) {
+	if !subj.HasRole(domain.RoleWriter) && !subj.HasRole(domain.RoleAdmin) {
 		return errs.NewBllForbiddenError("DataAuditFacadeImpl.Audit", "subject is not audit-writer", nil)
 	}
 	// validate
-	if data == nil {
+	if utils.IsNil(data) {
 		return errs.NewInvalidArgumentError("data", "data is nil")
 	}
 
@@ -71,7 +72,7 @@ func (daf *DataAuditFacadeImpl) ListByPeriod(ctx context.Context, auditPeriod *d
 		return nil, errs.NewBllForbiddenError("DataAuditFacadeImpl.ListByPeriod", "retrieve subject", err)
 	}
 	// rbac
-	if !(subj.HasRole(domain.RoleReader) || subj.HasRole(domain.RoleAdmin)) {
+	if !subj.HasRole(domain.RoleReader) && subj.HasRole(domain.RoleAdmin) {
 		return nil, errs.NewBllForbiddenError("DataAuditFacadeImpl.ListByPeriod", "subject is not audit-reader", nil)
 	}
 	// validate
@@ -93,7 +94,7 @@ func (daf *DataAuditFacadeImpl) ListByInstance(ctx context.Context, auditInstanc
 		return nil, errs.NewBllForbiddenError("DataAuditFacadeImpl.ListByInstance", "retrieve subject", err)
 	}
 	// rbac
-	if !(subj.HasRole(domain.RoleReader) || subj.HasRole(domain.RoleAdmin)) {
+	if !subj.HasRole(domain.RoleReader) && !subj.HasRole(domain.RoleAdmin) {
 		return nil, errs.NewBllForbiddenError("DataAuditFacadeImpl.ListByInstance", "subject is not audit-reader", nil)
 	}
 	// validate

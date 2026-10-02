@@ -106,10 +106,10 @@ func (aa *AuthAuditPgRepository) validateListByPeriod(from, till time.Time, limi
 	if till.IsZero() {
 		return errs.NewInvalidArgumentError("till", "field is required")
 	}
-	if !(limit > 0) {
+	if limit <= 0 {
 		return errs.NewInvalidArgumentError("limit", "limit must be grater than zero")
 	}
-	if !(offset >= 0) {
+	if offset < 0 {
 		return errs.NewInvalidArgumentError("offset", "offset must be greater or equal than zero")
 	}
 
