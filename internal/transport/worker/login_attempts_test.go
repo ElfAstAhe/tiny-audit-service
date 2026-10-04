@@ -8,9 +8,9 @@ import (
 
 	"github.com/ElfAstAhe/go-service-template/pkg/errs"
 	mocks2 "github.com/ElfAstAhe/go-service-template/pkg/logger/mocks"
-	"github.com/ElfAstAhe/go-service-template/pkg/transport/broker/amqp"
+	"github.com/ElfAstAhe/go-service-template/pkg/transport/broker/amqp/azure"
 	"github.com/ElfAstAhe/go-service-template/pkg/transport/broker/mocks"
-	libworker "github.com/ElfAstAhe/go-service-template/pkg/transport/worker"
+	"github.com/ElfAstAhe/go-service-template/pkg/transport/worker"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/transport/worker/dto"
 	mocks3 "github.com/ElfAstAhe/tiny-audit-service/internal/usecase/mocks"
 	"github.com/stretchr/testify/assert"
@@ -48,7 +48,7 @@ func TestNewLoginAttempts_Success(t *testing.T) {
 	la, err := NewLoginAttempts(
 		WithLAOName("test-login-attempts"),
 		WithLAOLogger(mockLog),
-		WithLAODispatcherOpts(&libworker.BaseSchedulerDispatcherConfig{}),
+		WithLAODispatcherOpts(&worker.BaseSchedulerDispatcherConfig{}),
 		WithLAOReceiver(mockReceiver),
 		WithLAOAuthAuditUseCase(mockUC),
 		WithLAOBatchSize(10),
@@ -75,11 +75,11 @@ func TestLoginAttempts_DataProvider_SuccessBatchSize(t *testing.T) {
 		receiver:         mockReceiver,
 		opts:             NewLoginAttemptsOptions(),
 	}
-	la.BaseSchedulerDispatcher = libworker.NewBaseSchedulerDispatcher[*dto.LoginAttemptWorkerJob](
-		"test", &libworker.BaseSchedulerDispatcherConfig{}, nil, nil, mockLog,
+	la.BaseSchedulerDispatcher = worker.NewBaseSchedulerDispatcher[*dto.LoginAttemptWorkerJob](
+		"test", &worker.BaseSchedulerDispatcherConfig{}, nil, nil, mockLog,
 	)
 
-	fakeMsg := amqp.NewMessage([]byte(`{"id":"1","value":"test"}`), nil)
+	fakeMsg := azure.NewMessage([]byte(`{"id":"1","value":"test"}`), nil)
 
 	// Настраиваем Mockery: Receive должен вернуть валидные данные 2 раза
 	mockReceiver.On("Receive", mock.Anything, mock.Anything).Return(fakeMsg, nil).Times(2)
@@ -100,11 +100,11 @@ func TestLoginAttempts_DataProvider_ReadTimeout(t *testing.T) {
 		receiver:         mockReceiver,
 		opts:             NewLoginAttemptsOptions(),
 	}
-	la.BaseSchedulerDispatcher = libworker.NewBaseSchedulerDispatcher[*dto.LoginAttemptWorkerJob](
-		"test", &libworker.BaseSchedulerDispatcherConfig{}, nil, nil, mockLog,
+	la.BaseSchedulerDispatcher = worker.NewBaseSchedulerDispatcher[*dto.LoginAttemptWorkerJob](
+		"test", &worker.BaseSchedulerDispatcherConfig{}, nil, nil, mockLog,
 	)
 
-	fakeMsg := amqp.NewMessage([]byte(`{"id":"1"}`), nil)
+	fakeMsg := azure.NewMessage([]byte(`{"id":"1"}`), nil)
 
 	mockReceiver.On("Receive", mock.Anything, mock.Anything).Return(fakeMsg, nil).Once()
 	// На второй итерации имитируем, что брокер пуст и время вышло
@@ -126,8 +126,8 @@ func TestLoginAttempts_DataProvider_ContextCanceled(t *testing.T) {
 		receiver:         mockReceiver,
 		opts:             NewLoginAttemptsOptions(),
 	}
-	la.BaseSchedulerDispatcher = libworker.NewBaseSchedulerDispatcher[*dto.LoginAttemptWorkerJob](
-		"test", &libworker.BaseSchedulerDispatcherConfig{}, nil, nil, mockLog,
+	la.BaseSchedulerDispatcher = worker.NewBaseSchedulerDispatcher[*dto.LoginAttemptWorkerJob](
+		"test", &worker.BaseSchedulerDispatcherConfig{}, nil, nil, mockLog,
 	)
 
 	// Имитируем Graceful Shutdown (SIGTERM во время ожидания сообщения брокера)
@@ -149,11 +149,11 @@ func TestLoginAttempts_DataProvider_MapperError_RejectSuccess(t *testing.T) {
 		receiver:         mockReceiver,
 		opts:             NewLoginAttemptsOptions(),
 	}
-	la.BaseSchedulerDispatcher = libworker.NewBaseSchedulerDispatcher[*dto.LoginAttemptWorkerJob](
-		"test", &libworker.BaseSchedulerDispatcherConfig{}, nil, nil, mockLog,
+	la.BaseSchedulerDispatcher = worker.NewBaseSchedulerDispatcher[*dto.LoginAttemptWorkerJob](
+		"test", &worker.BaseSchedulerDispatcherConfig{}, nil, nil, mockLog,
 	)
 
-	badMsg := amqp.NewMessage([]byte(`{ broken json }`), nil)
+	badMsg := azure.NewMessage([]byte(`{ broken json }`), nil)
 
 	mockReceiver.On("Receive", mock.Anything, mock.Anything).Return(badMsg, nil).Once()
 	// Проверяем, что сработал Reject сообщения в DLQ
@@ -181,12 +181,12 @@ func TestLoginAttempts_StoreAuthAudit_Success(t *testing.T) {
 		authAuditUC:        mockUC,
 		acknowledgeTimeout: 1 * time.Second,
 	}
-	la.BaseSchedulerDispatcher = libworker.NewBaseSchedulerDispatcher[*dto.LoginAttemptWorkerJob](
-		"test", &libworker.BaseSchedulerDispatcherConfig{}, nil, nil, mockLog,
+	la.BaseSchedulerDispatcher = worker.NewBaseSchedulerDispatcher[*dto.LoginAttemptWorkerJob](
+		"test", &worker.BaseSchedulerDispatcherConfig{}, nil, nil, mockLog,
 	)
 
 	testDTO := &dto.LoginAttemptWorkerJob{
-		Message: amqp.NewMessage([]byte(`{}`), nil),
+		Message: azure.NewMessage([]byte(`{}`), nil),
 	}
 
 	// Успешный аудит в БД тянет за собой успешное подтверждение (Accept) в Azure
@@ -208,12 +208,12 @@ func TestLoginAttempts_StoreAuthAudit_UniqueViolation_Accept(t *testing.T) {
 		authAuditUC:        mockUC,
 		acknowledgeTimeout: 1 * time.Second,
 	}
-	la.BaseSchedulerDispatcher = libworker.NewBaseSchedulerDispatcher[*dto.LoginAttemptWorkerJob](
-		"test", &libworker.BaseSchedulerDispatcherConfig{}, nil, nil, mockLog,
+	la.BaseSchedulerDispatcher = worker.NewBaseSchedulerDispatcher[*dto.LoginAttemptWorkerJob](
+		"test", &worker.BaseSchedulerDispatcherConfig{}, nil, nil, mockLog,
 	)
 
 	testDTO := &dto.LoginAttemptWorkerJob{
-		Message: amqp.NewMessage([]byte(`{}`), nil),
+		Message: azure.NewMessage([]byte(`{}`), nil),
 	}
 
 	// База сообщает о дубликате записи (UniqueViolation)
@@ -238,12 +238,12 @@ func TestLoginAttempts_StoreAuthAudit_DatabaseError_Release(t *testing.T) {
 		authAuditUC:        mockUC,
 		acknowledgeTimeout: 1 * time.Second,
 	}
-	la.BaseSchedulerDispatcher = libworker.NewBaseSchedulerDispatcher[*dto.LoginAttemptWorkerJob](
-		"test", &libworker.BaseSchedulerDispatcherConfig{}, nil, nil, mockLog,
+	la.BaseSchedulerDispatcher = worker.NewBaseSchedulerDispatcher[*dto.LoginAttemptWorkerJob](
+		"test", &worker.BaseSchedulerDispatcherConfig{}, nil, nil, mockLog,
 	)
 
 	testDTO := &dto.LoginAttemptWorkerJob{
-		Message: amqp.NewMessage([]byte(`{}`), nil),
+		Message: azure.NewMessage([]byte(`{}`), nil),
 	}
 
 	// Имитируем падение коннекта к СУБД Postgres

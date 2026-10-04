@@ -1,13 +1,15 @@
 package grpc
 
 import (
+	"github.com/ElfAstAhe/go-service-template/pkg/utils"
 	pb "github.com/ElfAstAhe/tiny-audit-service/pkg/api/grpc/tiny-audit-service/v1"
 	"github.com/ElfAstAhe/tiny-audit-service/pkg/client/dto"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
+// MapAuthDtoSDKToGRPC transforms a client-level AuthAuditDTO data contract into a strongly-typed wire-ready gRPC pb.AuthAudit message using the Opaque API builder.
 func MapAuthDtoSDKToGRPC(authData *dto.AuthAuditDTO) *pb.AuthAudit {
-	if authData == nil {
+	if utils.IsNil(authData) {
 		return nil
 	}
 
@@ -24,8 +26,9 @@ func MapAuthDtoSDKToGRPC(authData *dto.AuthAuditDTO) *pb.AuthAudit {
 	}.Build()
 }
 
+// MapDataDtoSDKToGRPC converts an inbound client-level DataAuditDTO data payload schema into a decoupled network delivery pb.DataAudit protobuf aggregate.
 func MapDataDtoSDKToGRPC(data *dto.DataAuditDTO) *pb.DataAudit {
-	if data == nil {
+	if utils.IsNil(data) {
 		return nil
 	}
 
@@ -46,8 +49,9 @@ func MapDataDtoSDKToGRPC(data *dto.DataAuditDTO) *pb.DataAudit {
 	}.Build()
 }
 
+// MapDataValueDtoSDKToGRPC maps an internal data modification record field variant schema onto a structured network pb.DataAuditValue element payload.
 func MapDataValueDtoSDKToGRPC(dataValue *dto.DataAuditValueDTO) *pb.DataAuditValue {
-	if dataValue == nil {
+	if utils.IsNil(dataValue) {
 		return nil
 	}
 
@@ -59,8 +63,9 @@ func MapDataValueDtoSDKToGRPC(dataValue *dto.DataAuditValueDTO) *pb.DataAuditVal
 	}.Build()
 }
 
+// MapDataValueDTOsSDKToGRPC processes a slice array of client change records, converting and allocating them into a sequential gRPC list collection array.
 func MapDataValueDTOsSDKToGRPC(dataValues []*dto.DataAuditValueDTO) []*pb.DataAuditValue {
-	if dataValues == nil {
+	if len(dataValues) == 0 {
 		return nil
 	}
 
