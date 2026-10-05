@@ -28,35 +28,42 @@ var _ worker.Scheduler = (*LoginAttempts)(nil)
 var _ worker.CommonWorker = (*LoginAttempts)(nil)
 var _ container.Runner = (*LoginAttempts)(nil)
 
-func NewLoginAttempts(
-	opts ...LoginAttemptsOption,
-) (*LoginAttempts, error) {
-	localOpts := NewLoginAttemptsOptions()
+func NewLoginAttempts(options ...LoginAttemptsOption) (*LoginAttempts, error) {
+	opts := NewLoginAttemptsOptions()
 
-	for _, opt := range opts {
-		opt(localOpts)
+	for _, option := range options {
+		option(opts)
 	}
-
-	if err := localOpts.Validate(); err != nil {
-		return nil, errs.NewCommonError("login attempts scheduled dispatcher options validation failed", err)
+	if err := opts.Validate(); err != nil {
+		return nil, errs.NewCommonError("login attempts options validation failed", err)
 	}
-
+	// instance
 	res := &LoginAttempts{
-		authAuditUC:        localOpts.AuthAuditUC,
-		receiver:           localOpts.Receiver,
-		opts:               localOpts,
-		batchSize:          localOpts.BatchSize,
-		batchReadTimeout:   localOpts.BatchReadTimeout,
-		acknowledgeTimeout: localOpts.AcknowledgeTimeout,
+		authAuditUC:        opts.AuthAuditUC,
+		receiver:           opts.Receiver,
+		opts:               opts,
+		batchSize:          opts.BatchSize,
+		batchReadTimeout:   opts.BatchReadTimeout,
+		acknowledgeTimeout: opts.AcknowledgeTimeout,
 	}
-
-	res.BaseSchedulerDispatcher = worker.NewBaseSchedulerDispatcher[*dto.LoginAttemptWorkerJob](
-		localOpts.Name,
-		localOpts.DispatcherOpts,
-		res.dataProvider,
-		res.storeAuthAudit,
-		localOpts.Logger,
+	// scheduler dispatcher
+	dispatcher, err := worker.NewBaseSchedulerDispatcher[*dto.LoginAttemptWorkerJob](
+		worker.WithSchedulerDispatcherName[*dto.LoginAttemptWorkerJob](opts.Name),
+		worker.WithSchedulerDispatcherStopTimeout[*dto.LoginAttemptWorkerJob](opts.DispatcherOpts.StopTimeout),
+		worker.WithSchedulerDispatcherDataProvider[*dto.LoginAttemptWorkerJob](res.dataProvider),
+		worker.WithSchedulerDispatcherLogger[*dto.LoginAttemptWorkerJob](opts.Logger),
+		worker.WithSchedulerDispatcherPoolWorkerCount[*dto.LoginAttemptWorkerJob](opts.DispatcherOpts.WorkerCount),
+		worker.WithSchedulerDispatcherPoolDataCapacity[*dto.LoginAttemptWorkerJob](opts.DispatcherOpts.DataCapacity),
+		worker.WithSchedulerDispatcherPoolCompleteProcess[*dto.LoginAttemptWorkerJob](opts.DispatcherOpts.CompleteProcess),
+		worker.WithSchedulerDispatcherPoolJobHandler[*dto.LoginAttemptWorkerJob](res.storeAuthAudit),
+		worker.WithSchedulerDispatcherSchedulerStartInterval[*dto.LoginAttemptWorkerJob](opts.DispatcherOpts.StartInterval),
+		worker.WithSchedulerDispatcherSchedulerScheduleInterval[*dto.LoginAttemptWorkerJob](opts.DispatcherOpts.ScheduleInterval),
 	)
+	if err != nil {
+		return nil, errs.NewCommonError("scheduler dispatcher creation failed", err)
+	}
+	// setup
+	res.BaseSchedulerDispatcher = dispatcher
 
 	return res, nil
 }

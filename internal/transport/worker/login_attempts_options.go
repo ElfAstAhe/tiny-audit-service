@@ -9,6 +9,7 @@ import (
 	"github.com/ElfAstAhe/go-service-template/pkg/transport/broker"
 	"github.com/ElfAstAhe/go-service-template/pkg/transport/worker"
 	"github.com/ElfAstAhe/go-service-template/pkg/utils"
+	"github.com/ElfAstAhe/tiny-audit-service/internal/transport/worker/dto"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/usecase"
 )
 
@@ -21,7 +22,7 @@ type LoginAttemptsOption func(*LoginAttemptsOptions)
 
 type LoginAttemptsOptions struct {
 	Name               string
-	DispatcherOpts     *worker.BaseSchedulerDispatcherConfig
+	DispatcherOpts     *worker.BaseSchedulerDispatcherOptions[*dto.LoginAttemptWorkerJob]
 	Receiver           broker.Receiver
 	AuthAuditUC        usecase.AuthAuditUseCase
 	BatchSize          int
@@ -34,6 +35,7 @@ func NewLoginAttemptsOptions() *LoginAttemptsOptions {
 	return &LoginAttemptsOptions{
 		BatchSize:        defaultBatchSize,
 		BatchReadTimeout: defaultBatchReadTimeout,
+		DispatcherOpts:   worker.NewBaseSchedulerDispatcherOptions[*dto.LoginAttemptWorkerJob](),
 	}
 }
 
@@ -72,7 +74,7 @@ func WithLAOName(name string) LoginAttemptsOption {
 	}
 }
 
-func WithLAODispatcherOpts(dispatcherOpts *worker.BaseSchedulerDispatcherConfig) LoginAttemptsOption {
+func WithLAODispatcherOpts(dispatcherOpts *worker.BaseSchedulerDispatcherOptions[*dto.LoginAttemptWorkerJob]) LoginAttemptsOption {
 	return func(opts *LoginAttemptsOptions) {
 		opts.DispatcherOpts = dispatcherOpts
 	}
