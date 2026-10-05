@@ -2,6 +2,7 @@ package client
 
 import (
 	"context"
+	"fmt"
 	"sync/atomic"
 
 	"github.com/ElfAstAhe/go-service-template/pkg/container"
@@ -12,9 +13,14 @@ import (
 	"github.com/ElfAstAhe/tiny-auth-service/pkg/transport/auth"
 )
 
+const (
+	baseAuditClientNameTemplate string = "base-audit-client-%s"
+)
+
 type BaseAuditClient[D any] struct {
+	name          string
 	pool          worker.Pool[D]
-	conf          *worker.BasePoolConfig
+	opts          *BaseAuditClientOptions[D]
 	totalLost     *atomic.Int32
 	tokenProvider auth.TokenProvider
 	auditAction   AuditAction[D]
@@ -25,34 +31,35 @@ var _ AuditClient[*dto.AuthAuditDTO] = (*BaseAuditClient[*dto.AuthAuditDTO])(nil
 var _ AuditClient[*dto.DataAuditDTO] = (*BaseAuditClient[*dto.DataAuditDTO])(nil)
 var _ container.Runner = (*BaseAuditClient[*dto.DataAuditDTO])(nil)
 
-func NewBaseAuditClient[D any](
-	name string,
-	conf *worker.BasePoolConfig,
-	auditAction AuditAction[D],
-	tokenProvider auth.TokenProvider,
-	log logger.Logger,
-) *BaseAuditClient[D] {
-	res := &BaseAuditClient[D]{
-		conf:          conf,
-		totalLost:     new(atomic.Int32),
-		tokenProvider: tokenProvider,
-		auditAction:   auditAction,
-		log:           log.GetLogger("BaseAuditClient"),
+func NewBaseAuditClient[D any](options ...BaseAuditClientOption[D]) (*BaseAuditClient[D], error) {
+	opts := NewBaseAuditClientOptions[D]()
+	for _, option := range options {
+		option(opts)
 	}
-	res.totalLost.Store(0)
-	res.pool = worker.NewBasePool(
-		name,
-		worker.NewBasePoolConfig(
-			conf.WorkerCount,
-			conf.DataCapacity,
-			conf.CompleteProcess,
-			conf.StopTimeout,
-		),
-		res.jobHandler,
-		log,
+	if err := opts.Validate(); err != nil {
+		return nil, errs.NewCommonError("base audit client options validation failed", err)
+	}
+	// instance
+	res := &BaseAuditClient[D]{
+		name:          fmt.Sprintf(baseAuditClientNameTemplate, opts.Name),
+		opts:          opts,
+		totalLost:     new(atomic.Int32),
+		tokenProvider: opts.TokenProvider,
+		auditAction:   opts.AuditAction,
+		log:           opts.Logger.GetLogger(fmt.Sprintf(baseAuditClientNameTemplate, opts.Name)),
+	}
+	// pool
+	workerPool, err := worker.NewBasePool[D](
+		worker.WithPoolName[D](opts.Name),
 	)
+	if err != nil {
+		return nil, errs.NewCommonError("failed to create worker pool", err)
+	}
+	// setup
+	res.totalLost.Store(0)
+	res.pool = workerPool
 
-	return res
+	return res, nil
 }
 
 func (bac *BaseAuditClient[D]) Start(ctx context.Context) error {
@@ -107,8 +114,8 @@ func (bac *BaseAuditClient[D]) jobHandler(ctx context.Context, workerIndex int, 
 	return nil
 }
 
-func (bac *BaseAuditClient[D]) GetConfig() *worker.BasePoolConfig {
-	return bac.conf
+func (bac *BaseAuditClient[D]) GetOpts() *BaseAuditClientOptions[D] {
+	return bac.opts
 }
 
 func (bac *BaseAuditClient[D]) GetLogger() logger.Logger {
