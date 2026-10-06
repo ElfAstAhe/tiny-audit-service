@@ -3,61 +3,47 @@ package facade
 import (
 	"context"
 
-	"github.com/ElfAstAhe/go-service-template/pkg/auth"
 	"github.com/ElfAstAhe/go-service-template/pkg/errs"
 	"github.com/ElfAstAhe/go-service-template/pkg/utils"
-	"github.com/ElfAstAhe/tiny-audit-service/internal/domain"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/facade/dto"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/facade/mapper"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/usecase"
 )
 
-type DataAuditFacade interface {
+type DataAudit interface {
 	Audit(ctx context.Context, data *dto.DataAuditDTO) error
 	ListByPeriod(ctx context.Context, auditPeriod *dto.AuditPeriodDTO) ([]*dto.DataAuditDTO, error)
 	ListByInstance(ctx context.Context, auditInstance *dto.AuditInstanceDTO) ([]*dto.DataAuditDTO, error)
 }
 
-type DataAuditFacadeImpl struct {
-	authHelper           auth.Helper
+type DataAuditImpl struct {
 	dataAuditUC          usecase.DataAuditUseCase
 	dataListByPeriodUC   usecase.DataListByPeriodUseCase
 	dataListByInstanceUC usecase.DataListByInstanceUseCase
 }
 
-var _ DataAuditFacade = (*DataAuditFacadeImpl)(nil)
+var _ DataAudit = (*DataAuditImpl)(nil)
 
-func NewDataAuditFacade(
-	authHelper auth.Helper,
+func NewDataAudit(
 	dataAuditUC usecase.DataAuditUseCase,
 	dataListByPeriod usecase.DataListByPeriodUseCase,
 	dataListByInstance usecase.DataListByInstanceUseCase,
-) *DataAuditFacadeImpl {
-	return &DataAuditFacadeImpl{
-		authHelper:           authHelper,
+) *DataAuditImpl {
+	return &DataAuditImpl{
 		dataAuditUC:          dataAuditUC,
 		dataListByPeriodUC:   dataListByPeriod,
 		dataListByInstanceUC: dataListByInstance,
 	}
 }
 
-func (daf *DataAuditFacadeImpl) Audit(ctx context.Context, data *dto.DataAuditDTO) error {
-	// subject
-	subj, err := daf.authHelper.SubjectFromContext(ctx)
-	if err != nil {
-		return errs.NewBllForbiddenError("DataAuditFacadeImpl.Audit", "retrieve subject", err)
-	}
-	// rbac
-	if !subj.HasRole(domain.RoleWriter) && !subj.HasRole(domain.RoleAdmin) {
-		return errs.NewBllForbiddenError("DataAuditFacadeImpl.Audit", "subject is not audit-writer", nil)
-	}
+func (daf *DataAuditImpl) Audit(ctx context.Context, data *dto.DataAuditDTO) error {
 	// validate
 	if utils.IsNil(data) {
 		return errs.NewInvalidArgumentError("data", "data is nil")
 	}
 
 	// logic
-	err = daf.dataAuditUC.Audit(ctx, mapper.MapDataAuditDTOToModel(data))
+	err := daf.dataAuditUC.Audit(ctx, mapper.MapDataAuditDTOToModel(data))
 	if err != nil {
 		return errs.NewBllError("DataAuditFacadeImpl.Audit", "write audit data", err)
 	}
@@ -65,16 +51,7 @@ func (daf *DataAuditFacadeImpl) Audit(ctx context.Context, data *dto.DataAuditDT
 	return nil
 }
 
-func (daf *DataAuditFacadeImpl) ListByPeriod(ctx context.Context, auditPeriod *dto.AuditPeriodDTO) ([]*dto.DataAuditDTO, error) {
-	// subject
-	subj, err := daf.authHelper.SubjectFromContext(ctx)
-	if err != nil {
-		return nil, errs.NewBllForbiddenError("DataAuditFacadeImpl.ListByPeriod", "retrieve subject", err)
-	}
-	// rbac
-	if !subj.HasRole(domain.RoleReader) && subj.HasRole(domain.RoleAdmin) {
-		return nil, errs.NewBllForbiddenError("DataAuditFacadeImpl.ListByPeriod", "subject is not audit-reader", nil)
-	}
+func (daf *DataAuditImpl) ListByPeriod(ctx context.Context, auditPeriod *dto.AuditPeriodDTO) ([]*dto.DataAuditDTO, error) {
 	// validate
 	// pass to bll
 
@@ -87,16 +64,7 @@ func (daf *DataAuditFacadeImpl) ListByPeriod(ctx context.Context, auditPeriod *d
 	return mapper.MapDataAuditModelsToDTOs(res), nil
 }
 
-func (daf *DataAuditFacadeImpl) ListByInstance(ctx context.Context, auditInstance *dto.AuditInstanceDTO) ([]*dto.DataAuditDTO, error) {
-	// subject
-	subj, err := daf.authHelper.SubjectFromContext(ctx)
-	if err != nil {
-		return nil, errs.NewBllForbiddenError("DataAuditFacadeImpl.ListByInstance", "retrieve subject", err)
-	}
-	// rbac
-	if !subj.HasRole(domain.RoleReader) && !subj.HasRole(domain.RoleAdmin) {
-		return nil, errs.NewBllForbiddenError("DataAuditFacadeImpl.ListByInstance", "subject is not audit-reader", nil)
-	}
+func (daf *DataAuditImpl) ListByInstance(ctx context.Context, auditInstance *dto.AuditInstanceDTO) ([]*dto.DataAuditDTO, error) {
 	// validate
 	// pass to bll
 

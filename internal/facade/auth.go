@@ -3,61 +3,47 @@ package facade
 import (
 	"context"
 
-	"github.com/ElfAstAhe/go-service-template/pkg/auth"
 	"github.com/ElfAstAhe/go-service-template/pkg/errs"
 	"github.com/ElfAstAhe/go-service-template/pkg/utils"
-	"github.com/ElfAstAhe/tiny-audit-service/internal/domain"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/facade/dto"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/facade/mapper"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/usecase"
 )
 
-type AuthAuditFacade interface {
+type AuthAudit interface {
 	Audit(ctx context.Context, data *dto.AuthAuditDTO) error
 	ListByPeriod(ctx context.Context, auditPeriod *dto.AuditPeriodDTO) ([]*dto.AuthAuditDTO, error)
 	ListByUsername(ctx context.Context, auditUser *dto.AuditUserDTO) ([]*dto.AuthAuditDTO, error)
 }
 
-type AuthAuditFacadeImpl struct {
-	authHelper           auth.Helper
+type AuthAuditFacade struct {
 	authAuditUC          usecase.AuthAuditUseCase
 	authListByPeriodUC   usecase.AuthListByPeriodUseCase
 	authListByUsernameUC usecase.AuthListByUsernameUseCase
 }
 
-var _ AuthAuditFacade = (*AuthAuditFacadeImpl)(nil)
+var _ AuthAudit = (*AuthAuditFacade)(nil)
 
-func NewAuthAuditFacade(
-	authHelper auth.Helper,
+func NewAuthAudit(
 	authAuditUC usecase.AuthAuditUseCase,
 	authListByPeriodUC usecase.AuthListByPeriodUseCase,
 	authListByUsernameUC usecase.AuthListByUsernameUseCase,
-) *AuthAuditFacadeImpl {
-	return &AuthAuditFacadeImpl{
-		authHelper:           authHelper,
+) *AuthAuditFacade {
+	return &AuthAuditFacade{
 		authAuditUC:          authAuditUC,
 		authListByPeriodUC:   authListByPeriodUC,
 		authListByUsernameUC: authListByUsernameUC,
 	}
 }
 
-func (aaf *AuthAuditFacadeImpl) Audit(ctx context.Context, data *dto.AuthAuditDTO) error {
-	// subject
-	subj, err := aaf.authHelper.SubjectFromContext(ctx)
-	if err != nil {
-		return errs.NewBllForbiddenError("AuthAuditFacadeImpl.Audit", "retrieve subject", err)
-	}
-	// rbac
-	if !subj.HasRole(domain.RoleWriter) && !subj.HasRole(domain.RoleAdmin) {
-		return errs.NewBllForbiddenError("AuthAuditFacadeImpl.Audit", "subject is not audit-writer", nil)
-	}
+func (aaf *AuthAuditFacade) Audit(ctx context.Context, data *dto.AuthAuditDTO) error {
 	// validate
 	if utils.IsNil(data) {
 		return errs.NewInvalidArgumentError("data", "data is nil")
 	}
 
 	// logic
-	err = aaf.authAuditUC.Audit(ctx, mapper.MapAuthAuditDTOToModel(data))
+	err := aaf.authAuditUC.Audit(ctx, mapper.MapAuthAuditDTOToModel(data))
 	if err != nil {
 		return errs.NewBllError("AuthAuditFacadeImpl.Audit", "write audit data", err)
 	}
@@ -65,16 +51,7 @@ func (aaf *AuthAuditFacadeImpl) Audit(ctx context.Context, data *dto.AuthAuditDT
 	return nil
 }
 
-func (aaf *AuthAuditFacadeImpl) ListByPeriod(ctx context.Context, auditPeriod *dto.AuditPeriodDTO) ([]*dto.AuthAuditDTO, error) {
-	// subject
-	subj, err := aaf.authHelper.SubjectFromContext(ctx)
-	if err != nil {
-		return nil, errs.NewBllForbiddenError("AuthAuditFacadeImpl.ListByPeriod", "retrieve subject", err)
-	}
-	// rbac
-	if !subj.HasRole(domain.RoleReader) && !subj.HasRole(domain.RoleAdmin) {
-		return nil, errs.NewBllForbiddenError("AuthAuditFacadeImpl.ListByPeriod", "subject is not audit-reader", nil)
-	}
+func (aaf *AuthAuditFacade) ListByPeriod(ctx context.Context, auditPeriod *dto.AuditPeriodDTO) ([]*dto.AuthAuditDTO, error) {
 	// validate
 	// pass to bll
 
@@ -87,16 +64,7 @@ func (aaf *AuthAuditFacadeImpl) ListByPeriod(ctx context.Context, auditPeriod *d
 	return mapper.MapAuthAuditModelsToDTOs(res), nil
 }
 
-func (aaf *AuthAuditFacadeImpl) ListByUsername(ctx context.Context, auditUser *dto.AuditUserDTO) ([]*dto.AuthAuditDTO, error) {
-	// subject
-	subj, err := aaf.authHelper.SubjectFromContext(ctx)
-	if err != nil {
-		return nil, errs.NewBllForbiddenError("AuthAuditFacadeImpl.ListByUsername", "retrieve subject", err)
-	}
-	// rbac
-	if !subj.HasRole(domain.RoleReader) && !subj.HasRole(domain.RoleAdmin) {
-		return nil, errs.NewBllForbiddenError("AuthAuditFacadeImpl.ListByUsername", "subject is not audit-reader", nil)
-	}
+func (aaf *AuthAuditFacade) ListByUsername(ctx context.Context, auditUser *dto.AuditUserDTO) ([]*dto.AuthAuditDTO, error) {
 	// validate
 	// pass to bll
 

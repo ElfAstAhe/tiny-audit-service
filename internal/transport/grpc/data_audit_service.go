@@ -10,10 +10,10 @@ import (
 
 type DataAuditGRPCService struct {
 	pb.UnimplementedDataAuditServiceServer
-	dataAuditFacade facade.DataAuditFacade
+	dataAuditFacade facade.DataAudit
 }
 
-func NewDataAuditGRPCService(dataAuditFacade facade.DataAuditFacade) *DataAuditGRPCService {
+func NewDataAuditGRPCService(dataAuditFacade facade.DataAudit) *DataAuditGRPCService {
 	return &DataAuditGRPCService{
 		dataAuditFacade: dataAuditFacade,
 	}
