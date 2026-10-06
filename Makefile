@@ -83,14 +83,14 @@ run: build ## Собрать проект и запустить бинарник
 		--auth-tc-schedule-interval "77s" \
 		--auth-tc-worker-count "2" \
 		--auth-tc-data-capacity "128" \
-		--auth-tc-shutdown-timeout "15s" \
+		--auth-tc-stop-timeout "15s" \
 		--auth-tc-tail-interval "4368h" \
 		--auth-tc-tail-cut \
 		--data-tc-start-interval "5s" \
 		--data-tc-schedule-interval "66s" \
 		--data-tc-worker-count "2" \
 		--data-tc-data-capacity "128" \
-		--data-tc-shutdown-timeout "15s" \
+		--data-tc-stop-timeout "15s" \
 		--data-tc-tail-interval "8760h" \
 		--data-tc-tail-cut \
 		--amqp-connector-url "amqp://localhost:5672" \
@@ -147,14 +147,14 @@ run-amqp: build ## Собрать проект и запустить бинар�
 		--auth-tc-schedule-interval "77s" \
 		--auth-tc-worker-count "2" \
 		--auth-tc-data-capacity "128" \
-		--auth-tc-shutdown-timeout "15s" \
+		--auth-tc-stop-timeout "15s" \
 		--auth-tc-tail-interval "4368h" \
 		--auth-tc-tail-cut \
 		--data-tc-start-interval "5s" \
 		--data-tc-schedule-interval "66s" \
 		--data-tc-worker-count "2" \
 		--data-tc-data-capacity "128" \
-		--data-tc-shutdown-timeout "15s" \
+		--data-tc-stop-timeout "15s" \
 		--data-tc-tail-interval "8760h" \
 		--data-tc-tail-cut \
 		--amqp-connector-url "amqp://localhost:5672" \
@@ -191,11 +191,18 @@ run-kafka: build ## Собрать проект и запустить бинар
 		--app-cipher-key "12345" \
 		--app-max-list-limit 500 \
 		--app-accept-token-issuers "tiny-auth-service,test-issuer" \
+		--auth-tc-start-interval "4s" \
+		--auth-tc-schedule-interval "77s" \
+		--auth-tc-worker-count "2" \
+		--auth-tc-data-capacity "128" \
+		--auth-tc-stop-timeout "15s" \
+		--auth-tc-tail-interval "4368h" \
+		--auth-tc-tail-cut \
 		--data-tc-start-interval "5s" \
 		--data-tc-schedule-interval "66s" \
 		--data-tc-worker-count "2" \
 		--data-tc-data-capacity "128" \
-		--data-tc-shutdown-timeout "15s" \
+		--data-tc-stop-timeout "15s" \
 		--data-tc-tail-interval "8760h" \
 		--data-tc-tail-cut \
 		--login-attempts-receiver-kind "kafka" \

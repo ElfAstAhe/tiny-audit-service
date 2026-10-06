@@ -44,7 +44,7 @@ func NewDefaultTailCutterConfig() *TailCutterConfig {
 		defaultAuthTCWorkerCount,
 		defaultAuthTCDataCapacity,
 		defaultAuthTCCompleteProcessing,
-		defaultAuthTCShutdownTimeout,
+		defaultAuthTCStopTimeout,
 		defaultAuthTCTailInterval,
 		defaultAuthTCTailCut,
 	)

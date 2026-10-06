@@ -24,7 +24,7 @@ const (
 	defaultAuthTCWorkerCount        int           = 2
 	defaultAuthTCDataCapacity       int           = 128
 	defaultAuthTCCompleteProcessing bool          = false
-	defaultAuthTCShutdownTimeout    time.Duration = 15 * time.Second
+	defaultAuthTCStopTimeout        time.Duration = 15 * time.Second
 	defaultAuthTCTailInterval       time.Duration = 182 * 24 * time.Hour // 182 days
 	defaultAuthTCTailCut            bool          = true
 )
@@ -36,7 +36,7 @@ const (
 	defaultDataTCWorkerCount        int           = 2
 	defaultDataTCDataCapacity       int           = 128
 	defaultDataTCCompleteProcessing bool          = false
-	defaultDataTCShutdownTimeout    time.Duration = 15 * time.Second
+	defaultDataTCStopTimeout        time.Duration = 15 * time.Second
 	defaultDataTCTailInterval       time.Duration = 365 * 24 * time.Hour // 1 year
 	defaultDataTCTailCut            bool          = true
 )
@@ -96,7 +96,7 @@ func applyDefaults(v *viper.Viper) {
 	v.SetDefault(keyAuthTCWorkerCount, defaultAuthTCWorkerCount)
 	v.SetDefault(keyAuthTCDataCapacity, defaultAuthTCDataCapacity)
 	v.SetDefault(keyAuthTCCompleteProcessing, defaultAuthTCCompleteProcessing)
-	v.SetDefault(keyAuthTCShutdownTimeout, defaultAuthTCShutdownTimeout)
+	v.SetDefault(keyAuthTCStopTimeout, defaultAuthTCStopTimeout)
 	v.SetDefault(keyAuthTCTailInterval, defaultAuthTCTailInterval)
 	v.SetDefault(keyAuthTCTailCut, defaultAuthTCTailCut)
 	// data tc
@@ -105,7 +105,7 @@ func applyDefaults(v *viper.Viper) {
 	v.SetDefault(keyDataTCWorkerCount, defaultDataTCWorkerCount)
 	v.SetDefault(keyDataTCDataCapacity, defaultDataTCDataCapacity)
 	v.SetDefault(keyDataTCCompleteProcessing, defaultDataTCCompleteProcessing)
-	v.SetDefault(keyDataTCShutdownTimeout, defaultDataTCShutdownTimeout)
+	v.SetDefault(keyDataTCStopTimeout, defaultDataTCStopTimeout)
 	v.SetDefault(keyDataTCTailInterval, defaultDataTCTailInterval)
 	v.SetDefault(keyDataTCTailCut, defaultDataTCTailCut)
 	// Auth

@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/ElfAstAhe/go-service-template/pkg/errs"
+	"github.com/ElfAstAhe/go-service-template/pkg/logger"
 	"github.com/ElfAstAhe/go-service-template/pkg/transport/worker"
 	"github.com/ElfAstAhe/go-service-template/pkg/utils"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/usecase"
@@ -48,6 +49,8 @@ func NewTailCutterOptions() *TailCutterOptions {
 
 // Validate проверяет корректность заполнения всех обязательных полей конфигурации,
 // включая встроенные параметры базового диспетчера и специфичные параметры use case.
+//
+//goland:noinspection DuplicatedCode
 func (tco *TailCutterOptions) Validate() error {
 	if strings.TrimSpace(tco.Name) == "" {
 		return errs.NewTlCommonError("Validate", "name is required", nil)
@@ -163,6 +166,13 @@ func WithTailCutTailGetUC(uc usecase.TailGetUseCase[string]) TailCutterOption {
 func WithTailCutterTailCutUC(uc usecase.TailCutUseCase[string]) TailCutterOption {
 	return func(options *TailCutterOptions) {
 		options.TailCutUC = uc
+	}
+}
+
+// WithTailCutLogger настраивает logger
+func WithTailCutLogger(log logger.Logger) TailCutterOption {
+	return func(options *TailCutterOptions) {
+		options.Logger = log
 	}
 }
 

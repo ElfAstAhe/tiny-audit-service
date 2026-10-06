@@ -74,9 +74,12 @@ func WithLAOName(name string) LoginAttemptsOption {
 	}
 }
 
-func WithLAODispatcherOpts(dispatcherOpts *worker.BaseSchedulerDispatcherOptions[*dto.LoginAttemptWorkerJob]) LoginAttemptsOption {
+func WithLAODispatcherOpts(options ...worker.BaseSchedulerDispatcherOption[*dto.LoginAttemptWorkerJob]) LoginAttemptsOption {
 	return func(opts *LoginAttemptsOptions) {
-		opts.DispatcherOpts = dispatcherOpts
+		opts.DispatcherOpts = worker.NewBaseSchedulerDispatcherOptions[*dto.LoginAttemptWorkerJob]()
+		for _, option := range options {
+			option(opts.DispatcherOpts)
+		}
 	}
 }
 

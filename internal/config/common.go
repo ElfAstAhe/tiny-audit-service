@@ -21,7 +21,7 @@ const (
 	FlagAuthTCWorkerCount        string = "auth-tc-worker-count"
 	FlagAuthTCDataCapacity       string = "auth-tc-data-capacity"
 	FlagAuthTCCompleteProcessing string = "auth-tc-complete-processing"
-	FlagAuthTCShutdownTimeout    string = "auth-tc-shutdown-timeout"
+	FlagAuthTCStopTimeout        string = "auth-tc-stop-timeout"
 	FlagAuthTCTailInterval       string = "auth-tc-tail-interval"
 	FlagAuthTCTailCut            string = "auth-tc-tail-cut"
 )
@@ -33,7 +33,7 @@ const (
 	FlagDataTCWorkerCount        string = "data-tc-worker-count"
 	FlagDataTCDataCapacity       string = "data-tc-data-capacity"
 	FlagDataTCCompleteProcessing string = "data-tc-complete-processing"
-	FlagDataTCShutdownTimeout    string = "data-tc-shutdown-timeout"
+	FlagDataTCStopTimeout        string = "data-tc-stop-timeout"
 	FlagDataTCTailInterval       string = "data-tc-tail-interval"
 	FlagDataTCTailCut            string = "data-tc-tail-cut"
 )
@@ -185,7 +185,7 @@ const (
 	keyAuthTCWorkerCount        string = "auth_tc.worker_count"
 	keyAuthTCDataCapacity       string = "auth_tc.data_capacity"
 	keyAuthTCCompleteProcessing string = "auth_tc.complete_processing"
-	keyAuthTCShutdownTimeout    string = "auth_tc.shutdown_timeout"
+	keyAuthTCStopTimeout        string = "auth_tc.stop_timeout"
 	keyAuthTCTailInterval       string = "auth_tc.tail_interval"
 	keyAuthTCTailCut            string = "auth_tc.tail_cut"
 )
@@ -197,7 +197,7 @@ const (
 	keyDataTCWorkerCount        string = "data_tc.worker_count"
 	keyDataTCDataCapacity       string = "data_tc.data_capacity"
 	keyDataTCCompleteProcessing string = "data_tc.complete_processing"
-	keyDataTCShutdownTimeout    string = "data_tc.shutdown_timeout"
+	keyDataTCStopTimeout        string = "data_tc.stop_timeout"
 	keyDataTCTailInterval       string = "data_tc.tail_interval"
 	keyDataTCTailCut            string = "data_tc.tail_cut"
 )
