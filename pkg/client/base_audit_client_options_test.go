@@ -16,12 +16,12 @@ import (
 func TestNewBaseAuditClientOptions_Defaults(t *testing.T) {
 	opts := NewBaseAuditClientOptions[any]()
 
-	assert.Equal(t, DefaultWorkerCount, opts.WorkerCount)
-	assert.Equal(t, DefaultDataCapacity, opts.DataCapacity)
-	assert.Equal(t, DefaultCompleteProcess, opts.CompleteProcess)
-	assert.Equal(t, worker.DefaultPoolStopTimeout, opts.StopTimeout)
-	assert.Empty(t, opts.Name)
-	assert.Nil(t, opts.Logger)
+	assert.Equal(t, DefaultWorkerCount, opts.Pool.WorkerCount)
+	assert.Equal(t, DefaultDataCapacity, opts.Pool.DataCapacity)
+	assert.Equal(t, DefaultCompleteProcess, opts.Pool.CompleteProcess)
+	assert.Equal(t, worker.DefaultPoolStopTimeout, opts.Pool.StopTimeout)
+	assert.Empty(t, opts.Pool.Name)
+	assert.Nil(t, opts.Pool.Logger)
 }
 
 // Тестируем Fluent API (функции With...)
@@ -44,12 +44,12 @@ func TestWithFunctions(t *testing.T) {
 	WithAuditAction[string](dummyAction)(opts)
 
 	// Проверяем, что все поля перезаписались
-	assert.Equal(t, "test-audit", opts.Name)
-	assert.Equal(t, 10, opts.WorkerCount)
-	assert.Equal(t, 128, opts.DataCapacity)
-	assert.False(t, opts.CompleteProcess)
-	assert.Equal(t, time.Second*10, opts.StopTimeout)
-	assert.Equal(t, mockLogger, opts.Logger)
+	assert.Equal(t, "test-audit", opts.Pool.Name)
+	assert.Equal(t, 10, opts.Pool.WorkerCount)
+	assert.Equal(t, 128, opts.Pool.DataCapacity)
+	assert.False(t, opts.Pool.CompleteProcess)
+	assert.Equal(t, time.Second*10, opts.Pool.StopTimeout)
+	assert.Equal(t, mockLogger, opts.Pool.Logger)
 	assert.Equal(t, mockTokenProvider, opts.TokenProvider)
 	assert.NotNil(t, opts.AuditAction)
 }
@@ -63,8 +63,8 @@ func TestBaseAuditClientOptions_Validate(t *testing.T) {
 	// Вспомогательная функция для создания валидного набора опций
 	validOpts := func() *BaseAuditClientOptions[string] {
 		opts := NewBaseAuditClientOptions[string]()
-		opts.Name = "valid-name"
-		opts.Logger = mockLogger
+		opts.Pool.Name = "valid-name"
+		opts.Pool.Logger = mockLogger
 		opts.TokenProvider = mockTokenProvider
 		opts.AuditAction = dummyAction
 		return opts
@@ -84,35 +84,35 @@ func TestBaseAuditClientOptions_Validate(t *testing.T) {
 		{
 			name: "Error empty name",
 			modify: func(opts *BaseAuditClientOptions[string]) {
-				opts.Name = "   "
+				opts.Pool.Name = "   "
 			},
 			wantErrText: "name is required",
 		},
 		{
 			name: "Error worker count zero",
 			modify: func(opts *BaseAuditClientOptions[string]) {
-				opts.WorkerCount = 0
+				opts.Pool.WorkerCount = 0
 			},
 			wantErrText: "worker count is required",
 		},
 		{
 			name: "Error data capacity negative",
 			modify: func(opts *BaseAuditClientOptions[string]) {
-				opts.DataCapacity = -1
+				opts.Pool.DataCapacity = -1
 			},
 			wantErrText: "data capacity is required",
 		},
 		{
 			name: "Error stop timeout zero",
 			modify: func(opts *BaseAuditClientOptions[string]) {
-				opts.StopTimeout = 0
+				opts.Pool.StopTimeout = 0
 			},
 			wantErrText: "stop timeout is required",
 		},
 		{
 			name: "Error nil logger",
 			modify: func(opts *BaseAuditClientOptions[string]) {
-				opts.Logger = nil // Внимание: если utils.IsNil проверяет интерфейс, это сработает
+				opts.Pool.Logger = nil // Внимание: если utils.IsNil проверяет интерфейс, это сработает
 			},
 			wantErrText: "logger is required",
 		},

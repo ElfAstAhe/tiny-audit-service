@@ -9,7 +9,7 @@ import (
 	"github.com/ElfAstAhe/go-service-template/pkg/logger"
 	"github.com/ElfAstAhe/tiny-audit-service/pkg/client"
 	"github.com/ElfAstAhe/tiny-audit-service/pkg/client/dto"
-	transportauth "github.com/ElfAstAhe/tiny-auth-service/pkg/transport/auth"
+	libauth "github.com/ElfAstAhe/tiny-auth-service/pkg/transport/auth"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/connectivity"
 	"google.golang.org/grpc/credentials"
@@ -17,21 +17,32 @@ import (
 	"google.golang.org/grpc/keepalive"
 )
 
-type BaseAuditClient[D any] struct {
+type RawAuditClient[D any] struct {
 	*client.BaseAuditClient[D]
 	conn          *grpc.ClientConn
-	conf          *AuditClientConfig
-	tokenProvider transportauth.TokenProvider
+	opts          *RawClientOptions
+	tokenProvider libauth.TokenProvider
 	log           logger.Logger
 }
 
-var _ client.AuditClient[*dto.AuthAuditDTO] = (*BaseAuditClient[*dto.AuthAuditDTO])(nil)
-var _ client.AuditClient[*dto.DataAuditDTO] = (*BaseAuditClient[*dto.DataAuditDTO])(nil)
+var _ client.AuditClient[*dto.AuthAuditDTO] = (*RawAuditClient[*dto.AuthAuditDTO])(nil)
+var _ client.AuditClient[*dto.DataAuditDTO] = (*RawAuditClient[*dto.DataAuditDTO])(nil)
+
+func NewRawAuditClient[D any](options ...RawClientOption) (*RawAuditClient[D], error) {
+	opts := NewRawClientOptions()
+	for _, option := range options {
+		option(opts)
+	}
+	if err := opts.Validate(); err != nil {
+		return nil, errs.NewTlCommonError("NewRawAuditClient", "client options validation failed", err)
+	}
+	// instance
+}
 
 func NewBaseAuditClient[D any](
 	name string,
 	conf *AuditClientConfig,
-	tokenProvider transportauth.TokenProvider,
+	tokenProvider libauth.TokenProvider,
 	auditAction client.AuditAction[D],
 	log logger.Logger,
 ) *BaseAuditClient[D] {
@@ -52,7 +63,7 @@ func NewBaseAuditClient[D any](
 	return res
 }
 
-func (bac *BaseAuditClient[D]) Start(ctx context.Context) error {
+func (bac *RawAuditClient[D]) Start(ctx context.Context) error {
 	// connection
 	conn, err := bac.createGRPCConnection(ctx)
 	if err != nil {
@@ -86,16 +97,16 @@ func (bac *BaseAuditClient[D]) Stop(ctx context.Context) error {
 func (bac *BaseAuditClient[D]) createGRPCConnection(ctx context.Context) (*grpc.ClientConn, error) {
 	// transport credentials
 	var transportCreds credentials.TransportCredentials
-	if bac.conf.GRPCConf.Secure {
+	if bac.opts.GRPC.Secure {
 		transportCreds = credentials.NewClientTLSFromCert(nil, "")
 	} else {
 		transportCreds = insecure.NewCredentials()
 	}
 	// kacp params
 	kacp := keepalive.ClientParameters{
-		Time:                bac.conf.GRPCConf.KATime,
-		Timeout:             bac.conf.GRPCConf.KATimeOut,
-		PermitWithoutStream: bac.conf.GRPCConf.KAPermitWOStream,
+		Time:                bac.opts.GRPC.KATime,
+		Timeout:             bac.opts.GRPC.KATimeout,
+		PermitWithoutStream: bac.opts.GRPC.KAPermitWithoutStream,
 	}
 
 	// dial options
@@ -106,14 +117,14 @@ func (bac *BaseAuditClient[D]) createGRPCConnection(ctx context.Context) (*grpc.
 	}
 
 	// connection
-	conn, err := grpc.NewClient(bac.conf.Target, dialOptions...)
+	conn, err := grpc.NewClient(bac.opts.Target, dialOptions...)
 	if err != nil {
 		return nil, errs.NewCommonError("gRPC base audit client create connection failed", err)
 	}
 
 	// conn timeout
-	if bac.conf.GRPCConf.ConnTimeout > 0 {
-		timeoutCtx, timeoutCancel := context.WithTimeout(ctx, bac.conf.GRPCConf.ConnTimeout)
+	if bac.opts.GRPC.ConnTimeout > 0 {
+		timeoutCtx, timeoutCancel := context.WithTimeout(ctx, bac.opts.GRPC.ConnTimeout)
 		defer timeoutCancel()
 		for {
 			state := conn.GetState()
@@ -130,15 +141,15 @@ func (bac *BaseAuditClient[D]) createGRPCConnection(ctx context.Context) (*grpc.
 	return conn, nil
 }
 
-func (bac *BaseAuditClient[D]) GetConfig() *AuditClientConfig {
-	return bac.conf
+func (bac *BaseAuditClient[D]) GetOpts() *AuditClientOptions[D] {
+	return bac.opts
 }
 
 func (bac *BaseAuditClient[D]) GetLogger() logger.Logger {
 	return bac.log
 }
 
-func (bac *BaseAuditClient[D]) GetRequestMetadata(ctx context.Context, uri ...string) (map[string]string, error) {
+func (bac *BaseAuditClient[D]) GetRequestMetadata(_ context.Context, _ ...string) (map[string]string, error) {
 	token, err := bac.tokenProvider.GetAccessToken()
 	if err != nil {
 		return nil, err
@@ -150,5 +161,5 @@ func (bac *BaseAuditClient[D]) GetRequestMetadata(ctx context.Context, uri ...st
 }
 
 func (bac *BaseAuditClient[D]) RequireTransportSecurity() bool {
-	return bac.conf.GRPCConf.Secure
+	return bac.opts.GRPC.Secure
 }

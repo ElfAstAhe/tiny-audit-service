@@ -18,16 +18,42 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-// Вспомогательный метод для быстрой инициализации мока логгера без шума в тестах
+// setupMockLogger настраивает мок логгера для подавления шума в выводах тестов.
 func setupMockLogger(t *testing.T) *mocks2.MockLogger {
 	loggerMock := mocks2.NewMockLogger(t)
-	loggerMock.On("GetLogger", mock.Anything).Return(loggerMock)
-	// Разрешаем любые вызовы Debugf и Errorf с любыми аргументами, чтобы тесты не падали на логах
+	loggerMock.On("GetLogger", mock.Anything).Return(loggerMock).Maybe()
 	loggerMock.EXPECT().Debugf(mock.Anything, mock.Anything, mock.Anything, mock.Anything).Maybe()
 	loggerMock.EXPECT().Debugf(mock.Anything, mock.Anything, mock.Anything).Maybe()
 	loggerMock.EXPECT().Debugf(mock.Anything, mock.Anything).Maybe()
 	loggerMock.EXPECT().Errorf(mock.Anything, mock.Anything).Maybe()
 	return loggerMock
+}
+
+// createTestWorker собирает воркер через официальный конструктор с правильной передачей опций диспетчера.
+func createTestWorker(
+	mockReceiver *mocks.MockReceiver,
+	mockUC *mocks3.MockAuthAuditUseCase,
+	mockLog *mocks2.MockLogger,
+	batchSize int,
+) (*LoginAttempts, error) {
+	return NewLoginAttempts(
+		WithLAOName("test-login-attempts"),
+		WithLAOLogger(mockLog),
+		// Передаем опции диспетчера в полном соответствии с сигнатурой WithLAODispatcherOpts
+		WithLAODispatcherOpts(
+			worker.WithSchedulerDispatcherPoolWorkerCount[*dto.LoginAttemptWorkerJob](1),
+			worker.WithSchedulerDispatcherPoolDataCapacity[*dto.LoginAttemptWorkerJob](10),
+			worker.WithSchedulerDispatcherPoolCompleteProcess[*dto.LoginAttemptWorkerJob](true),
+			worker.WithSchedulerDispatcherSchedulerStartInterval[*dto.LoginAttemptWorkerJob](time.Second),
+			worker.WithSchedulerDispatcherSchedulerScheduleInterval[*dto.LoginAttemptWorkerJob](time.Minute),
+			worker.WithSchedulerDispatcherStopTimeout[*dto.LoginAttemptWorkerJob](time.Second),
+		),
+		WithLAOReceiver(mockReceiver),
+		WithLAOAuthAuditUseCase(mockUC),
+		WithLAOBatchSize(batchSize),
+		WithLAOBatchReadTimeout(50*time.Millisecond),
+		WithLAOAcknowledgeTimeout(1*time.Second),
+	)
 }
 
 // ============================================================================
@@ -45,16 +71,7 @@ func TestNewLoginAttempts_Success(t *testing.T) {
 	mockUC := mocks3.NewMockAuthAuditUseCase(t)
 	mockLog := setupMockLogger(t)
 
-	la, err := NewLoginAttempts(
-		WithLAOName("test-login-attempts"),
-		WithLAOLogger(mockLog),
-		WithLAODispatcherOpts(&worker.BaseSchedulerDispatcherConfig{}),
-		WithLAOReceiver(mockReceiver),
-		WithLAOAuthAuditUseCase(mockUC),
-		WithLAOBatchSize(10),
-		WithLAOBatchReadTimeout(1*time.Second),
-		WithLAOAcknowledgeTimeout(1*time.Second),
-	)
+	la, err := createTestWorker(mockReceiver, mockUC, mockLog, 10)
 
 	require.NoError(t, err)
 	assert.NotNil(t, la)
@@ -67,22 +84,17 @@ func TestNewLoginAttempts_Success(t *testing.T) {
 
 func TestLoginAttempts_DataProvider_SuccessBatchSize(t *testing.T) {
 	mockReceiver := mocks.NewMockReceiver(t)
+	mockUC := mocks3.NewMockAuthAuditUseCase(t)
 	mockLog := setupMockLogger(t)
 
-	la := &LoginAttempts{
-		batchSize:        2,
-		batchReadTimeout: 1 * time.Second,
-		receiver:         mockReceiver,
-		opts:             NewLoginAttemptsOptions(),
-	}
-	la.BaseSchedulerDispatcher = worker.NewBaseSchedulerDispatcher[*dto.LoginAttemptWorkerJob](
-		"test", &worker.BaseSchedulerDispatcherConfig{}, nil, nil, mockLog,
-	)
+	la, err := createTestWorker(mockReceiver, mockUC, mockLog, 2)
+	require.NoError(t, err)
 
-	fakeMsg := azure.NewMessage([]byte(`{"id":"1","value":"test"}`), nil)
+	// Передаем валидный JSON-объект, чтобы внутренний mapper успешно распарсил структуру
+	fakeMsg := azure.NewMessage([]byte(`{"username":"john_doe","event":"login"}`), nil)
 
-	// Настраиваем Mockery: Receive должен вернуть валидные данные 2 раза
-	mockReceiver.On("Receive", mock.Anything, mock.Anything).Return(fakeMsg, nil).Times(2)
+	// Исправлено: Метод Receive принимает ровно 1 аргумент context.Context
+	mockReceiver.On("Receive", mock.Anything).Return(fakeMsg, nil).Times(2)
 
 	res, err := la.dataProvider(context.Background(), time.Now())
 
@@ -92,79 +104,59 @@ func TestLoginAttempts_DataProvider_SuccessBatchSize(t *testing.T) {
 
 func TestLoginAttempts_DataProvider_ReadTimeout(t *testing.T) {
 	mockReceiver := mocks.NewMockReceiver(t)
+	mockUC := mocks3.NewMockAuthAuditUseCase(t)
 	mockLog := setupMockLogger(t)
 
-	la := &LoginAttempts{
-		batchSize:        5,
-		batchReadTimeout: 50 * time.Millisecond,
-		receiver:         mockReceiver,
-		opts:             NewLoginAttemptsOptions(),
-	}
-	la.BaseSchedulerDispatcher = worker.NewBaseSchedulerDispatcher[*dto.LoginAttemptWorkerJob](
-		"test", &worker.BaseSchedulerDispatcherConfig{}, nil, nil, mockLog,
-	)
+	la, err := createTestWorker(mockReceiver, mockUC, mockLog, 5)
+	require.NoError(t, err)
 
-	fakeMsg := azure.NewMessage([]byte(`{"id":"1"}`), nil)
+	fakeMsg := azure.NewMessage([]byte(`{"username":"john_doe"}`), nil)
 
-	mockReceiver.On("Receive", mock.Anything, mock.Anything).Return(fakeMsg, nil).Once()
-	// На второй итерации имитируем, что брокер пуст и время вышло
-	mockReceiver.On("Receive", mock.Anything, mock.Anything).Return(nil, context.DeadlineExceeded).Once()
+	// Исправлено: Синхронизация по числу аргументов Receive
+	mockReceiver.On("Receive", mock.Anything).Return(fakeMsg, nil).Once()
+	mockReceiver.On("Receive", mock.Anything).Return(nil, context.DeadlineExceeded).Once()
 
 	res, err := la.dataProvider(context.Background(), time.Now())
 
 	require.NoError(t, err)
-	assert.Len(t, res, 1, "Должны вернуть то, что накопили до наступления таймаута")
+	assert.Len(t, res, 1, "Должны вернуть то, что успели вычитать из брокера до таймаута")
 }
 
 func TestLoginAttempts_DataProvider_ContextCanceled(t *testing.T) {
 	mockReceiver := mocks.NewMockReceiver(t)
+	mockUC := mocks3.NewMockAuthAuditUseCase(t)
 	mockLog := setupMockLogger(t)
 
-	la := &LoginAttempts{
-		batchSize:        5,
-		batchReadTimeout: 1 * time.Second,
-		receiver:         mockReceiver,
-		opts:             NewLoginAttemptsOptions(),
-	}
-	la.BaseSchedulerDispatcher = worker.NewBaseSchedulerDispatcher[*dto.LoginAttemptWorkerJob](
-		"test", &worker.BaseSchedulerDispatcherConfig{}, nil, nil, mockLog,
-	)
+	la, err := createTestWorker(mockReceiver, mockUC, mockLog, 5)
+	require.NoError(t, err)
 
-	// Имитируем Graceful Shutdown (SIGTERM во время ожидания сообщения брокера)
-	mockReceiver.On("Receive", mock.Anything, mock.Anything).Return(nil, context.Canceled).Once()
+	mockReceiver.On("Receive", mock.Anything).Return(nil, context.Canceled).Once()
 
 	res, err := la.dataProvider(context.Background(), time.Now())
 
-	require.NoError(t, err, "При отмене контекста ошибку наружу не выкидываем")
+	require.NoError(t, err, "При отмене контекста ошибка гасится внутри функции")
 	assert.Empty(t, res, "Пачка должна сброситься и вернуться пустой")
 }
 
 func TestLoginAttempts_DataProvider_MapperError_RejectSuccess(t *testing.T) {
 	mockReceiver := mocks.NewMockReceiver(t)
+	mockUC := mocks3.NewMockAuthAuditUseCase(t)
 	mockLog := setupMockLogger(t)
 
-	la := &LoginAttempts{
-		batchSize:        2,
-		batchReadTimeout: 1 * time.Second,
-		receiver:         mockReceiver,
-		opts:             NewLoginAttemptsOptions(),
-	}
-	la.BaseSchedulerDispatcher = worker.NewBaseSchedulerDispatcher[*dto.LoginAttemptWorkerJob](
-		"test", &worker.BaseSchedulerDispatcherConfig{}, nil, nil, mockLog,
-	)
+	la, err := createTestWorker(mockReceiver, mockUC, mockLog, 2)
+	require.NoError(t, err)
 
-	badMsg := azure.NewMessage([]byte(`{ broken json }`), nil)
+	badMsg := azure.NewMessage([]byte(`{ битый json }`), nil)
 
-	mockReceiver.On("Receive", mock.Anything, mock.Anything).Return(badMsg, nil).Once()
-	// Проверяем, что сработал Reject сообщения в DLQ
+	// Исправлено: Соответствие аргументов для Receive и Reject
+	mockReceiver.On("Receive", mock.Anything).Return(badMsg, nil).Once()
 	mockReceiver.On("Reject", mock.Anything, badMsg, mock.Anything).Return(nil).Once()
-	// Завершаем цикл по таймауту на второй круг
-	mockReceiver.On("Receive", mock.Anything, mock.Anything).Return(nil, context.DeadlineExceeded).Once()
+	mockReceiver.On("Receive", mock.Anything).Return(nil, context.DeadlineExceeded).Once()
 
 	res, err := la.dataProvider(context.Background(), time.Now())
 
 	require.NoError(t, err)
-	assert.Empty(t, res, "Сломанные данные не должны попасть в пачку воркеров")
+	assert.Empty(t, res, "Сообщения с ошибкой маппинга отсекаются и уходят в DLQ")
 }
 
 // ============================================================================
@@ -176,24 +168,20 @@ func TestLoginAttempts_StoreAuthAudit_Success(t *testing.T) {
 	mockUC := mocks3.NewMockAuthAuditUseCase(t)
 	mockLog := setupMockLogger(t)
 
-	la := &LoginAttempts{
-		receiver:           mockReceiver,
-		authAuditUC:        mockUC,
-		acknowledgeTimeout: 1 * time.Second,
-	}
-	la.BaseSchedulerDispatcher = worker.NewBaseSchedulerDispatcher[*dto.LoginAttemptWorkerJob](
-		"test", &worker.BaseSchedulerDispatcherConfig{}, nil, nil, mockLog,
-	)
+	la, err := createTestWorker(mockReceiver, mockUC, mockLog, 2)
+	require.NoError(t, err)
 
+	// Инициализируем внутренний DTO, чтобы маппер внутри storeAuthAudit не падал с nil pointer
 	testDTO := &dto.LoginAttemptWorkerJob{
 		Message: azure.NewMessage([]byte(`{}`), nil),
+		Data:    &dto.LoginAttemptEventDTO{},
 	}
 
-	// Успешный аудит в БД тянет за собой успешное подтверждение (Accept) в Azure
 	mockUC.On("Audit", mock.Anything, mock.Anything).Return(nil).Once()
+	// Исправлено: Accept принимает строго 2 аргумента (ctx, message)
 	mockReceiver.On("Accept", mock.Anything, testDTO.Message).Return(nil).Once()
 
-	err := la.storeAuthAudit(context.Background(), 1, testDTO)
+	err = la.storeAuthAudit(context.Background(), 1, testDTO)
 
 	assert.NoError(t, err)
 }
@@ -203,29 +191,23 @@ func TestLoginAttempts_StoreAuthAudit_UniqueViolation_Accept(t *testing.T) {
 	mockUC := mocks3.NewMockAuthAuditUseCase(t)
 	mockLog := setupMockLogger(t)
 
-	la := &LoginAttempts{
-		receiver:           mockReceiver,
-		authAuditUC:        mockUC,
-		acknowledgeTimeout: 1 * time.Second,
-	}
-	la.BaseSchedulerDispatcher = worker.NewBaseSchedulerDispatcher[*dto.LoginAttemptWorkerJob](
-		"test", &worker.BaseSchedulerDispatcherConfig{}, nil, nil, mockLog,
-	)
+	la, err := createTestWorker(mockReceiver, mockUC, mockLog, 2)
+	require.NoError(t, err)
 
 	testDTO := &dto.LoginAttemptWorkerJob{
 		Message: azure.NewMessage([]byte(`{}`), nil),
+		Data:    &dto.LoginAttemptEventDTO{},
 	}
 
-	// База сообщает о дубликате записи (UniqueViolation)
 	uniqueErr := &errs.BllUniqueError{}
 	mockUC.On("Audit", mock.Anything, mock.Anything).Return(uniqueErr).Once()
 
-	// Наш код на Go 1.26 должен проглотить ошибку дубликата и всё равно выполнить Accept
+	// Исправлено: Accept принимает 2 аргумента
 	mockReceiver.On("Accept", mock.Anything, testDTO.Message).Return(nil).Once()
 
-	err := la.storeAuthAudit(context.Background(), 1, testDTO)
+	err = la.storeAuthAudit(context.Background(), 1, testDTO)
 
-	assert.NoError(t, err, "Ошибка уникальности должна гаситься на месте")
+	assert.NoError(t, err, "Ошибка дубликата должна успешно обрабатываться без прерывания")
 }
 
 func TestLoginAttempts_StoreAuthAudit_DatabaseError_Release(t *testing.T) {
@@ -233,27 +215,21 @@ func TestLoginAttempts_StoreAuthAudit_DatabaseError_Release(t *testing.T) {
 	mockUC := mocks3.NewMockAuthAuditUseCase(t)
 	mockLog := setupMockLogger(t)
 
-	la := &LoginAttempts{
-		receiver:           mockReceiver,
-		authAuditUC:        mockUC,
-		acknowledgeTimeout: 1 * time.Second,
-	}
-	la.BaseSchedulerDispatcher = worker.NewBaseSchedulerDispatcher[*dto.LoginAttemptWorkerJob](
-		"test", &worker.BaseSchedulerDispatcherConfig{}, nil, nil, mockLog,
-	)
+	la, err := createTestWorker(mockReceiver, mockUC, mockLog, 2)
+	require.NoError(t, err)
 
 	testDTO := &dto.LoginAttemptWorkerJob{
 		Message: azure.NewMessage([]byte(`{}`), nil),
+		Data:    &dto.LoginAttemptEventDTO{},
 	}
 
-	// Имитируем падение коннекта к СУБД Postgres
 	criticalDBErr := errors.New("postgres connection timeout")
 	mockUC.On("Audit", mock.Anything, mock.Anything).Return(criticalDBErr).Once()
 
-	// Метод должен сделать Release, чтобы брокер вернул сообщение обратно в очередь
+	// Исправлено: Release принимает 2 аргумента
 	mockReceiver.On("Release", mock.Anything, testDTO.Message).Return(nil).Once()
 
-	err := la.storeAuthAudit(context.Background(), 1, testDTO)
+	err = la.storeAuthAudit(context.Background(), 1, testDTO)
 
 	assert.Error(t, err)
 	assert.Contains(t, err.Error(), "store auth audit failed")

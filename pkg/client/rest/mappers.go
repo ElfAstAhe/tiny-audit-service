@@ -7,6 +7,8 @@ import (
 	"github.com/ElfAstAhe/tiny-audit-service/pkg/client/dto"
 )
 
+// MapAuthDtoSDKToRest преобразует модель данных аудита аутентификации из формата SDK (DTO)
+// в транспортную модель REST API (models). Возвращает nil, если входной объект равен nil.
 func MapAuthDtoSDKToRest(authAudit *dto.AuthAuditDTO) *models.AuthAuditDTO {
 	if authAudit == nil {
 		return nil
@@ -25,6 +27,9 @@ func MapAuthDtoSDKToRest(authAudit *dto.AuthAuditDTO) *models.AuthAuditDTO {
 	}
 }
 
+// MapDataDtoSDKToRest преобразует бизнес-модель данных аудита операций из формата SDK (DTO)
+// в транспортную модель REST API (models), включая вложенную коллекцию измененных значений.
+// Возвращает nil, если входной объект равен nil.
 func MapDataDtoSDKToRest(dataAudit *dto.DataAuditDTO) *models.DataAuditDTO {
 	if dataAudit == nil {
 		return nil
@@ -47,6 +52,8 @@ func MapDataDtoSDKToRest(dataAudit *dto.DataAuditDTO) *models.DataAuditDTO {
 	}
 }
 
+// MapDataValueDtoSDKToRest преобразует отдельное измененное значение поля из формата SDK (DTO)
+// в транспортную модель REST API (models). Возвращает nil, если входной объект равен nil.
 func MapDataValueDtoSDKToRest(dataAuditValue *dto.DataAuditValueDTO) *models.DataAuditValueDTO {
 	if dataAuditValue == nil {
 		return nil
@@ -60,6 +67,8 @@ func MapDataValueDtoSDKToRest(dataAuditValue *dto.DataAuditValueDTO) *models.Dat
 	}
 }
 
+// MapDataValueDTOsSDKToRest преобразует слайс измененных значений из формата SDK в слайс моделей REST API.
+// Фильтрует возможные nil-указатели внутри исходной коллекции. Возвращает nil, если слайс пустой.
 func MapDataValueDTOsSDKToRest(dataAuditValues []*dto.DataAuditValueDTO) []*models.DataAuditValueDTO {
 	if len(dataAuditValues) == 0 {
 		return nil
@@ -67,7 +76,10 @@ func MapDataValueDTOsSDKToRest(dataAuditValues []*dto.DataAuditValueDTO) []*mode
 
 	res := make([]*models.DataAuditValueDTO, 0, len(dataAuditValues))
 	for _, dataValue := range dataAuditValues {
-		res = append(res, MapDataValueDtoSDKToRest(dataValue))
+		// Защита: пропускаем nil элементы, чтобы не загрязнять итоговый слайс пурыми указателями
+		if mappedValue := MapDataValueDtoSDKToRest(dataValue); mappedValue != nil {
+			res = append(res, mappedValue)
+		}
 	}
 
 	return res

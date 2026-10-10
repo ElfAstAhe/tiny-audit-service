@@ -2,7 +2,8 @@ package rest
 
 import (
 	"context"
-	"strings"
+	"fmt"
+	"net/url"
 
 	"github.com/ElfAstAhe/go-service-template/pkg/container"
 	"github.com/ElfAstAhe/go-service-template/pkg/errs"
@@ -10,15 +11,19 @@ import (
 	"github.com/ElfAstAhe/tiny-audit-service/pkg/api/http/audit/v1/client/audit"
 	"github.com/ElfAstAhe/tiny-audit-service/pkg/client"
 	"github.com/ElfAstAhe/tiny-audit-service/pkg/client/dto"
-	"github.com/ElfAstAhe/tiny-auth-service/pkg/transport/auth"
 	"github.com/go-openapi/runtime"
 	httptransport "github.com/go-openapi/runtime/client"
 )
 
+const (
+	authClientNameTemplate string = "rest-auth-audit-client-%s"
+)
+
 type AuthAuditClient struct {
 	*client.BaseAuditClient[*dto.AuthAuditDTO]
+	name   string
 	client audit.ClientService
-	conf   *AuditClientConfig
+	opts   *AuditClientOptions[*dto.AuthAuditDTO]
 	log    logger.Logger
 }
 
@@ -26,30 +31,43 @@ var _ client.AuditClient[*dto.AuthAuditDTO] = (*AuthAuditClient)(nil)
 var _ client.AuthAuditClient = (*AuthAuditClient)(nil)
 var _ container.Runner = (*AuthAuditClient)(nil)
 
-func NewAuthAuditClient(
-	name string,
-	conf *AuditClientConfig,
-	tokenProvider auth.TokenProvider,
-	log logger.Logger,
-) *AuthAuditClient {
+func NewAuthAuditClient(options ...AuditClientOption[*dto.AuthAuditDTO]) (*AuthAuditClient, error) {
+	opts := NewAuditClientOptions[*dto.AuthAuditDTO]()
+	for _, option := range options {
+		option(opts)
+	}
+	if err := opts.Validate(); err != nil {
+		return nil, errs.NewTlCommonError("NewAuthAuditClient", "client options validation failed", err)
+	}
+	u, err := url.Parse(opts.BaseURL)
+	if err != nil {
+		return nil, errs.NewTlCommonError("NewAuthAuditClient", "failed to parse base url", err)
+	}
+	// instance
 	res := &AuthAuditClient{
-		log:    log.GetLogger("AuthAuditClient"),
-		conf:   conf,
-		client: audit.NewClientWithBearerToken(conf.Host, conf.BasePath, conf.Scheme, ""),
+		name:   fmt.Sprintf(authClientNameTemplate, opts.Pool.Name),
+		opts:   opts,
+		log:    opts.Pool.Logger.GetLogger(fmt.Sprintf(authClientNameTemplate, opts.Pool.Name)),
+		client: audit.NewClientWithBearerToken(u.Host, u.Path, u.Scheme, ""),
 	}
-	if strings.TrimSpace(name) == "" {
-		name = "auth-audit-client"
-	}
-
-	res.BaseAuditClient = client.NewBaseAuditClient[*dto.AuthAuditDTO](
-		name,
-		conf.poolConf,
-		res.auditAction,
-		tokenProvider,
-		log,
+	// base
+	base, err := client.NewBaseAuditClient[*dto.AuthAuditDTO](
+		client.WithName[*dto.AuthAuditDTO](opts.Pool.Name),
+		client.WithAuditAction[*dto.AuthAuditDTO](res.auditAction),
+		client.WithLogger[*dto.AuthAuditDTO](opts.Pool.Logger),
+		client.WithPoolWorkerCount[*dto.AuthAuditDTO](opts.Pool.WorkerCount),
+		client.WithPoolDataCapacity[*dto.AuthAuditDTO](opts.Pool.DataCapacity),
+		client.WithPoolCompleteProcess[*dto.AuthAuditDTO](opts.Pool.CompleteProcess),
+		client.WithPoolStopTimeout[*dto.AuthAuditDTO](opts.Pool.StopTimeout),
+		client.WithTokenProvider[*dto.AuthAuditDTO](opts.TokenProvider),
 	)
+	if err != nil {
+		return nil, errs.NewTlCommonError("NewAuthAuditClient", "failed to create base audit client", err)
+	}
+	// setup
+	res.BaseAuditClient = base
 
-	return res
+	return res, nil
 }
 
 func (aac *AuthAuditClient) auditAction(
@@ -66,7 +84,7 @@ func (aac *AuthAuditClient) auditAction(
 	_, err := aac.client.PostAPIV1AuditAuthContext(
 		ctx,
 		audit.NewPostAPIV1AuditAuthParams().
-			WithTimeout(aac.conf.ReadTimeout).
+			WithTimeout(aac.opts.ReadTimeout).
 			WithInput(clientDTO),
 		func(op *runtime.ClientOperation) {
 			op.AuthInfo = httptransport.BearerToken(token)
@@ -79,8 +97,12 @@ func (aac *AuthAuditClient) auditAction(
 	return nil
 }
 
-func (aac *AuthAuditClient) GetConfig() *AuditClientConfig {
-	return aac.conf
+func (aac *AuthAuditClient) GetName() string {
+	return aac.name
+}
+
+func (aac *AuthAuditClient) GetOpts() *AuditClientOptions[*dto.AuthAuditDTO] {
+	return aac.opts
 }
 
 func (aac *AuthAuditClient) GetLogger() logger.Logger {

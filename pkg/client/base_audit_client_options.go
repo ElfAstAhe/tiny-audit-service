@@ -13,7 +13,7 @@ import (
 
 // Константы со значениями по умолчанию для конфигурации пула воркеров клиента аудита.
 const (
-	DefaultWorkerCount     int  = 1
+	DefaultWorkerCount     int  = 2
 	DefaultDataCapacity    int  = 32
 	DefaultCompleteProcess bool = true
 )
@@ -24,7 +24,7 @@ type BaseAuditClientOption[D any] func(options *BaseAuditClientOptions[D])
 // BaseAuditClientOptions содержит конфигурационные параметры для базового клиента аудита.
 // Использует generic-тип D для определения структуры передаваемых данных аудита.
 type BaseAuditClientOptions[D any] struct {
-	*worker.BasePoolOptions[D]
+	Pool          *worker.BasePoolOptions[D]
 	TokenProvider auth.TokenProvider
 	AuditAction   AuditAction[D]
 }
@@ -33,31 +33,33 @@ type BaseAuditClientOptions[D any] struct {
 // с заполненными значениями по умолчанию.
 func NewBaseAuditClientOptions[D any]() *BaseAuditClientOptions[D] {
 	res := &BaseAuditClientOptions[D]{
-		BasePoolOptions: worker.NewBasePoolOptions[D](),
+		Pool: worker.NewBasePoolOptions[D](),
 	}
-	res.WorkerCount = DefaultWorkerCount
-	res.DataCapacity = DefaultDataCapacity
-	res.CompleteProcess = DefaultCompleteProcess
+	res.Pool.WorkerCount = DefaultWorkerCount
+	res.Pool.DataCapacity = DefaultDataCapacity
+	res.Pool.CompleteProcess = DefaultCompleteProcess
 
 	return res
 }
 
 // Validate проверяет корректность заполнения всех обязательных полей конфигурации.
 // Возвращает ошибку, если хотя бы одно из ключевых полей не инициализировано или имеет невалидное значение.
+//
+//goland:noinspection DuplicatedCode
 func (aco *BaseAuditClientOptions[D]) Validate() error {
-	if strings.TrimSpace(aco.Name) == "" {
+	if strings.TrimSpace(aco.Pool.Name) == "" {
 		return errs.NewTlCommonError("Validate", "name is required", nil)
 	}
-	if aco.WorkerCount <= 0 {
+	if aco.Pool.WorkerCount <= 0 {
 		return errs.NewTlCommonError("Validate", "worker count is required", nil)
 	}
-	if aco.DataCapacity <= 0 {
+	if aco.Pool.DataCapacity <= 0 {
 		return errs.NewTlCommonError("Validate", "data capacity is required", nil)
 	}
-	if aco.StopTimeout <= 0 {
+	if aco.Pool.StopTimeout <= 0 {
 		return errs.NewTlCommonError("Validate", "stop timeout is required", nil)
 	}
-	if utils.IsNil(aco.Logger) {
+	if utils.IsNil(aco.Pool.Logger) {
 		return errs.NewTlCommonError("Validate", "logger is required", nil)
 	}
 	if utils.IsNil(aco.TokenProvider) {
@@ -73,35 +75,35 @@ func (aco *BaseAuditClientOptions[D]) Validate() error {
 // WithName задает уникальное имя для клиента аудита.
 func WithName[D any](name string) BaseAuditClientOption[D] {
 	return func(options *BaseAuditClientOptions[D]) {
-		options.Name = name
+		options.Pool.Name = name
 	}
 }
 
 // WithPoolWorkerCount задает количество параллельных воркеров для обработки данных пула.
 func WithPoolWorkerCount[D any](workerCount int) BaseAuditClientOption[D] {
 	return func(options *BaseAuditClientOptions[D]) {
-		options.WorkerCount = workerCount
+		options.Pool.WorkerCount = workerCount
 	}
 }
 
 // WithPoolDataCapacity устанавливает емкость буферизированного канала (очереди) для данных пула.
 func WithPoolDataCapacity[D any](dataCapacity int) BaseAuditClientOption[D] {
 	return func(options *BaseAuditClientOptions[D]) {
-		options.DataCapacity = dataCapacity
+		options.Pool.DataCapacity = dataCapacity
 	}
 }
 
 // WithPoolCompleteProcess управляет флагом завершения обработки всех оставшихся в очереди данных пула при остановке.
 func WithPoolCompleteProcess[D any](flag bool) BaseAuditClientOption[D] {
 	return func(options *BaseAuditClientOptions[D]) {
-		options.CompleteProcess = flag
+		options.Pool.CompleteProcess = flag
 	}
 }
 
 // WithPoolStopTimeout задает максимальное время ожидания корректного завершения работы пула (Graceful Shutdown).
 func WithPoolStopTimeout[D any](timeout time.Duration) BaseAuditClientOption[D] {
 	return func(options *BaseAuditClientOptions[D]) {
-		options.StopTimeout = timeout
+		options.Pool.StopTimeout = timeout
 	}
 }
 
@@ -122,6 +124,6 @@ func WithAuditAction[D any](action AuditAction[D]) BaseAuditClientOption[D] {
 // WithLogger конфигурирует логгер для записи системных событий клиента.
 func WithLogger[D any](log logger.Logger) BaseAuditClientOption[D] {
 	return func(options *BaseAuditClientOptions[D]) {
-		options.Logger = log
+		options.Pool.Logger = log
 	}
 }

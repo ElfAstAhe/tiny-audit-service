@@ -41,22 +41,27 @@ func NewBaseAuditClient[D any](options ...BaseAuditClientOption[D]) (*BaseAuditC
 	}
 	// instance
 	res := &BaseAuditClient[D]{
-		name:          fmt.Sprintf(baseAuditClientNameTemplate, opts.Name),
+		name:          fmt.Sprintf(baseAuditClientNameTemplate, opts.Pool.Name),
 		opts:          opts,
 		totalLost:     new(atomic.Int32),
 		tokenProvider: opts.TokenProvider,
 		auditAction:   opts.AuditAction,
-		log:           opts.Logger.GetLogger(fmt.Sprintf(baseAuditClientNameTemplate, opts.Name)),
+		log:           opts.Pool.Logger.GetLogger(fmt.Sprintf(baseAuditClientNameTemplate, opts.Pool.Name)),
 	}
 	// pool
 	workerPool, err := worker.NewBasePool[D](
-		worker.WithPoolName[D](opts.Name),
+		worker.WithPoolName[D](opts.Pool.Name),
+		worker.WithPoolWorkerCount[D](opts.Pool.WorkerCount),
+		worker.WithPoolDataCapacity[D](opts.Pool.DataCapacity),
+		worker.WithPoolCompleteProcess[D](opts.Pool.CompleteProcess),
+		worker.WithPoolStopTimeout[D](opts.Pool.StopTimeout),
+		worker.WithPoolJobHandler[D](res.jobHandler),
+		worker.WithPoolLogger[D](opts.Pool.Logger),
 	)
 	if err != nil {
 		return nil, errs.NewCommonError("failed to create worker pool", err)
 	}
 	// setup
-	res.totalLost.Store(0)
 	res.pool = workerPool
 
 	return res, nil
