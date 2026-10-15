@@ -5,31 +5,31 @@ import (
 	"fmt"
 	"time"
 
-	libdomain "github.com/ElfAstAhe/go-service-template/pkg/domain"
-	"github.com/ElfAstAhe/go-service-template/pkg/repository"
+	libdom "github.com/ElfAstAhe/go-service-template/pkg/domain"
+	"github.com/ElfAstAhe/go-service-template/pkg/repository/trace"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/domain"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
 )
 
 type DataAuditTraceRepository struct {
-	*repository.BaseCRUDTraceRepository[*domain.DataAudit, string]
+	*trace.BaseCRUDTraceRepository[*domain.DataAudit, string]
 	next domain.DataAuditRepository
 }
 
-var _ libdomain.CRUDRepository[*domain.DataAudit, string] = (*DataAuditTraceRepository)(nil)
+var _ libdom.CRUDRepository[*domain.DataAudit, string] = (*DataAuditTraceRepository)(nil)
 var _ domain.DataAuditRepository = (*DataAuditTraceRepository)(nil)
 
 func NewDataAuditTraceRepository(next domain.DataAuditRepository) *DataAuditTraceRepository {
 	return &DataAuditTraceRepository{
 		next:                    next,
-		BaseCRUDTraceRepository: repository.NewBaseCRUDTraceRepository[*domain.DataAudit, string]("DataAuditRepository", next),
+		BaseCRUDTraceRepository: trace.NewBaseCRUDTraceRepository[*domain.DataAudit, string]("DataAuditRepository", next),
 	}
 }
 
 //goland:noinspection DuplicatedCode
 func (dat *DataAuditTraceRepository) ListByPeriod(ctx context.Context, from, till time.Time, limit, offset int) ([]*domain.DataAudit, error) {
-	ctx, span := dat.StartSpan(ctx, fmt.Sprintf("%s.ListByPeriod", dat.BaseCRUDTraceRepository.GetRepositoryName()))
+	ctx, span := dat.StartSpan(ctx, fmt.Sprintf("%s.ListByPeriod", dat.GetRepositoryName()))
 	defer span.End()
 
 	span.SetAttributes(
@@ -50,7 +50,7 @@ func (dat *DataAuditTraceRepository) ListByPeriod(ctx context.Context, from, til
 }
 
 func (dat *DataAuditTraceRepository) ListByInstance(ctx context.Context, typeName, instanceID string, limit, offset int) ([]*domain.DataAudit, error) {
-	ctx, span := dat.StartSpan(ctx, fmt.Sprintf("%s.ListByInstance", dat.BaseCRUDTraceRepository.GetRepositoryName()))
+	ctx, span := dat.StartSpan(ctx, fmt.Sprintf("%s.ListByInstance", dat.GetRepositoryName()))
 	defer span.End()
 
 	span.SetAttributes(

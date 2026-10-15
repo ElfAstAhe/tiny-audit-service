@@ -10,9 +10,14 @@ import (
 )
 
 const (
+	// ApplicationName определяет константное системное имя текущего микросервиса.
 	ApplicationName = "tiny-audit-service"
 )
 
+// Config является центральным агрегатором (композитным паспортом) всей конфигурации микросервиса.
+//
+// Сводит воедино параметры ядра, настройки среза хвостов очередей (TailCutter),
+// конфигурации сетевых протоколов (HTTP/gRPC), базы данных, телеметрии брокера AMQP и лимитов попыток входа.
 type Config struct {
 	App           *AppConfig                  `mapstructure:"app" json:"app,omitempty" yaml:"app,omitempty"`
 	AuthTC        *TailCutterConfig           `mapstructure:"auth_tc" json:"auth_tc,omitempty" yaml:"auth_tc,omitempty"`
@@ -27,13 +32,14 @@ type Config struct {
 	LoginAttempts *LoginAttemptsConfig        `mapstructure:"login_attempts_receiver" json:"login_attempts,omitempty" yaml:"login_attempts,omitempty"`
 }
 
-// linker params
+// Переменные для динамической инжекции метаданных сборки компилятором через linker flags (-ldflags)
 var (
 	AppName      string
 	AppVersion   string
 	AppBuildTime string
 )
 
+// NewConfig — параметризованный конструктор для явного формирования агрегированного объекта конфигурации.
 func NewConfig(
 	app *AppConfig,
 	authTC *TailCutterConfig,
@@ -62,6 +68,7 @@ func NewConfig(
 	}
 }
 
+// NewDefaultConfig инициализирует объект конфигурации со стандартными значениями таймаутов и лимитов по умолчанию.
 func NewDefaultConfig() *Config {
 	return NewConfig(
 		NewDefaultAppConfig(),
@@ -78,6 +85,7 @@ func NewDefaultConfig() *Config {
 	)
 }
 
+// NewEmptyConfig выделяет память под пустые указатели внутренних структур для последующего заполнения парсером Viper.
 func NewEmptyConfig() *Config {
 	return &Config{
 		App:           &AppConfig{},
@@ -94,6 +102,7 @@ func NewEmptyConfig() *Config {
 	}
 }
 
+// Validate итерируется по вееру зарегистрированных вложенных конфигураций и каскадно запускает их проверку целостности.
 func (c *Config) Validate() error {
 	validators := []interface {
 		Validate() error
@@ -120,7 +129,7 @@ func (c *Config) Validate() error {
 	return nil
 }
 
-// Load собирает конфигурацию из: Flags -> ENV -> YAML -> Defaults
+// Load поэтапно собирает итоговую конфигурацию в соответствии с приоритетом: Flags -> ENV -> YAML -> Defaults.
 func Load() (*Config, error) {
 	v := viper.New()
 

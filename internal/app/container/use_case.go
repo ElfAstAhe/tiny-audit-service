@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	InstanceTM                   string = "TransactionManager"
+	InstanceUnitOfWork           string = "unit-of-work"
 	InstanceAuthAuditUC          string = "AuthAuditUC"
 	InstanceAuthListByPeriodUC   string = "AuthListByPeriodUC"
 	InstanceAuthListByUsernameUC string = "AuthListByUsernameUC"
@@ -45,7 +45,7 @@ func NewUseCaseContainer(
 
 func (ucc *UseCaseContainer) Init(ctx context.Context) error {
 	err := errors.Join(
-		ucc.RegisterProvider(InstanceTM, ucc.providerTM),
+		ucc.RegisterProvider(InstanceUnitOfWork, ucc.providerUnitOfWork),
 		ucc.RegisterProvider(InstanceAuthAuditUC, ucc.providerAuthAuditUC),
 		ucc.RegisterProvider(InstanceAuthListByPeriodUC, ucc.providerAuthListByPeriodUC),
 		ucc.RegisterProvider(InstanceAuthListByUsernameUC, ucc.providerAuthListByUsernameUC),

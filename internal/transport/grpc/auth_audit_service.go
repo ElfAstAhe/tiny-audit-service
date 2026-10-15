@@ -10,12 +10,12 @@ import (
 
 type AuthAuditGRPCService struct {
 	pb.UnimplementedAuthAuditServiceServer
-	authAuditFacade facade.AuthAuditFacade
+	authAuditFacade facade.AuthAudit
 }
 
 var _ pb.AuthAuditServiceServer = (*AuthAuditGRPCService)(nil)
 
-func NewAuthAuditGRPCService(authAuditFacade facade.AuthAuditFacade) *AuthAuditGRPCService {
+func NewAuthAuditGRPCService(authAuditFacade facade.AuthAudit) *AuthAuditGRPCService {
 	return &AuthAuditGRPCService{
 		authAuditFacade: authAuditFacade,
 	}

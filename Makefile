@@ -12,7 +12,7 @@ STAGE=DEV
 KAFKA_DIR   = /opt/kafka_2.13-4.3.1
 ARTEMIS_RUN = /var/lib/artemis-test-cluster/bin/artemis
 
-.PHONY: gen-proto gen-swagger gen-http-client gen-mocks build run run-amqp run-kafka test static-check lint clean update-deps artemis-local-start artemis-local-stop kafka-local-start kafka-local-stop brokers-all-start kafka-docker-start kafka-docker-stop kafka-docker-logs
+.PHONY: gen-proto gen-swagger gen-http-client gen-mocks build github-build run run-amqp run-kafka test github-test static-check lint lint-revive clean update-deps artemis-start artemis-stop kafka-start kafka-stop brokers-all-start kafka-docker-start kafka-docker-stop kafka-docker-logs
 
 help:
 	@echo "Доступные команды для сборки и тестирования:"
@@ -24,8 +24,7 @@ help:
 gen-proto: ## Сгенерировать gRPC код (Go & gRPC) из Protobuf файлов
 	mkdir -p $(PROTO_OUT)
 	protoc \
-        -I $(PROTO_ROOT) \
-		--proto_path=$(PROTO_PATH) \
+		-I $(PROTO_ROOT) \
 		--go_out=$(PROTO_OUT) --go_opt=paths=source_relative \
 		--go-grpc_out=$(PROTO_OUT) --go-grpc_opt=paths=source_relative \
 		--go_opt=default_api_level=API_OPAQUE \
@@ -57,6 +56,13 @@ build: gen-proto gen-swagger gen-http-client gen-mocks ## Полная сбор�
 	-X '$(MODULE_NAME)/internal/config.AppBuildTime=$(BUILD_TIME)'" \
 	-o ./bin/$(SERVER_BINARY_NAME) $(SERVER_BUILD_DIR)/main.go
 
+# Сборка проекта с прокидыванием переменных
+github-build: ## Быстрая сборка: компиляция бинарника (github actions)
+	go build -ldflags \
+	"-X '$(MODULE_NAME)/internal/config.AppVersion=$(VERSION)' \
+	-X '$(MODULE_NAME)/internal/config.AppBuildTime=$(BUILD_TIME)'" \
+	-o ./bin/$(SERVER_BINARY_NAME) $(SERVER_BUILD_DIR)/main.go
+
 # запуск проекта с выводом информации о параметрах
 run-help: build ## Собрать проект и запустить бинарник с информацией о параметрах
 	./bin/$(SERVER_BINARY_NAME) --help
@@ -77,14 +83,14 @@ run: build ## Собрать проект и запустить бинарник
 		--auth-tc-schedule-interval "77s" \
 		--auth-tc-worker-count "2" \
 		--auth-tc-data-capacity "128" \
-		--auth-tc-shutdown-timeout "15s" \
+		--auth-tc-stop-timeout "15s" \
 		--auth-tc-tail-interval "4368h" \
 		--auth-tc-tail-cut \
 		--data-tc-start-interval "5s" \
 		--data-tc-schedule-interval "66s" \
 		--data-tc-worker-count "2" \
 		--data-tc-data-capacity "128" \
-		--data-tc-shutdown-timeout "15s" \
+		--data-tc-stop-timeout "15s" \
 		--data-tc-tail-interval "8760h" \
 		--data-tc-tail-cut \
 		--amqp-connector-url "amqp://localhost:5672" \
@@ -141,14 +147,14 @@ run-amqp: build ## Собрать проект и запустить бинар�
 		--auth-tc-schedule-interval "77s" \
 		--auth-tc-worker-count "2" \
 		--auth-tc-data-capacity "128" \
-		--auth-tc-shutdown-timeout "15s" \
+		--auth-tc-stop-timeout "15s" \
 		--auth-tc-tail-interval "4368h" \
 		--auth-tc-tail-cut \
 		--data-tc-start-interval "5s" \
 		--data-tc-schedule-interval "66s" \
 		--data-tc-worker-count "2" \
 		--data-tc-data-capacity "128" \
-		--data-tc-shutdown-timeout "15s" \
+		--data-tc-stop-timeout "15s" \
 		--data-tc-tail-interval "8760h" \
 		--data-tc-tail-cut \
 		--amqp-connector-url "amqp://localhost:5672" \
@@ -185,11 +191,18 @@ run-kafka: build ## Собрать проект и запустить бинар
 		--app-cipher-key "12345" \
 		--app-max-list-limit 500 \
 		--app-accept-token-issuers "tiny-auth-service,test-issuer" \
+		--auth-tc-start-interval "4s" \
+		--auth-tc-schedule-interval "77s" \
+		--auth-tc-worker-count "2" \
+		--auth-tc-data-capacity "128" \
+		--auth-tc-stop-timeout "15s" \
+		--auth-tc-tail-interval "4368h" \
+		--auth-tc-tail-cut \
 		--data-tc-start-interval "5s" \
 		--data-tc-schedule-interval "66s" \
 		--data-tc-worker-count "2" \
 		--data-tc-data-capacity "128" \
-		--data-tc-shutdown-timeout "15s" \
+		--data-tc-stop-timeout "15s" \
 		--data-tc-tail-interval "8760h" \
 		--data-tc-tail-cut \
 		--login-attempts-receiver-kind "kafka" \
@@ -223,6 +236,10 @@ run-kafka: build ## Собрать проект и запустить бинар
 test: gen-proto gen-mocks ## Запустить модульные и интеграционные тесты проекта
 	go test -v $$(go list ./... | grep -vE "mocks")
 
+# Запуск тестов (github actions)
+github-test: gen-mocks ## Запустить модульные и интеграционные тесты проекта (github actions)
+	go test -v $$(go list ./... | grep -vE "mocks")
+
 # Запуск бенчмарков (сюда добавляем все вызовы) или разные параметры под один пакет
 bench: gen-proto gen-mocks ## Запустить утилиты с замером памяти
 #	go test -bench=BenchmarkManager_FullCycle -benchmem ./pkg/infra/cache/test/...
@@ -232,8 +249,12 @@ bench: gen-proto gen-mocks ## Запустить утилиты с замеро�
 static-check: ## Запустить статический анализ кода (пропуская автогенерируемый pkg/api)
 	staticcheck $$(go list ./... | grep -vE "pkg/api|mocks")
 
+# Запуск линтера golangci-lint
+lint: ## Запустить линтер golangci-lint (пропуск internal, pkg/api, cmd/gen-tz)
+	golangci-lint run
+
 # Запуск линтера
-lint: ## Запустить линтер revive (пропуская автогенерируемый код)
+lint-revive: ## Запустить линтер revive (пропуская автогенерируемый код)
 	revive -exclude "_test\.go$$" $$(go list ./... | grep -vE "pkg/api|mocks")
 
 # Очистка бинарников
@@ -244,19 +265,19 @@ clean: ## Очистить скомпилированные файлы из па
 update-deps: ## Принудительно обновить и скачать все Go-зависимости проекта
 	go get -u -x all
 
-artemis-local-start: ## start artemis local (ubuntu, in separate terminal)
+artemis-start: ## start artemis local (ubuntu, in separate terminal)
 	gnome-terminal -- bash -c "sudo $(ARTEMIS_RUN) run; exec bash"
 
-artemis-local-stop: ## stop artemis local (not implemented)
+artemis-stop: ## stop artemis local (not implemented)
 	echo "not implemented :-)"
 
-kafka-local-start: ## start kafka local (ubuntu, in separate terminal)
+kafka-start: ## start kafka local (ubuntu, in separate terminal)
 	gnome-terminal -- bash -c "$(KAFKA_DIR)/bin/kafka-server-start.sh $(KAFKA_DIR)/config/server.properties; exec bash"
 
-kafka-local-stop: ## stop kafka local (not implemented)
+kafka-stop: ## stop kafka local (not implemented)
 	echo "not implemented :-)"
 
-brokers-all-start: kafka-local-start artemis-local-start ## start both brokers simultaneously in separate windows
+brokers-all-start: kafka-start artemis-start ## start both brokers simultaneously in separate windows
 
 # start kafka (docker compose)
 kafka-docker-start: ## start kafka docker container (docker compose)

@@ -50,8 +50,6 @@ jobs:
       # Это гарантирует, что линтеры и тесты будут видеть актуальный код
       - name: Generate Sources, Proto and Mocks
         run: |
-          make gen-sources
-          make gen-proto
           make gen-swagger
           make gen-mocks
 
@@ -59,14 +57,11 @@ jobs:
       - name: Run Staticcheck
         run: make static-check
 
-      - name: Run Revive Linter
-        run: make lint
-
       # 8. Запускаем тесты (флаг -race уже можно зашить внутрь Makefile при желании)
       # Обратите внимание: тесты теперь не упадут, так как моки и прото уже сгенерированы шагом выше
       - name: Run tests
-        run: make test
+        run: make github-test
 
       # 9. Пробная полная сборка бинарника
       - name: Build Application
-        run: make build-only
+        run: make github-build

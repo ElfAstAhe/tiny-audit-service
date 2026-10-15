@@ -1,4 +1,4 @@
-package facade
+package rbac
 
 import (
 	"github.com/ElfAstAhe/go-service-template/pkg/auth"

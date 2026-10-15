@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"encoding/json"
+	"strings"
 	"time"
 
 	"github.com/ElfAstAhe/go-service-template/pkg/db"
@@ -99,7 +100,6 @@ func (da *DataAuditPgRepository) ListByPeriod(ctx context.Context, from, till ti
 	return res, nil
 }
 
-//goland:noinspection DuplicatedCode
 func (da *DataAuditPgRepository) validateListByPeriod(from, till time.Time, limit, offset int) error {
 	if from.IsZero() {
 		return errs.NewInvalidArgumentError("from", "field is required")
@@ -107,10 +107,10 @@ func (da *DataAuditPgRepository) validateListByPeriod(from, till time.Time, limi
 	if till.IsZero() {
 		return errs.NewInvalidArgumentError("till", "field is required")
 	}
-	if !(limit > 0) {
+	if limit <= 0 {
 		return errs.NewInvalidArgumentError("limit", "limit must be grater than zero")
 	}
-	if !(offset >= 0) {
+	if offset < 0 {
 		return errs.NewInvalidArgumentError("offset", "offset must be greater or equal than zero")
 	}
 
@@ -136,16 +136,16 @@ func (da *DataAuditPgRepository) ListByInstance(ctx context.Context, typeName st
 }
 
 func (da *DataAuditPgRepository) validateListByInstance(typeName, instanceID string, limit, offset int) error {
-	if typeName == "" {
+	if strings.TrimSpace(typeName) == "" {
 		return errs.NewInvalidArgumentError("typeName", "typeName is required")
 	}
-	if instanceID == "" {
+	if strings.TrimSpace(instanceID) == "" {
 		return errs.NewInvalidArgumentError("instanceID", "instanceID is required")
 	}
-	if !(limit > 0) {
+	if limit <= 0 {
 		return errs.NewInvalidArgumentError("limit", "limit must be grater than zero")
 	}
-	if !(offset >= 0) {
+	if offset < 0 {
 		return errs.NewInvalidArgumentError("offset", "offset must be greater or equal than zero")
 	}
 

@@ -4,6 +4,8 @@ package config
 const FlagConfig = "config-path"
 
 // App config flags
+//
+//nolint:gosec // G101 : app params
 const (
 	FlagAppNodeName           string = "node-name"
 	FlagAppMaxListLimit       string = "app-max-list-limit"
@@ -19,7 +21,7 @@ const (
 	FlagAuthTCWorkerCount        string = "auth-tc-worker-count"
 	FlagAuthTCDataCapacity       string = "auth-tc-data-capacity"
 	FlagAuthTCCompleteProcessing string = "auth-tc-complete-processing"
-	FlagAuthTCShutdownTimeout    string = "auth-tc-shutdown-timeout"
+	FlagAuthTCStopTimeout        string = "auth-tc-stop-timeout"
 	FlagAuthTCTailInterval       string = "auth-tc-tail-interval"
 	FlagAuthTCTailCut            string = "auth-tc-tail-cut"
 )
@@ -31,12 +33,14 @@ const (
 	FlagDataTCWorkerCount        string = "data-tc-worker-count"
 	FlagDataTCDataCapacity       string = "data-tc-data-capacity"
 	FlagDataTCCompleteProcessing string = "data-tc-complete-processing"
-	FlagDataTCShutdownTimeout    string = "data-tc-shutdown-timeout"
+	FlagDataTCStopTimeout        string = "data-tc-stop-timeout"
 	FlagDataTCTailInterval       string = "data-tc-tail-interval"
 	FlagDataTCTailCut            string = "data-tc-tail-cut"
 )
 
 // Auth config flags
+//
+//nolint:gosec // G101 : app params
 const (
 	FlagAuthJWTSecret          string = "auth-jwt-secret"
 	FlagAuthJWTSigningMethod   string = "auth-jwt-signing-method"
@@ -69,6 +73,8 @@ const (
 )
 
 // http config flags
+//
+//nolint:gosec // G101 : app params
 const (
 	FlagHTTPAddress            string = "http-address"
 	FlagHTTPReadTimeout        string = "http-read-timeout"
@@ -100,6 +106,8 @@ const (
 const EnvConfig string = "CONFIG_PATH"
 
 // amqp connector
+//
+//nolint:gosec // G101 : app params
 const (
 	FlagAMQPConnectorURL             string = "amqp-connector-url"
 	FlagAMQPConnectorUsername        string = "amqp-connector-username"
@@ -160,6 +168,8 @@ const (
 )
 
 // app
+//
+//nolint:gosec // G101 : app params
 const (
 	keyAppNodeName           string = "app.node_name"
 	keyAppMaxListLimit       string = "app.max_list_limit"
@@ -175,7 +185,7 @@ const (
 	keyAuthTCWorkerCount        string = "auth_tc.worker_count"
 	keyAuthTCDataCapacity       string = "auth_tc.data_capacity"
 	keyAuthTCCompleteProcessing string = "auth_tc.complete_processing"
-	keyAuthTCShutdownTimeout    string = "auth_tc.shutdown_timeout"
+	keyAuthTCStopTimeout        string = "auth_tc.stop_timeout"
 	keyAuthTCTailInterval       string = "auth_tc.tail_interval"
 	keyAuthTCTailCut            string = "auth_tc.tail_cut"
 )
@@ -187,12 +197,14 @@ const (
 	keyDataTCWorkerCount        string = "data_tc.worker_count"
 	keyDataTCDataCapacity       string = "data_tc.data_capacity"
 	keyDataTCCompleteProcessing string = "data_tc.complete_processing"
-	keyDataTCShutdownTimeout    string = "data_tc.shutdown_timeout"
+	keyDataTCStopTimeout        string = "data_tc.stop_timeout"
 	keyDataTCTailInterval       string = "data_tc.tail_interval"
 	keyDataTCTailCut            string = "data_tc.tail_cut"
 )
 
 // amqp connector
+//
+//nolint:gosec // G101 : dev/test default conf vals
 const (
 	keyAMQPConnectorURL             string = "amqp_connector.url"
 	keyAMQPConnectorUsername        string = "amqp_connector.username"

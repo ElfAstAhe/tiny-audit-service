@@ -71,7 +71,8 @@ func (acr *BaseAuditCRUDRepository[E, ID]) Create(ctx context.Context, entity E)
 	}
 
 	// builder, data
-	builder := acr.builder(ctx, auditEntity, err).WithEvent(dto.DataEventCreate).
+	builder := acr.builder(ctx, auditEntity, err).
+		WithEvent(dto.DataEventCreate).
 		WithValues(utils.BuildSingleDataAuditValues(auditEntity, false))
 
 	// audit
@@ -129,6 +130,7 @@ func (acr *BaseAuditCRUDRepository[E, ID]) Change(ctx context.Context, entity E)
 	return res, err
 }
 
+// Delete перехватывает фазу удаления сущности, фиксирует ее финальное состояние до очистки сокетов БД и отправляет лог.
 func (acr *BaseAuditCRUDRepository[E, ID]) Delete(ctx context.Context, id ID) error {
 	acr.log.Debugf("audit Delete start")
 	defer acr.log.Debugf("audit Delete finish")
@@ -142,13 +144,13 @@ func (acr *BaseAuditCRUDRepository[E, ID]) Delete(ctx context.Context, id ID) er
 	err := acr.next.Delete(ctx, id)
 	// auditable
 	var auditEntity pkgdomain.Auditable = nil
-	if beforeErr != nil {
+	if beforeErr == nil {
 		auditEntity = acr.mapper(beforeEntity)
 	}
 	// builder
 	builder := acr.builder(ctx, auditEntity, err).WithEvent(dto.DataEventRemove)
 	// data
-	if beforeErr != nil {
+	if beforeErr == nil {
 		builder.WithValues(utils.BuildSingleDataAuditValues(auditEntity, true))
 	}
 	// audit
@@ -193,6 +195,7 @@ func (acr *BaseAuditCRUDRepository[E, ID]) GetSource() string {
 func (acr *BaseAuditCRUDRepository[E, ID]) Unwrap() domain.CRUDRepository[E, ID] {
 	return acr.next
 }
+
 func (acr *BaseAuditCRUDRepository[E, ID]) GetAuditClient() client.DataAuditClient {
 	return acr.auditClient
 }

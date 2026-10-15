@@ -29,8 +29,8 @@ type AppChiRouter struct {
 	health          *health.Health
 	healthz         libhttp.HealthzFunc
 	readyz          libhttp.ReadyzFunc
-	authAuditFacade facade.AuthAuditFacade
-	dataAuditFacade facade.DataAuditFacade
+	authAuditFacade facade.AuthAudit
+	dataAuditFacade facade.DataAudit
 }
 
 var _ libhttp.Router = (*AppChiRouter)(nil)
@@ -70,8 +70,8 @@ func newAppChiRouter(
 	health *health.Health,
 	healthz libhttp.HealthzFunc,
 	readyz libhttp.ReadyzFunc,
-	authAuditFacade facade.AuthAuditFacade,
-	dataAuditFacade facade.DataAuditFacade,
+	authAuditFacade facade.AuthAudit,
+	dataAuditFacade facade.DataAudit,
 ) *AppChiRouter {
 	res := &AppChiRouter{
 		router:          chi.NewRouter(),

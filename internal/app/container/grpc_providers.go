@@ -32,7 +32,7 @@ func (gc *GRPCContainer) serviceRegister(server *libgrpc.Server) error {
 }
 
 func (gc *GRPCContainer) providerAuthAuditGRPCService() (any, error) {
-	authFacadeInst, err := container.GetInstance[facade.AuthAuditFacade](InstanceAuthFacade)
+	authFacadeInst, err := container.GetInstance[facade.AuthAudit](InstanceRBACAuthFacade)
 	if err != nil {
 		return nil, errs.NewContainerError(gc.GetName(), "service register: retrieve instance failed", err)
 	}
@@ -41,7 +41,7 @@ func (gc *GRPCContainer) providerAuthAuditGRPCService() (any, error) {
 }
 
 func (gc *GRPCContainer) providerDataAuditGRPCService() (any, error) {
-	dataFacadeInst, err := container.GetInstance[facade.DataAuditFacade](InstanceDataFacade)
+	dataFacadeInst, err := container.GetInstance[facade.DataAudit](InstanceRBACDataFacade)
 	if err != nil {
 		return nil, errs.NewContainerError(gc.GetName(), "service register: retrieve instance failed", err)
 	}

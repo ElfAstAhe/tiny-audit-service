@@ -10,8 +10,10 @@ import (
 )
 
 const (
-	InstanceAuthFacade string = "AuthFacade"
-	InstanceDataFacade string = "DataFacade"
+	InstanceAuthFacade     string = "auth-facade"
+	InstanceDataFacade     string = "data-facade"
+	InstanceRBACAuthFacade string = "rbac-auth-facade"
+	InstanceRBACDataFacade string = "rbac-data-facade"
 )
 
 type FacadeContainer struct {
@@ -38,6 +40,8 @@ func (fc *FacadeContainer) Init(ctx context.Context) error {
 	err := errors.Join(
 		fc.RegisterProvider(InstanceAuthFacade, fc.providerAuthFacade),
 		fc.RegisterProvider(InstanceDataFacade, fc.providerDataFacade),
+		fc.RegisterProvider(InstanceRBACAuthFacade, fc.providerRBACAuthFacade),
+		fc.RegisterProvider(InstanceRBACDataFacade, fc.providerRBACDataFacade),
 	)
 	if err != nil {
 		return errs.NewContainerError(fc.GetName(), "container init: register providers failed", err)

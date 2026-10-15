@@ -21,8 +21,8 @@ type AppRouterOptions struct {
 	Health          *health.Health
 	Healthz         libhttp.HealthzFunc
 	Readyz          libhttp.ReadyzFunc
-	AuthAuditFacade facade.AuthAuditFacade
-	DataAuditFacade facade.DataAuditFacade
+	AuthAuditFacade facade.AuthAudit
+	DataAuditFacade facade.DataAudit
 }
 
 func (aro *AppRouterOptions) Validate() error {
@@ -110,13 +110,13 @@ func WithReadyz(readyz libhttp.ReadyzFunc) Option {
 	}
 }
 
-func WithAuthAuditFacade(authAuditFacade facade.AuthAuditFacade) Option {
+func WithAuthAuditFacade(authAuditFacade facade.AuthAudit) Option {
 	return func(o *AppRouterOptions) {
 		o.AuthAuditFacade = authAuditFacade
 	}
 }
 
-func WithDataAuditFacade(dataAuditFacade facade.DataAuditFacade) Option {
+func WithDataAuditFacade(dataAuditFacade facade.DataAudit) Option {
 	return func(o *AppRouterOptions) {
 		o.DataAuditFacade = dataAuditFacade
 	}

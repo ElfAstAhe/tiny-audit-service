@@ -1,19 +1,22 @@
 package dto
 
+// Блок констант, определяющих типы фиксируемых событий безопасности в рамках контура аутентификации и авторизации (Auth Events).
 const (
-	AuthEventLogin   string = "login"
-	AuthEventLogoff  string = "logoff"
-	AuthEventRefresh string = "refresh"
-	AuthEventRevoke  string = "revoke"
+	AuthEventLogin   string = "login"   // Событие успешного входа пользователя в систему
+	AuthEventLogoff  string = "logoff"  // Событие планового выхода пользователя из системы
+	AuthEventRefresh string = "refresh" // Событие обновления жизненного цикла токена безопасности (Refresh Session)
+	AuthEventRevoke  string = "revoke"  // Событие принудительного отзыва сессии или токена авторизации
 )
 
+// Блок констант, определяющих типы событий изменения доменных бизнес-данных в СУБД (Data Mutations Events).
 const (
-	DataEventCreate string = "create"
-	DataEventChange string = "change"
-	DataEventRemove string = "remove"
+	DataEventCreate string = "create" // Событие создания новой сущности в системе (INSERT)
+	DataEventChange string = "change" // Событие модификации параметров существующей сущности (UPDATE)
+	DataEventRemove string = "remove" // Событие удаления сущности из кодовой базы или СУБД (DELETE)
 )
 
+// Блок констант, фиксирующих итоговый статус выполнения прикладной операции для паспорта аудит-лога.
 const (
-	AuditStatusSuccess string = "success"
-	AuditStatusFail    string = "fail"
+	AuditStatusSuccess string = "success" // Операция завершилась успешно, бизнес-логика отработала штатно
+	AuditStatusFail    string = "fail"    // Операция завершилась сбоем (отказ в доступе, системная ошибка, невалидные данные)
 )

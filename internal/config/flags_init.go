@@ -45,7 +45,7 @@ func initFLags() (res *pflag.FlagSet, err error) {
 		res.Int(FlagAuthTCWorkerCount, defaultAuthTCWorkerCount, "auth tail cutter workers count")
 		res.Int(FlagAuthTCDataCapacity, defaultAuthTCDataCapacity, "auth tail cutter data capacity")
 		res.Bool(FlagAuthTCCompleteProcessing, defaultAuthTCCompleteProcessing, "auth tail cutter try complete data queue on shutdown")
-		res.Duration(FlagAuthTCShutdownTimeout, defaultAuthTCShutdownTimeout, "auth tail cutter shutdown timeout")
+		res.Duration(FlagAuthTCStopTimeout, defaultAuthTCStopTimeout, "auth tail cutter worker stop timeout")
 		res.Duration(FlagAuthTCTailInterval, defaultAuthTCTailInterval, "auth tail cutter tail interval")
 		res.Bool(FlagAuthTCTailCut, defaultAuthTCTailCut, "auth tail cutter enabler")
 		// data tc
@@ -54,7 +54,7 @@ func initFLags() (res *pflag.FlagSet, err error) {
 		res.Int(FlagDataTCWorkerCount, defaultDataTCWorkerCount, "data tail cutter workers count")
 		res.Int(FlagDataTCDataCapacity, defaultDataTCDataCapacity, "data tail cutter data capacity")
 		res.Bool(FlagDataTCCompleteProcessing, defaultDataTCCompleteProcessing, "data tail cutter try complete data queue on shutdown")
-		res.Duration(FlagDataTCShutdownTimeout, defaultDataTCShutdownTimeout, "data tail cutter shutdown timeout")
+		res.Duration(FlagDataTCStopTimeout, defaultDataTCStopTimeout, "data tail cutter worker stop timeout")
 		res.Duration(FlagDataTCTailInterval, defaultDataTCTailInterval, "data tail cutter tail interval")
 		res.Bool(FlagDataTCTailCut, defaultDataTCTailCut, "data tail cutter enabler")
 		// Auth

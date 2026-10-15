@@ -76,25 +76,25 @@ func (lac *LoginAttemptsConfig) Validate() error {
 	if !slices.Contains([]string{"amqp", "kafka"}, lac.ReceiverKind) {
 		return errs.NewConfigValidateError("login_attempts", "ReceiverKind", fmt.Sprintf("unknown receiver kind: %s", lac.ReceiverKind), nil)
 	}
-	if !(lac.ScheduleInterval > 0) {
+	if lac.ScheduleInterval <= 0 {
 		return errs.NewConfigValidateError("login_attempts", "ScheduleInterval", "must be greater than zero", nil)
 	}
-	if !(lac.WorkerCount > 0) {
+	if lac.WorkerCount <= 0 {
 		return errs.NewConfigValidateError("login_attempts", "WorkerCount", "must be greater than zero", nil)
 	}
-	if !(lac.DataCapacity > 0) {
+	if lac.DataCapacity <= 0 {
 		return errs.NewConfigValidateError("login_attempts", "DataCapacity", "must be greater than zero", nil)
 	}
-	if !(lac.ShutdownTimeout > 0) {
+	if lac.ShutdownTimeout <= 0 {
 		return errs.NewConfigValidateError("login_attempts", "ShutdownTimeout", "must be greater than zero", nil)
 	}
-	if !(lac.BatchSize > 0) {
+	if lac.BatchSize <= 0 {
 		return errs.NewConfigValidateError("login_attempts", "BatchSize", "must be greater than zero", nil)
 	}
-	if !(lac.BatchReadTimeout > 0) {
+	if lac.BatchReadTimeout <= 0 {
 		return errs.NewConfigValidateError("login_attempts", "BatchReadTimeout", "must be greater than zero", nil)
 	}
-	if !(lac.AcknowledgeTimeout > 0) {
+	if lac.AcknowledgeTimeout <= 0 {
 		return errs.NewConfigValidateError("login_attempts", "AcknowledgeTimeout", "must be greater than zero", nil)
 	}
 	if lac.ReceiverKind == "amqp" && utils.IsNil(lac.AMQPConfig) {

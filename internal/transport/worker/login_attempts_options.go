@@ -9,6 +9,7 @@ import (
 	"github.com/ElfAstAhe/go-service-template/pkg/transport/broker"
 	"github.com/ElfAstAhe/go-service-template/pkg/transport/worker"
 	"github.com/ElfAstAhe/go-service-template/pkg/utils"
+	"github.com/ElfAstAhe/tiny-audit-service/internal/transport/worker/dto"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/usecase"
 )
 
@@ -21,7 +22,7 @@ type LoginAttemptsOption func(*LoginAttemptsOptions)
 
 type LoginAttemptsOptions struct {
 	Name               string
-	DispatcherOpts     *worker.BaseSchedulerDispatcherConfig
+	DispatcherOpts     *worker.BaseSchedulerDispatcherOptions[*dto.LoginAttemptWorkerJob]
 	Receiver           broker.Receiver
 	AuthAuditUC        usecase.AuthAuditUseCase
 	BatchSize          int
@@ -34,6 +35,7 @@ func NewLoginAttemptsOptions() *LoginAttemptsOptions {
 	return &LoginAttemptsOptions{
 		BatchSize:        defaultBatchSize,
 		BatchReadTimeout: defaultBatchReadTimeout,
+		DispatcherOpts:   worker.NewBaseSchedulerDispatcherOptions[*dto.LoginAttemptWorkerJob](),
 	}
 }
 
@@ -53,13 +55,13 @@ func (lao LoginAttemptsOptions) Validate() error {
 	if utils.IsNil(lao.AuthAuditUC) {
 		return errs.NewCommonError("auth audit use case not provided (nil)", nil)
 	}
-	if !(lao.BatchSize > 0) {
+	if lao.BatchSize <= 0 {
 		return errs.NewCommonError("batch size must be greater than 0", nil)
 	}
-	if !(lao.BatchReadTimeout > 0) {
+	if lao.BatchReadTimeout <= 0 {
 		return errs.NewCommonError("batch read timeout must be greater than 0", nil)
 	}
-	if !(lao.AcknowledgeTimeout > 0) {
+	if lao.AcknowledgeTimeout <= 0 {
 		return errs.NewCommonError("acknowledge timeout must be greater than 0", nil)
 	}
 
@@ -72,9 +74,12 @@ func WithLAOName(name string) LoginAttemptsOption {
 	}
 }
 
-func WithLAODispatcherOpts(dispatcherOpts *worker.BaseSchedulerDispatcherConfig) LoginAttemptsOption {
+func WithLAODispatcherOpts(options ...worker.BaseSchedulerDispatcherOption[*dto.LoginAttemptWorkerJob]) LoginAttemptsOption {
 	return func(opts *LoginAttemptsOptions) {
-		opts.DispatcherOpts = dispatcherOpts
+		opts.DispatcherOpts = worker.NewBaseSchedulerDispatcherOptions[*dto.LoginAttemptWorkerJob]()
+		for _, option := range options {
+			option(opts.DispatcherOpts)
+		}
 	}
 }
 

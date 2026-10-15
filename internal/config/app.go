@@ -7,7 +7,8 @@ import (
 	"github.com/ElfAstAhe/go-service-template/pkg/errs"
 )
 
-// AppConfig — метаданные сервиса
+// AppConfig расширяет базовую конфигурацию фреймворка, инкапсулируя метаданные,
+// лимиты выборок, параметры криптографии и правила валидации токенов безопасности микросервиса.
 type AppConfig struct {
 	*config.AppConfig  `mapstructure:",squash"`
 	NodeName           string   `mapstructure:"node_name" json:"node_name,omitempty" yaml:"node_name,omitempty"`
@@ -17,6 +18,7 @@ type AppConfig struct {
 	CipherKey          string   `mapstructure:"cipher_key" json:"cipher_key,omitempty" yaml:"cipher_key,omitempty"`
 }
 
+// NewAppConfig — параметризованный конструктор для явного формирования конфигурационной структуры.
 func NewAppConfig(
 	env config.AppEnv,
 	initTimeout time.Duration,
@@ -34,6 +36,7 @@ func NewAppConfig(
 	}
 }
 
+// NewDefaultAppConfig создает дефолтный профиль конфигурации, использующий константы базового шаблона.
 func NewDefaultAppConfig() *AppConfig {
 	return NewAppConfig(
 		defaultAppEnv,
@@ -46,6 +49,7 @@ func NewDefaultAppConfig() *AppConfig {
 	)
 }
 
+// Validate проверяет целостность и бизнес-валидность загруженных параметров конфигурации на фазе холодного старта.
 func (ac *AppConfig) Validate() error {
 	if ac.Env == "" {
 		return errs.NewConfigValidateError("app", "env", "must not be empty", nil)
@@ -60,7 +64,7 @@ func (ac *AppConfig) Validate() error {
 	}
 
 	if ac.CipherKey == "" {
-		return errs.NewConfigValidateError("app", "cipher-key", "must not be empty", nil)
+		return errs.NewConfigValidateError("app", "cipher_key", "must not be empty", nil)
 	}
 
 	// ToDo: restore in future
