@@ -5,6 +5,7 @@ import (
 	"github.com/ElfAstAhe/tiny-audit-service/internal/facade/dto"
 )
 
+// MapAuthAuditModelToDTO преобразует доменную модель лога аутентификации во внешнюю структуру DTO для передачи через API.
 func MapAuthAuditModelToDTO(model *domain.AuthAudit) *dto.AuthAuditDTO {
 	if model == nil {
 		return nil
@@ -26,6 +27,7 @@ func MapAuthAuditModelToDTO(model *domain.AuthAudit) *dto.AuthAuditDTO {
 	}
 }
 
+// MapAuthAuditModelsToDTOs веерно конвертирует пачку доменных моделей событий аутентификации в срез структур DTO, отсекая nil-элементы.
 func MapAuthAuditModelsToDTOs(models []*domain.AuthAudit) []*dto.AuthAuditDTO {
 	res := make([]*dto.AuthAuditDTO, 0, len(models))
 
@@ -39,6 +41,7 @@ func MapAuthAuditModelsToDTOs(models []*domain.AuthAudit) []*dto.AuthAuditDTO {
 	return res
 }
 
+// MapAuthAuditDTOToModel преобразует прикладную структуру DTO во внутреннюю доменную модель лога аутентификации для последующей валидации.
 func MapAuthAuditDTOToModel(data *dto.AuthAuditDTO) *domain.AuthAudit {
 	if data == nil {
 		return nil

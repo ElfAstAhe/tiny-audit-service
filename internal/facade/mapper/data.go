@@ -5,6 +5,7 @@ import (
 	"github.com/ElfAstAhe/tiny-audit-service/internal/facade/dto"
 )
 
+// MapDataAuditValueModelToDTO трансформирует внутреннюю доменную модель атрибута в соответствующий объект передачи данных (DTO).
 func MapDataAuditValueModelToDTO(model *domain.DataAuditValue) *dto.DataAuditValueDTO {
 	if model == nil {
 		return nil
@@ -18,6 +19,7 @@ func MapDataAuditValueModelToDTO(model *domain.DataAuditValue) *dto.DataAuditVal
 	}
 }
 
+// MapDataAuditValueModelsToDTOs веерно конвертирует срез доменных моделей полей в срез DTO структур, исключая пустые указатели.
 func MapDataAuditValueModelsToDTOs(models []*domain.DataAuditValue) []*dto.DataAuditValueDTO {
 	res := make([]*dto.DataAuditValueDTO, 0, len(models))
 
@@ -31,6 +33,7 @@ func MapDataAuditValueModelsToDTOs(models []*domain.DataAuditValue) []*dto.DataA
 	return res
 }
 
+// MapDataAuditValueDTOToModel трансформирует входящий объект передачи данных (DTO) атрибута во внутреннюю доменную модель.
 func MapDataAuditValueDTOToModel(data *dto.DataAuditValueDTO) *domain.DataAuditValue {
 	if data == nil {
 		return nil
@@ -44,6 +47,7 @@ func MapDataAuditValueDTOToModel(data *dto.DataAuditValueDTO) *domain.DataAuditV
 	}
 }
 
+// MapDataAuditValueDTOsToModels веерно конвертирует входящий срез DTO структур в срез внутренних доменных моделей полей.
 func MapDataAuditValueDTOsToModels(data []*dto.DataAuditValueDTO) []*domain.DataAuditValue {
 	res := make([]*domain.DataAuditValue, 0, len(data))
 
@@ -57,6 +61,7 @@ func MapDataAuditValueDTOsToModels(data []*dto.DataAuditValueDTO) []*domain.Data
 	return res
 }
 
+// MapDataAuditModelToDTO преобразует корневой доменный агрегат лога аудита в плоскую структуру DTO с каскадным маппингом полей.
 func MapDataAuditModelToDTO(model *domain.DataAudit) *dto.DataAuditDTO {
 	if model == nil {
 		return nil
@@ -82,6 +87,7 @@ func MapDataAuditModelToDTO(model *domain.DataAudit) *dto.DataAuditDTO {
 	}
 }
 
+// MapDataAuditDTOToModel преобразует внешнюю структуру DTO в корневой доменный агрегат лога аудита для последующей бизнес-валидации.
 func MapDataAuditDTOToModel(data *dto.DataAuditDTO) *domain.DataAudit {
 	if data == nil {
 		return nil
@@ -107,6 +113,7 @@ func MapDataAuditDTOToModel(data *dto.DataAuditDTO) *domain.DataAudit {
 	}
 }
 
+// MapDataAuditModelsToDTOs выполняет массовую трансформацию пачки доменных моделей логов в срез DTO для отдачи в API-слой.
 func MapDataAuditModelsToDTOs(models []*domain.DataAudit) []*dto.DataAuditDTO {
 	res := make([]*dto.DataAuditDTO, 0, len(models))
 

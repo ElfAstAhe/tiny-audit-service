@@ -55,10 +55,10 @@ func NewOptions[D any]() *Options[D] {
 		KeepAliveTimeout:             DefaultKeepAliveTimeout,
 		KeepAlivePermitWithoutStream: DefaultKeepAlivePermitWithoutStream,
 	}
-	res.BaseAuditClientOptions.Pool.WorkerCount = DefaultWorkerCount
-	res.BaseAuditClientOptions.Pool.DataCapacity = DefaultDataCapacity
-	res.BaseAuditClientOptions.Pool.CompleteProcess = DefaultCompleteProcessing
-	res.BaseAuditClientOptions.Pool.StopTimeout = DefaultStopTimeout
+	res.Pool.WorkerCount = DefaultWorkerCount
+	res.Pool.DataCapacity = DefaultDataCapacity
+	res.Pool.CompleteProcess = DefaultCompleteProcessing
+	res.Pool.StopTimeout = DefaultStopTimeout
 
 	return res
 }

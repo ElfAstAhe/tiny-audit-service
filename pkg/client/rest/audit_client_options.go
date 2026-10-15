@@ -41,10 +41,10 @@ func NewAuditClientOptions[D any]() *AuditClientOptions[D] {
 		ReadTimeout:            DefaultTimeout,
 		BaseAuditClientOptions: client.NewBaseAuditClientOptions[D](),
 	}
-	res.BaseAuditClientOptions.Pool.WorkerCount = DefaultWorkerCount
-	res.BaseAuditClientOptions.Pool.DataCapacity = DefaultDataCapacity
-	res.BaseAuditClientOptions.Pool.CompleteProcess = DefaultCompleteProcessing
-	res.BaseAuditClientOptions.Pool.StopTimeout = DefaultStopTimeout
+	res.Pool.WorkerCount = DefaultWorkerCount
+	res.Pool.DataCapacity = DefaultDataCapacity
+	res.Pool.CompleteProcess = DefaultCompleteProcessing
+	res.Pool.StopTimeout = DefaultStopTimeout
 
 	return res
 }
