@@ -68,16 +68,22 @@ func NewBaseAuditClient[D any](options ...BaseAuditClientOption[D]) (*BaseAuditC
 }
 
 func (bac *BaseAuditClient[D]) Start(ctx context.Context) error {
+	bac.GetLogger().Debugf("Start start")
+	defer bac.GetLogger().Debugf("Start finish")
+
 	return bac.pool.Start(ctx)
 }
 
 func (bac *BaseAuditClient[D]) Stop(ctx context.Context) error {
+	bac.GetLogger().Debugf("Stop start")
+	defer bac.GetLogger().Debugf("Stop finish")
+
 	return bac.pool.Stop(ctx)
 }
 
 func (bac *BaseAuditClient[D]) Audit(data D) error {
 	bac.GetLogger().Debugf("Audit start")
-	defer bac.GetLogger().Debugf("Audit end")
+	defer bac.GetLogger().Debugf("Audit finish")
 
 	res := bac.pool.TryPush(data)
 	if !res {
@@ -94,7 +100,7 @@ func (bac *BaseAuditClient[D]) TotalLost() int32 {
 
 func (bac *BaseAuditClient[D]) jobHandler(ctx context.Context, workerIndex int, data D) error {
 	bac.GetLogger().Debugf("jobHandler start")
-	defer bac.GetLogger().Debugf("jobHandler end")
+	defer bac.GetLogger().Debugf("jobHandler finish")
 
 	// token acquire
 	token, err := bac.tokenProvider.GetAccessToken()

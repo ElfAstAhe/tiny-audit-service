@@ -31,6 +31,7 @@ var _ client.AuditClient[*dto.AuthAuditDTO] = (*AuthAuditClient)(nil)
 var _ client.AuthAuditClient = (*AuthAuditClient)(nil)
 var _ container.Runner = (*AuthAuditClient)(nil)
 
+//goland:noinspection DuplicatedCode
 func NewAuthAuditClient(options ...AuditClientOption[*dto.AuthAuditDTO]) (*AuthAuditClient, error) {
 	opts := NewAuditClientOptions[*dto.AuthAuditDTO]()
 	for _, option := range options {

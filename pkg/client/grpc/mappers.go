@@ -71,6 +71,11 @@ func MapDataValueDTOsSDKToGRPC(dataValues []*dto.DataAuditValueDTO) []*pb.DataAu
 
 	res := make([]*pb.DataAuditValue, 0, len(dataValues))
 	for _, dataValue := range dataValues {
+		data := MapDataValueDtoSDKToGRPC(dataValue)
+		if utils.IsNil(data) {
+			continue
+		}
+
 		res = append(res, MapDataValueDtoSDKToGRPC(dataValue))
 	}
 
