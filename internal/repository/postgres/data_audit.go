@@ -13,6 +13,7 @@ import (
 	"github.com/ElfAstAhe/go-service-template/pkg/repository"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/domain"
 	apprepo "github.com/ElfAstAhe/tiny-audit-service/internal/repository"
+	pkgdom "github.com/ElfAstAhe/tiny-audit-service/pkg/domain"
 )
 
 type DataAuditPgRepository struct {
@@ -21,7 +22,7 @@ type DataAuditPgRepository struct {
 
 var _ libdomain.CRUDRepository[*domain.DataAudit, string] = (*DataAuditPgRepository)(nil)
 var _ domain.DataAuditRepository = (*DataAuditPgRepository)(nil)
-var _ domain.TailRepository[string] = (*DataAuditPgRepository)(nil)
+var _ pkgdom.TailRepository[string] = (*DataAuditPgRepository)(nil)
 
 func NewDataAuditPgRepository(executor db.Executor, errDecipher db.ErrorDecipher) (*DataAuditPgRepository, error) {
 	res := &DataAuditPgRepository{}

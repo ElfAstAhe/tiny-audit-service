@@ -8,7 +8,7 @@ import (
 	"github.com/ElfAstAhe/go-service-template/pkg/logger"
 	"github.com/ElfAstAhe/go-service-template/pkg/transport/worker"
 	"github.com/ElfAstAhe/go-service-template/pkg/utils"
-	"github.com/ElfAstAhe/tiny-audit-service/internal/usecase"
+	pkguc "github.com/ElfAstAhe/tiny-audit-service/pkg/usecase"
 )
 
 // Константы со значениями по умолчанию для конфигурации планировщика TailCutter.
@@ -29,8 +29,8 @@ type TailCutterOption func(*TailCutterOptions)
 // Включает в себя базовые опции диспетчера через эмбеддинг BaseSchedulerDispatcherOptions.
 type TailCutterOptions struct {
 	*worker.BaseSchedulerDispatcherOptions[string]
-	TailGetUC    usecase.TailGetUseCase[string]
-	TailCutUC    usecase.TailCutUseCase[string]
+	TailGetUC    pkguc.TailGetUseCase[string]
+	TailCutUC    pkguc.TailCutUseCase[string]
 	DataInterval time.Duration
 	CutEnabled   bool
 }
@@ -156,14 +156,14 @@ func WithTailCutCutEnabled(enabled bool) TailCutterOption {
 }
 
 // WithTailCutTailGetUC конфигурирует Use Case для получения "хвостов" данных.
-func WithTailCutTailGetUC(uc usecase.TailGetUseCase[string]) TailCutterOption {
+func WithTailCutTailGetUC(uc pkguc.TailGetUseCase[string]) TailCutterOption {
 	return func(options *TailCutterOptions) {
 		options.TailGetUC = uc
 	}
 }
 
 // WithTailCutterTailCutUC конфигурирует Use Case для обрезания/удаления данных.
-func WithTailCutterTailCutUC(uc usecase.TailCutUseCase[string]) TailCutterOption {
+func WithTailCutterTailCutUC(uc pkguc.TailCutUseCase[string]) TailCutterOption {
 	return func(options *TailCutterOptions) {
 		options.TailCutUC = uc
 	}

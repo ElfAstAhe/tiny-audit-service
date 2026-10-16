@@ -7,7 +7,6 @@ import (
 	"github.com/ElfAstAhe/go-service-template/pkg/domain"
 	"github.com/ElfAstAhe/go-service-template/pkg/logger"
 	libutils "github.com/ElfAstAhe/go-service-template/pkg/utils"
-	"github.com/ElfAstAhe/tiny-audit-service/pkg/client"
 	"github.com/ElfAstAhe/tiny-audit-service/pkg/client/dto"
 	pkgdomain "github.com/ElfAstAhe/tiny-audit-service/pkg/domain"
 	"github.com/ElfAstAhe/tiny-audit-service/pkg/utils"
@@ -21,26 +20,26 @@ type AuditableEntity[ID comparable] interface {
 type AuditableMapper[E domain.Entity[ID], ID comparable] func(entity E) pkgdomain.Auditable
 
 type BaseAuditCRUDRepository[E AuditableEntity[ID], ID comparable] struct {
-	next        domain.CRUDRepository[E, ID]
-	source      string
-	mapper      AuditableMapper[E, ID]
-	auditClient client.DataAuditClient
-	log         logger.Logger
+	next       domain.CRUDRepository[E, ID]
+	source     string
+	mapper     AuditableMapper[E, ID]
+	outboxRepo pkgdomain.OutboxRepository[*pkgdomain.DataAuditOutbox, string]
+	log        logger.Logger
 }
 
 func NewBaseAuditCRUDRepository[E AuditableEntity[ID], ID comparable](
 	next domain.CRUDRepository[E, ID],
 	source string,
 	mapper AuditableMapper[E, ID],
-	auditClient client.DataAuditClient,
+	outboxRepo pkgdomain.OutboxRepository[*pkgdomain.DataAuditOutbox, string],
 	log logger.Logger,
 ) *BaseAuditCRUDRepository[E, ID] {
 	return &BaseAuditCRUDRepository[E, ID]{
-		next:        next,
-		source:      source,
-		mapper:      mapper,
-		auditClient: auditClient,
-		log:         log.GetLogger(libutils.GetTypeName(next)),
+		next:       next,
+		source:     source,
+		mapper:     mapper,
+		outboxRepo: outboxRepo,
+		log:        log.GetLogger(libutils.GetTypeName(next)),
 	}
 }
 
@@ -76,7 +75,7 @@ func (acr *BaseAuditCRUDRepository[E, ID]) Create(ctx context.Context, entity E)
 		WithValues(utils.BuildSingleDataAuditValues(auditEntity, false))
 
 	// audit
-	acr.audit(builder)
+	acr.audit(ctx, builder)
 
 	return res, err
 }
@@ -125,7 +124,7 @@ func (acr *BaseAuditCRUDRepository[E, ID]) Change(ctx context.Context, entity E)
 		builder.WithValues(utils.BuildSingleDataAuditValues(auditAfterEntity, false))
 	}
 	// audit
-	acr.audit(builder)
+	acr.audit(ctx, builder)
 
 	return res, err
 }
@@ -154,7 +153,7 @@ func (acr *BaseAuditCRUDRepository[E, ID]) Delete(ctx context.Context, id ID) er
 		builder.WithValues(utils.BuildSingleDataAuditValues(auditEntity, true))
 	}
 	// audit
-	acr.audit(builder)
+	acr.audit(ctx, builder)
 
 	return err
 }
@@ -177,11 +176,12 @@ func (acr *BaseAuditCRUDRepository[E, ID]) builder(ctx context.Context, auditEnt
 		WithRequestID(utils.RequestIDFromContext(ctx))
 }
 
-func (acr *BaseAuditCRUDRepository[E, ID]) audit(builder *utils.DataAuditBuilder) {
+func (acr *BaseAuditCRUDRepository[E, ID]) audit(ctx context.Context, builder *utils.DataAuditBuilder) {
 	clientDTO := builder.Build()
 	acr.log.Debugf("audit Create client dto [%v]", clientDTO)
 
-	auditErr := acr.auditClient.Audit(clientDTO)
+	// ToDo: implement transform into DataAuditOutbox
+	auditErr := acr.outboxRepo.Save(ctx, clientDTO)
 	if auditErr != nil {
 		acr.log.Errorf("audit Create audit [%v] failed [%v]", clientDTO, auditErr)
 	}
@@ -196,8 +196,8 @@ func (acr *BaseAuditCRUDRepository[E, ID]) Unwrap() domain.CRUDRepository[E, ID]
 	return acr.next
 }
 
-func (acr *BaseAuditCRUDRepository[E, ID]) GetAuditClient() client.DataAuditClient {
-	return acr.auditClient
+func (acr *BaseAuditCRUDRepository[E, ID]) GetOutboxRepository() pkgdomain.OutboxRepository[*pkgdomain.DataAuditOutbox, string] {
+	return acr.outboxRepo
 }
 
 func (acr *BaseAuditCRUDRepository[E, ID]) GetLogger() logger.Logger {

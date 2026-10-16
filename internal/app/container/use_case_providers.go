@@ -9,6 +9,8 @@ import (
 	"github.com/ElfAstAhe/tiny-audit-service/internal/domain"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/usecase"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/usecase/telemetry"
+	domain2 "github.com/ElfAstAhe/tiny-audit-service/pkg/domain"
+	usecase2 "github.com/ElfAstAhe/tiny-audit-service/pkg/usecase"
 )
 
 func (ucc *UseCaseContainer) providerUnitOfWork() (any, error) {
@@ -83,12 +85,12 @@ func (ucc *UseCaseContainer) providerDataListByInstanceUC() (any, error) {
 }
 
 func (ucc *UseCaseContainer) providerAuthAuditTailGetUC() (any, error) {
-	tailRepoInst, err := container.GetInstance[domain.TailRepository[string]](InstanceAuthAuditRepo)
+	tailRepoInst, err := container.GetInstance[domain2.TailRepository[string]](InstanceAuthAuditRepo)
 	if err != nil {
 		return nil, errs.NewContainerError(ucc.GetName(), "provider: retrieve instance failed", err)
 	}
 
-	return usecase.NewTailGetUseCase[string](tailRepoInst), nil
+	return usecase2.NewTailGetUseCase[string](tailRepoInst), nil
 }
 
 func (ucc *UseCaseContainer) providerAuthAuditTailCutUC() (any, error) {
@@ -96,21 +98,21 @@ func (ucc *UseCaseContainer) providerAuthAuditTailCutUC() (any, error) {
 	if err != nil {
 		return nil, errs.NewContainerError(ucc.GetName(), "provider: retrieve instance failed", err)
 	}
-	tailRepoInst, err := container.GetInstance[domain.TailRepository[string]](InstanceAuthAuditRepo)
+	tailRepoInst, err := container.GetInstance[domain2.TailRepository[string]](InstanceAuthAuditRepo)
 	if err != nil {
 		return nil, errs.NewContainerError(ucc.GetName(), "provider: retrieve instance failed", err)
 	}
 
-	return usecase.NewTailCutUseCase[string](uwInst, tailRepoInst), nil
+	return usecase2.NewTailCutUseCase[string](uwInst, tailRepoInst), nil
 }
 
 func (ucc *UseCaseContainer) providerDataAuditTailGetUC() (any, error) {
-	tailRepoInst, err := container.GetInstance[domain.TailRepository[string]](InstanceDataAuditRepo)
+	tailRepoInst, err := container.GetInstance[domain2.TailRepository[string]](InstanceDataAuditRepo)
 	if err != nil {
 		return nil, errs.NewContainerError(ucc.GetName(), "provider: retrieve instance failed", err)
 	}
 
-	return usecase.NewTailGetUseCase[string](tailRepoInst), nil
+	return usecase2.NewTailGetUseCase[string](tailRepoInst), nil
 }
 
 //goland:noinspection DuplicatedCode
@@ -119,10 +121,10 @@ func (ucc *UseCaseContainer) providerDataAuditTailCutUC() (any, error) {
 	if err != nil {
 		return nil, errs.NewContainerError(ucc.GetName(), "provider: retrieve instance failed", err)
 	}
-	tailRepoInst, err := container.GetInstance[domain.TailRepository[string]](InstanceDataAuditRepo)
+	tailRepoInst, err := container.GetInstance[domain2.TailRepository[string]](InstanceDataAuditRepo)
 	if err != nil {
 		return nil, errs.NewContainerError(ucc.GetName(), "provider: retrieve instance failed", err)
 	}
 
-	return usecase.NewTailCutUseCase[string](uwInst, tailRepoInst), nil
+	return usecase2.NewTailCutUseCase[string](uwInst, tailRepoInst), nil
 }

@@ -11,6 +11,7 @@ import (
 	"github.com/ElfAstAhe/go-service-template/pkg/repository"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/domain"
 	apprepo "github.com/ElfAstAhe/tiny-audit-service/internal/repository"
+	pkgdom "github.com/ElfAstAhe/tiny-audit-service/pkg/domain"
 )
 
 type AuthAuditPgRepository struct {
@@ -19,7 +20,7 @@ type AuthAuditPgRepository struct {
 
 var _ libdomain.CRUDRepository[*domain.AuthAudit, string] = (*AuthAuditPgRepository)(nil)
 var _ domain.AuthAuditRepository = (*AuthAuditPgRepository)(nil)
-var _ domain.TailRepository[string] = (*AuthAuditPgRepository)(nil)
+var _ pkgdom.TailRepository[string] = (*AuthAuditPgRepository)(nil)
 
 //goland:noinspection DuplicatedCode
 func NewAuthAuditPgRepository(executor db.Executor, errDecipher db.ErrorDecipher) (*AuthAuditPgRepository, error) {
