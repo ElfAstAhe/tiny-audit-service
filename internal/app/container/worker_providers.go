@@ -5,6 +5,8 @@ import (
 
 	"github.com/ElfAstAhe/go-service-template/pkg/container"
 	"github.com/ElfAstAhe/go-service-template/pkg/errs"
+	"github.com/ElfAstAhe/go-service-template/pkg/ext/transport/worker/tailcutter"
+	libextuc "github.com/ElfAstAhe/go-service-template/pkg/ext/usecase"
 	"github.com/ElfAstAhe/go-service-template/pkg/logger"
 	"github.com/ElfAstAhe/go-service-template/pkg/transport/broker"
 	libamqp "github.com/ElfAstAhe/go-service-template/pkg/transport/broker/amqp"
@@ -13,8 +15,6 @@ import (
 	"github.com/ElfAstAhe/tiny-audit-service/internal/transport/worker"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/transport/worker/dto"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/usecase"
-	worker2 "github.com/ElfAstAhe/tiny-audit-service/pkg/transport/worker"
-	usecase2 "github.com/ElfAstAhe/tiny-audit-service/pkg/usecase"
 )
 
 //goland:noinspection DuplicatedCode
@@ -27,28 +27,28 @@ func (wc *WorkerContainer) providerAuthAuditTailCutter() (any, error) {
 	if err != nil {
 		return nil, errs.NewContainerError(wc.GetName(), "provider: retrieve instance failed", err)
 	}
-	authAuditTailGetUCInst, err := container.GetInstance[usecase2.TailGetUseCase[string]](InstanceAuthAuditTailGetUC)
+	authAuditTailGetUCInst, err := container.GetInstance[libextuc.TailGetUseCase[string]](InstanceAuthAuditTailGetUC)
 	if err != nil {
 		return nil, errs.NewContainerError(wc.GetName(), "provider: retrieve instance failed", err)
 	}
-	authAuditTailCutUCInst, err := container.GetInstance[usecase2.TailCutUseCase[string]](InstanceAuthAuditTailCutUC)
+	authAuditTailCutUCInst, err := container.GetInstance[libextuc.TailCutUseCase[string]](InstanceAuthAuditTailCutUC)
 	if err != nil {
 		return nil, errs.NewContainerError(wc.GetName(), "provider: retrieve instance failed", err)
 	}
 
-	res, err := worker2.NewTailCutter(
-		worker2.WithTailCutName("auth"),
-		worker2.WithTailCutCutEnabled(confInst.AuthTC.TailCut),
-		worker2.WithTailCutDataInterval(confInst.AuthTC.TailInterval),
-		worker2.WithTailCutTailGetUC(authAuditTailGetUCInst),
-		worker2.WithTailCutterTailCutUC(authAuditTailCutUCInst),
-		worker2.WithTailCutStopTimeout(confInst.AuthTC.StopTimeout),
-		worker2.WithTailCutWorkerCount(confInst.AuthTC.WorkerCount),
-		worker2.WithTailCutDataCapacity(confInst.AuthTC.DataCapacity),
-		worker2.WithTailCutCompleteProcess(confInst.AuthTC.CompleteProcess),
-		worker2.WithTailCutStartInterval(confInst.AuthTC.StartInterval),
-		worker2.WithTailCutScheduleInterval(confInst.AuthTC.ScheduleInterval),
-		worker2.WithTailCutLogger(logInst),
+	res, err := tailcutter.New(
+		tailcutter.WithName("auth"),
+		tailcutter.WithCutEnabled(confInst.AuthTC.TailCut),
+		tailcutter.WithDataInterval(confInst.AuthTC.TailInterval),
+		tailcutter.WithTailGetUseCase(authAuditTailGetUCInst),
+		tailcutter.WithTailCutUseCase(authAuditTailCutUCInst),
+		tailcutter.WithStopTimeout(confInst.AuthTC.StopTimeout),
+		tailcutter.WithWorkerCount(confInst.AuthTC.WorkerCount),
+		tailcutter.WithDataCapacity(confInst.AuthTC.DataCapacity),
+		tailcutter.WithCompleteProcess(confInst.AuthTC.CompleteProcess),
+		tailcutter.WithStartInterval(confInst.AuthTC.StartInterval),
+		tailcutter.WithScheduleInterval(confInst.AuthTC.ScheduleInterval),
+		tailcutter.WithLogger(logInst),
 	)
 	if err != nil {
 		return nil, errs.NewContainerError(wc.GetName(), fmt.Sprintf("provider: create %s instance failed", InstanceAuthAuditTailCutter), err)
@@ -67,28 +67,28 @@ func (wc *WorkerContainer) providerDataAuditTailCutter() (any, error) {
 	if err != nil {
 		return nil, errs.NewContainerError(wc.GetName(), "provider: retrieve instance failed", err)
 	}
-	dataAuditTailGetUCInst, err := container.GetInstance[usecase2.TailGetUseCase[string]](InstanceDataAuditTailGetUC)
+	dataAuditTailGetUCInst, err := container.GetInstance[libextuc.TailGetUseCase[string]](InstanceDataAuditTailGetUC)
 	if err != nil {
 		return nil, errs.NewContainerError(wc.GetName(), "provider: retrieve instance failed", err)
 	}
-	dataAuditTailCutUCInst, err := container.GetInstance[usecase2.TailCutUseCase[string]](InstanceDataAuditTailCutUC)
+	dataAuditTailCutUCInst, err := container.GetInstance[libextuc.TailCutUseCase[string]](InstanceDataAuditTailCutUC)
 	if err != nil {
 		return nil, errs.NewContainerError(wc.GetName(), "provider: retrieve instance failed", err)
 	}
 
-	res, err := worker2.NewTailCutter(
-		worker2.WithTailCutName("data"),
-		worker2.WithTailCutCutEnabled(confInst.DataTC.TailCut),
-		worker2.WithTailCutDataInterval(confInst.DataTC.TailInterval),
-		worker2.WithTailCutTailGetUC(dataAuditTailGetUCInst),
-		worker2.WithTailCutterTailCutUC(dataAuditTailCutUCInst),
-		worker2.WithTailCutStopTimeout(confInst.DataTC.StopTimeout),
-		worker2.WithTailCutWorkerCount(confInst.DataTC.WorkerCount),
-		worker2.WithTailCutDataCapacity(confInst.DataTC.DataCapacity),
-		worker2.WithTailCutCompleteProcess(confInst.DataTC.CompleteProcess),
-		worker2.WithTailCutStartInterval(confInst.DataTC.StartInterval),
-		worker2.WithTailCutScheduleInterval(confInst.DataTC.ScheduleInterval),
-		worker2.WithTailCutLogger(logInst),
+	res, err := tailcutter.New(
+		tailcutter.WithName("data"),
+		tailcutter.WithCutEnabled(confInst.DataTC.TailCut),
+		tailcutter.WithDataInterval(confInst.DataTC.TailInterval),
+		tailcutter.WithTailGetUseCase(dataAuditTailGetUCInst),
+		tailcutter.WithTailCutUseCase(dataAuditTailCutUCInst),
+		tailcutter.WithStopTimeout(confInst.DataTC.StopTimeout),
+		tailcutter.WithWorkerCount(confInst.DataTC.WorkerCount),
+		tailcutter.WithDataCapacity(confInst.DataTC.DataCapacity),
+		tailcutter.WithCompleteProcess(confInst.DataTC.CompleteProcess),
+		tailcutter.WithStartInterval(confInst.DataTC.StartInterval),
+		tailcutter.WithScheduleInterval(confInst.DataTC.ScheduleInterval),
+		tailcutter.WithLogger(logInst),
 	)
 	if err != nil {
 		return nil, errs.NewContainerError(wc.GetName(), fmt.Sprintf("provider: create %s instance failed", InstanceDataAuditTailCutter), err)

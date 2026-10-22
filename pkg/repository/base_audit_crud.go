@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/ElfAstAhe/go-service-template/pkg/domain"
+	domain2 "github.com/ElfAstAhe/go-service-template/pkg/ext/domain"
 	"github.com/ElfAstAhe/go-service-template/pkg/logger"
 	libutils "github.com/ElfAstAhe/go-service-template/pkg/utils"
 	"github.com/ElfAstAhe/tiny-audit-service/pkg/client/dto"
@@ -23,7 +24,7 @@ type BaseAuditCRUDRepository[E AuditableEntity[ID], ID comparable] struct {
 	next       domain.CRUDRepository[E, ID]
 	source     string
 	mapper     AuditableMapper[E, ID]
-	outboxRepo pkgdomain.OutboxRepository[*pkgdomain.DataAuditOutbox, string]
+	outboxRepo domain2.OutboxRepository[*, string]
 	log        logger.Logger
 }
 
@@ -31,7 +32,7 @@ func NewBaseAuditCRUDRepository[E AuditableEntity[ID], ID comparable](
 	next domain.CRUDRepository[E, ID],
 	source string,
 	mapper AuditableMapper[E, ID],
-	outboxRepo pkgdomain.OutboxRepository[*pkgdomain.DataAuditOutbox, string],
+	outboxRepo domain2.OutboxRepository[DataAuditOutbox, string],
 	log logger.Logger,
 ) *BaseAuditCRUDRepository[E, ID] {
 	return &BaseAuditCRUDRepository[E, ID]{

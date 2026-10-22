@@ -6,28 +6,28 @@ import (
 	"time"
 
 	"github.com/ElfAstAhe/go-service-template/pkg/db"
-	libdomain "github.com/ElfAstAhe/go-service-template/pkg/domain"
+	libdom "github.com/ElfAstAhe/go-service-template/pkg/domain"
 	"github.com/ElfAstAhe/go-service-template/pkg/errs"
-	"github.com/ElfAstAhe/go-service-template/pkg/repository"
+	libextdom "github.com/ElfAstAhe/go-service-template/pkg/ext/domain"
+	librepo "github.com/ElfAstAhe/go-service-template/pkg/repository"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/domain"
-	apprepo "github.com/ElfAstAhe/tiny-audit-service/internal/repository"
-	pkgdom "github.com/ElfAstAhe/tiny-audit-service/pkg/domain"
+	"github.com/ElfAstAhe/tiny-audit-service/internal/repository"
 )
 
 type AuthAuditPgRepository struct {
-	*repository.BaseCRUDRepository[*domain.AuthAudit, string]
+	*librepo.BaseCRUDRepository[*domain.AuthAudit, string]
 }
 
-var _ libdomain.CRUDRepository[*domain.AuthAudit, string] = (*AuthAuditPgRepository)(nil)
+var _ libdom.CRUDRepository[*domain.AuthAudit, string] = (*AuthAuditPgRepository)(nil)
 var _ domain.AuthAuditRepository = (*AuthAuditPgRepository)(nil)
-var _ pkgdom.TailRepository[string] = (*AuthAuditPgRepository)(nil)
+var _ libextdom.TailRepository[string] = (*AuthAuditPgRepository)(nil)
 
 //goland:noinspection DuplicatedCode
 func NewAuthAuditPgRepository(executor db.Executor, errDecipher db.ErrorDecipher) (*AuthAuditPgRepository, error) {
 	res := &AuthAuditPgRepository{}
 
 	// sql builders
-	queryBuilders := repository.NewBaseCRUDQueryBuildersBuilder().NewInstance().
+	queryBuilders := librepo.NewBaseCRUDQueryBuildersBuilder().NewInstance().
 		WithFind(func() string {
 			return sqlAuthAuditFind
 		}).
@@ -45,7 +45,7 @@ func NewAuthAuditPgRepository(executor db.Executor, errDecipher db.ErrorDecipher
 		}).
 		Build()
 	// callbacks
-	callbacks, _ := repository.NewBaseRepositoryCallbacksBuilder[*domain.AuthAudit, string]().NewInstance().
+	callbacks, _ := librepo.NewBaseRepositoryCallbacksBuilder[*domain.AuthAudit, string]().NewInstance().
 		WithEntityScanner(res.entityScanner).
 		WithNewEntityFactory(domain.NewEmptyAuthAudit).
 		WithAfterListYield(res.afterListYield).
@@ -57,10 +57,10 @@ func NewAuthAuditPgRepository(executor db.Executor, errDecipher db.ErrorDecipher
 		WithChanger(res.changer).
 		Build()
 	// base CRUD
-	base, err := repository.NewBaseCRUDRepository[*domain.AuthAudit, string](
+	base, err := librepo.NewBaseCRUDRepository[*domain.AuthAudit, string](
 		executor,
 		errDecipher,
-		repository.NewEntityInfo("auth_audit", "AuthAudit"),
+		librepo.NewEntityInfo("auth_audit", "AuthAudit"),
 		queryBuilders,
 		callbacks,
 	)
@@ -74,12 +74,12 @@ func NewAuthAuditPgRepository(executor db.Executor, errDecipher db.ErrorDecipher
 }
 
 func (aa *AuthAuditPgRepository) GetTail(ctx context.Context, tailDate time.Time) ([]string, error) {
-	res, err := aa.GetHelper().List(ctx, apprepo.SourceLabelTailList, sqlAuthAuditTailList, tailDate)
+	res, err := aa.GetHelper().List(ctx, repository.SourceLabelTailList, sqlAuthAuditTailList, tailDate)
 	if err != nil {
 		return nil, err
 	}
 
-	return libdomain.EntitiesToIDList(res), err
+	return libdom.EntitiesToIDList(res), err
 }
 
 func (aa *AuthAuditPgRepository) ListByPeriod(ctx context.Context, from, till time.Time, limit, offset int) ([]*domain.AuthAudit, error) {
@@ -87,7 +87,7 @@ func (aa *AuthAuditPgRepository) ListByPeriod(ctx context.Context, from, till ti
 		return nil, err
 	}
 
-	res, err := aa.GetHelper().List(ctx, apprepo.SourceLabelListByPeriod, sqlAuthAuditListByPeriod,
+	res, err := aa.GetHelper().List(ctx, repository.SourceLabelListByPeriod, sqlAuthAuditListByPeriod,
 		from,
 		till,
 		limit,
@@ -122,7 +122,7 @@ func (aa *AuthAuditPgRepository) ListByUsername(ctx context.Context, username st
 		return nil, err
 	}
 
-	res, err := aa.GetHelper().List(ctx, apprepo.SourceLabelListByUsername, sqlAuthAuditListByUsername,
+	res, err := aa.GetHelper().List(ctx, repository.SourceLabelListByUsername, sqlAuthAuditListByUsername,
 		username,
 		limit,
 		offset,
@@ -148,9 +148,9 @@ func (aa *AuthAuditPgRepository) validateListByUsername(username string, offset,
 	return nil
 }
 
-func (aa *AuthAuditPgRepository) entityScanner(scanner repository.Scannable, sourceLabel string, entity *domain.AuthAudit, params ...any) error {
+func (aa *AuthAuditPgRepository) entityScanner(scanner librepo.Scannable, sourceLabel string, entity *domain.AuthAudit, params ...any) error {
 	switch sourceLabel {
-	case apprepo.SourceLabelTailList:
+	case repository.SourceLabelTailList:
 		return scanner.Scan(&entity.ID)
 	default:
 		return scanner.Scan(
