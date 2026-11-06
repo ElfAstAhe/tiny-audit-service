@@ -10,17 +10,17 @@ import (
 )
 
 type DataAuditMetricsRepository struct {
-	*metrics.BaseCRUDMetricsRepository[*domain.DataAudit, string]
+	*metrics.CRUD[*domain.DataAudit, string]
 	next domain.DataAuditRepository
 }
 
 var _ libdom.CRUDRepository[*domain.DataAudit, string] = (*DataAuditMetricsRepository)(nil)
 var _ domain.DataAuditRepository = (*DataAuditMetricsRepository)(nil)
 
-func NewDataAuditMetricsRepository(next domain.DataAuditRepository) *DataAuditMetricsRepository {
+func NewDataAuditRepository(next domain.DataAuditRepository) *DataAuditMetricsRepository {
 	return &DataAuditMetricsRepository{
-		next:                      next,
-		BaseCRUDMetricsRepository: metrics.NewBaseCRUDMetricsRepository[*domain.DataAudit, string]("DataAuditRepository", next),
+		next: next,
+		CRUD: metrics.NewCRUD[*domain.DataAudit, string]("DataAuditRepository", next),
 	}
 }
 

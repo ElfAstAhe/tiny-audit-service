@@ -1,4 +1,4 @@
-package repository
+package postgres
 
 const (
 	SourceLabelListByPeriod   string = "ListByPeriod"

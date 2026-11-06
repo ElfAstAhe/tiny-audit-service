@@ -13,11 +13,10 @@ import (
 	libextdom "github.com/ElfAstAhe/go-service-template/pkg/ext/domain"
 	librepo "github.com/ElfAstAhe/go-service-template/pkg/repository"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/domain"
-	"github.com/ElfAstAhe/tiny-audit-service/internal/repository"
 )
 
 type DataAuditPgRepository struct {
-	*librepo.BaseCRUDRepository[*domain.DataAudit, string]
+	*librepo.CRUD[*domain.DataAudit, string]
 }
 
 var _ libdom.CRUDRepository[*domain.DataAudit, string] = (*DataAuditPgRepository)(nil)
@@ -30,23 +29,23 @@ func NewDataAuditPgRepository(executor db.Executor, errDecipher db.ErrorDecipher
 	// sql builders
 	queryBuilders := librepo.NewBaseCRUDQueryBuildersBuilder().NewInstance().
 		WithFind(func() string {
-			return sqlDataAuditFind
+			return SqlDataAuditFind
 		}).
 		WithList(func() string {
-			return sqlDataAuditList
+			return SqlDataAuditList
 		}).
 		WithCreate(func() string {
-			return sqlDataAuditCreate
+			return SqlDataAuditCreate
 		}).
 		WithChange(func() string {
-			return sqlDataAuditChange
+			return SqlDataAuditChange
 		}).
 		WithDelete(func() string {
-			return sqlDataAuditDelete
+			return SqlDataAuditDelete
 		}).
 		Build()
 	// callbacks
-	callbacks, _ := librepo.NewBaseRepositoryCallbacksBuilder[*domain.DataAudit, string]().NewInstance().
+	callbacks, _ := librepo.NewCallbacksBuilder[*domain.DataAudit, string]().NewInstance().
 		WithEntityScanner(res.entityScanner).
 		WithNewEntityFactory(domain.NewEmptyDataAudit).
 		WithAfterListYield(res.afterListYield).
@@ -58,7 +57,7 @@ func NewDataAuditPgRepository(executor db.Executor, errDecipher db.ErrorDecipher
 		WithChanger(res.changer).
 		Build()
 	// base CRUD
-	base, err := librepo.NewBaseCRUDRepository[*domain.DataAudit, string](
+	base, err := librepo.NewCRUD[*domain.DataAudit, string](
 		executor,
 		errDecipher,
 		librepo.NewEntityInfo("data_audit_[index]", "DataAudit"),
@@ -69,18 +68,18 @@ func NewDataAuditPgRepository(executor db.Executor, errDecipher db.ErrorDecipher
 		return nil, errs.NewCommonError("error create DataAuditPgRepository", err)
 	}
 
-	res.BaseCRUDRepository = base
+	res.CRUD = base
 
 	return res, nil
 }
 
 func (da *DataAuditPgRepository) GetTail(ctx context.Context, tailDate time.Time) ([]string, error) {
-	res, err := da.GetHelper().List(ctx, repository.SourceLabelTailList, sqlDataAuditTailList, tailDate)
+	res, err := da.GetHelper().List(ctx, SourceLabelTailList, SqlDataAuditTailList, tailDate)
 	if err != nil {
 		return nil, err
 	}
 
-	return libdom.EntitiesToIDList(res), err
+	return libdom.MapEntitiesToIDs(res), err
 }
 
 func (da *DataAuditPgRepository) ListByPeriod(ctx context.Context, from, till time.Time, limit, offset int) ([]*domain.DataAudit, error) {
@@ -88,7 +87,7 @@ func (da *DataAuditPgRepository) ListByPeriod(ctx context.Context, from, till ti
 		return nil, err
 	}
 
-	res, err := da.GetHelper().List(ctx, repository.SourceLabelListByPeriod, sqlDataAuditListByPeriod,
+	res, err := da.GetHelper().List(ctx, SourceLabelListByPeriod, SqlDataAuditListByPeriod,
 		from,
 		till,
 		limit,
@@ -123,7 +122,7 @@ func (da *DataAuditPgRepository) ListByInstance(ctx context.Context, typeName st
 		return nil, err
 	}
 
-	res, err := da.GetHelper().List(ctx, repository.SourceLabelListByInstance, sqlDataAuditListByInstance,
+	res, err := da.GetHelper().List(ctx, SourceLabelListByInstance, SqlDataAuditListByInstance,
 		typeName,
 		instanceID,
 		limit,
@@ -155,7 +154,7 @@ func (da *DataAuditPgRepository) validateListByInstance(typeName, instanceID str
 
 func (da *DataAuditPgRepository) entityScanner(scanner librepo.Scannable, sourceLabel string, entity *domain.DataAudit, params ...any) error {
 	switch sourceLabel {
-	case repository.SourceLabelTailList:
+	case SourceLabelTailList:
 		return scanner.Scan(&entity.ID)
 	default:
 		var valuesRaw []byte

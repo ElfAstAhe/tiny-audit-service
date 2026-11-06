@@ -1,7 +1,7 @@
 package postgres
 
 const (
-	sqlDataAuditFind string = `
+	SqlDataAuditFind string = `
 select
     id,
     source,
@@ -24,7 +24,7 @@ from
 where
     id = $1
 `
-	sqlDataAuditList string = `
+	SqlDataAuditList string = `
 select
     id,
     source,
@@ -51,7 +51,7 @@ order by
 offset $2
 limit $1
 `
-	sqlDataAuditListByPeriod string = `
+	SqlDataAuditListByPeriod string = `
 select
     id,
     source,
@@ -81,7 +81,7 @@ order by
 offset $4
 limit $3
 `
-	sqlDataAuditListByInstance string = `
+	SqlDataAuditListByInstance string = `
 select
     id,
     source,
@@ -109,7 +109,7 @@ order by
 offset $4
 limit $3
 `
-	sqlDataAuditCreate string = `
+	SqlDataAuditCreate string = `
 insert into data_audit (
     id,
     source,
@@ -148,7 +148,7 @@ returning
     created_at,
     updated_at
 `
-	sqlDataAuditChange string = `
+	SqlDataAuditChange string = `
 update
     data_audit
 set
@@ -186,14 +186,14 @@ returning
     created_at,
     updated_at
 `
-	sqlDataAuditDelete string = `
+	SqlDataAuditDelete string = `
 delete
 from
     data_audit
 where
     id = $1
 `
-	sqlDataAuditTailList string = `
+	SqlDataAuditTailList string = `
 select
     id
 from

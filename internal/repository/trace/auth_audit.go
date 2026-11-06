@@ -13,17 +13,17 @@ import (
 )
 
 type AuthAuditTraceRepository struct {
-	*trace.BaseCRUDTraceRepository[*domain.AuthAudit, string]
+	*trace.CRUD[*domain.AuthAudit, string]
 	next domain.AuthAuditRepository
 }
 
 var _ libdom.CRUDRepository[*domain.AuthAudit, string] = (*AuthAuditTraceRepository)(nil)
 var _ domain.AuthAuditRepository = (*AuthAuditTraceRepository)(nil)
 
-func NewAuthAuditTraceRepository(next domain.AuthAuditRepository) *AuthAuditTraceRepository {
+func NewAuthAuditRepository(next domain.AuthAuditRepository) *AuthAuditTraceRepository {
 	return &AuthAuditTraceRepository{
-		next:                    next,
-		BaseCRUDTraceRepository: trace.NewBaseCRUDTraceRepository[*domain.AuthAudit, string]("AuthAuditRepository", next),
+		next: next,
+		CRUD: trace.NewCRUD[*domain.AuthAudit, string]("AuthAuditRepository", next),
 	}
 }
 

@@ -1,7 +1,7 @@
 package postgres
 
 const (
-	sqlAuthAuditFind string = `
+	SqlAuthAuditFind string = `
 select
     id,
     source,
@@ -19,7 +19,7 @@ from
 where
     id = $1
 `
-	sqlAuthAuditList string = `
+	SqlAuthAuditList string = `
 select
     id,
     source,
@@ -40,7 +40,7 @@ order by
 offset $2
 limit $1
 `
-	sqlAuthAuditListByPeriod string = `
+	SqlAuthAuditListByPeriod string = `
 select
     id,
     source,
@@ -64,7 +64,7 @@ order by
 offset $4
 limit $3
 `
-	sqlAuthAuditListByUsername string = `
+	SqlAuthAuditListByUsername string = `
 select
     id,
     source,
@@ -87,7 +87,7 @@ order by
 offset $3
 limit $2
 `
-	sqlAuthAuditCreate string = `
+	SqlAuthAuditCreate string = `
 insert into auth_audit (
     id,
     source,
@@ -118,7 +118,7 @@ returning
     created_at,
     updated_at
 `
-	sqlAuthAuditChange string = `
+	SqlAuthAuditChange string = `
 update
     auth_audit
 set
@@ -148,14 +148,14 @@ returning
     created_at,
     updated_at
 `
-	sqlAuthAuditDelete string = `
+	SqlAuthAuditDelete string = `
 delete
 from
     auth_audit
 where
     id = $1
 `
-	sqlAuthAuditTailList string = `
+	SqlAuthAuditTailList string = `
 select
     id
 from

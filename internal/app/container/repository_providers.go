@@ -4,20 +4,21 @@ import (
 	"fmt"
 
 	"github.com/ElfAstAhe/go-service-template/pkg/container"
+	"github.com/ElfAstAhe/go-service-template/pkg/db"
 	"github.com/ElfAstAhe/go-service-template/pkg/errs"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/domain"
+	"github.com/ElfAstAhe/tiny-audit-service/internal/repository"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/repository/metrics"
-	"github.com/ElfAstAhe/tiny-audit-service/internal/repository/postgres"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/repository/trace"
 )
 
 //goland:noinspection DuplicatedCode
 func (rc *RepositoryContainer) providerAuthAuditRepo() (any, error) {
-	dbInst, err := container.GetInstance[*postgres.PgDB](InstanceDB)
+	dbInst, err := container.GetInstance[db.DB](InstanceDB)
 	if err != nil {
 		return nil, errs.NewContainerError(rc.GetName(), "provider: retrieve instance failed", err)
 	}
-	res, err := postgres.NewAuthAuditPgRepository(dbInst, dbInst)
+	res, err := repository.NewAuthAudit(dbInst.GetDriver(), dbInst, dbInst)
 	if err != nil {
 		return nil, errs.NewContainerError(rc.GetName(), fmt.Sprintf("provider: create %s instance failed", InstanceAuthAuditRepo), err)
 	}
@@ -31,7 +32,7 @@ func (rc *RepositoryContainer) providerAuthAuditMetricsRepo() (any, error) {
 		return nil, errs.NewContainerError(rc.GetName(), "provider: retrieve instance failed", err)
 	}
 
-	return metrics.NewAuthAuditMetricsRepository(repo), nil
+	return metrics.NewAuthAuditRepository(repo), nil
 }
 
 func (rc *RepositoryContainer) providerAuthAuditTraceRepo() (any, error) {
@@ -40,16 +41,16 @@ func (rc *RepositoryContainer) providerAuthAuditTraceRepo() (any, error) {
 		return nil, errs.NewContainerError(rc.GetName(), "provider: retrieve instance failed", err)
 	}
 
-	return trace.NewAuthAuditTraceRepository(repo), nil
+	return trace.NewAuthAuditRepository(repo), nil
 }
 
 //goland:noinspection DuplicatedCode
 func (rc *RepositoryContainer) providerDataAuditRepo() (any, error) {
-	dbInst, err := container.GetInstance[*postgres.PgDB](InstanceDB)
+	dbInst, err := container.GetInstance[db.DB](InstanceDB)
 	if err != nil {
 		return nil, errs.NewContainerError(rc.GetName(), "provider: retrieve instance failed", err)
 	}
-	res, err := postgres.NewDataAuditPgRepository(dbInst, dbInst)
+	res, err := repository.NewDataAudit(dbInst.GetDriver(), dbInst, dbInst)
 	if err != nil {
 		return nil, errs.NewContainerError(rc.GetName(), fmt.Sprintf("provider: create %s instance failed", InstanceDataAuditRepo), err)
 	}
@@ -63,7 +64,7 @@ func (rc *RepositoryContainer) providerDataAuditMetricsRepo() (any, error) {
 		return nil, errs.NewContainerError(rc.GetName(), "provider: retrieve instance failed", err)
 	}
 
-	return metrics.NewDataAuditMetricsRepository(repo), nil
+	return metrics.NewDataAuditRepository(repo), nil
 }
 
 func (rc *RepositoryContainer) providerDataAuditTraceRepo() (any, error) {
@@ -72,5 +73,5 @@ func (rc *RepositoryContainer) providerDataAuditTraceRepo() (any, error) {
 		return nil, errs.NewContainerError(rc.GetName(), "provider: retrieve instance failed", err)
 	}
 
-	return trace.NewDataAuditTraceRepository(repo), nil
+	return trace.NewDataAuditRepository(repo), nil
 }
