@@ -11,6 +11,7 @@ import (
 	"github.com/ElfAstAhe/go-service-template/pkg/migration/goose"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/config"
 	_ "github.com/ElfAstAhe/tiny-audit-service/migrations/audit"
+	_ "github.com/jackc/pgx/v5/stdlib"
 )
 
 func (pc *PgContainer) providerDB() (any, error) {

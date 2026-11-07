@@ -67,7 +67,7 @@ func (da *DataAudit) GetTail(ctx context.Context, tailDate time.Time) ([]string,
 		return []string{}, errs.NewInvalidArgumentError("TailDate", "tail date is required")
 	}
 	// act
-	res, err := da.GetHelper().List(ctx, statementAuthGetTail, tailDate)
+	res, err := da.GetHelper().List(ctx, statementDataGetTail, tailDate)
 	if err != nil {
 		return []string{}, errs.NewDalError("DataAudit.GetTail", "list failed", err)
 	}
