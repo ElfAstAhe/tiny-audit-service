@@ -9,6 +9,6 @@ type AuditAction[D any] func(ctx context.Context, workerIndex int, data D, token
 type AuditClient[A any] interface {
 	Start(ctx context.Context) error
 	Stop(ctx context.Context) error
-	Audit(data A) error
+	Audit(ctx context.Context, data A) error
 	TotalLost() int32
 }

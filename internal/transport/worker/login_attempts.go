@@ -15,7 +15,7 @@ import (
 )
 
 type LoginAttempts struct {
-	*worker.BaseSchedulerDispatcher[*dto.LoginAttemptWorkerJob]
+	*worker.PeriodicDispatcher[*dto.LoginAttemptWorkerJob]
 	opts               *LoginAttemptsOptions
 	receiver           broker.Receiver
 	authAuditUC        usecase.AuthAuditUseCase
@@ -25,7 +25,7 @@ type LoginAttempts struct {
 }
 
 var _ worker.Scheduler = (*LoginAttempts)(nil)
-var _ worker.CommonWorker = (*LoginAttempts)(nil)
+var _ worker.Common = (*LoginAttempts)(nil)
 var _ container.Runner = (*LoginAttempts)(nil)
 
 func NewLoginAttempts(options ...LoginAttemptsOption) (*LoginAttempts, error) {
@@ -47,23 +47,23 @@ func NewLoginAttempts(options ...LoginAttemptsOption) (*LoginAttempts, error) {
 		acknowledgeTimeout: opts.AcknowledgeTimeout,
 	}
 	// scheduler dispatcher
-	dispatcher, err := worker.NewBaseSchedulerDispatcher[*dto.LoginAttemptWorkerJob](
-		worker.WithSchedulerDispatcherName[*dto.LoginAttemptWorkerJob](opts.Name),
-		worker.WithSchedulerDispatcherStopTimeout[*dto.LoginAttemptWorkerJob](opts.DispatcherOpts.StopTimeout),
-		worker.WithSchedulerDispatcherDataProvider[*dto.LoginAttemptWorkerJob](res.dataProvider),
-		worker.WithSchedulerDispatcherLogger[*dto.LoginAttemptWorkerJob](opts.Logger),
-		worker.WithSchedulerDispatcherPoolWorkerCount[*dto.LoginAttemptWorkerJob](opts.DispatcherOpts.WorkerCount),
-		worker.WithSchedulerDispatcherPoolDataCapacity[*dto.LoginAttemptWorkerJob](opts.DispatcherOpts.DataCapacity),
-		worker.WithSchedulerDispatcherPoolCompleteProcess[*dto.LoginAttemptWorkerJob](opts.DispatcherOpts.CompleteProcess),
-		worker.WithSchedulerDispatcherPoolJobHandler[*dto.LoginAttemptWorkerJob](res.storeAuthAudit),
-		worker.WithSchedulerDispatcherSchedulerStartInterval[*dto.LoginAttemptWorkerJob](opts.DispatcherOpts.StartInterval),
-		worker.WithSchedulerDispatcherSchedulerScheduleInterval[*dto.LoginAttemptWorkerJob](opts.DispatcherOpts.ScheduleInterval),
+	dispatcher, err := worker.NewPeriodicDispatcher[*dto.LoginAttemptWorkerJob](
+		worker.WithPeriodicDispatcherName[*dto.LoginAttemptWorkerJob](opts.Name),
+		worker.WithPeriodicDispatcherStopTimeout[*dto.LoginAttemptWorkerJob](opts.DispatcherOpts.StopTimeout),
+		worker.WithPeriodicDispatcherDataProvider[*dto.LoginAttemptWorkerJob](res.dataProvider),
+		worker.WithPeriodicDispatcherLogger[*dto.LoginAttemptWorkerJob](opts.Logger),
+		worker.WithPeriodicDispatcherPoolWorkerCount[*dto.LoginAttemptWorkerJob](opts.DispatcherOpts.WorkerCount),
+		worker.WithPeriodicDispatcherPoolDataCapacity[*dto.LoginAttemptWorkerJob](opts.DispatcherOpts.DataCapacity),
+		worker.WithPeriodicDispatcherPoolCompleteProcess[*dto.LoginAttemptWorkerJob](opts.DispatcherOpts.CompleteProcess),
+		worker.WithPeriodicDispatcherPoolJobHandler[*dto.LoginAttemptWorkerJob](res.storeAuthAudit),
+		worker.WithPeriodicDispatcherSchedulerStartInterval[*dto.LoginAttemptWorkerJob](opts.DispatcherOpts.StartInterval),
+		worker.WithPeriodicDispatcherSchedulerScheduleInterval[*dto.LoginAttemptWorkerJob](opts.DispatcherOpts.ScheduleInterval),
 	)
 	if err != nil {
 		return nil, errs.NewCommonError("scheduler dispatcher creation failed", err)
 	}
 	// setup
-	res.BaseSchedulerDispatcher = dispatcher
+	res.PeriodicDispatcher = dispatcher
 
 	return res, nil
 }

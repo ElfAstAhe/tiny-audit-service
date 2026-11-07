@@ -22,7 +22,7 @@ type LoginAttemptsOption func(*LoginAttemptsOptions)
 
 type LoginAttemptsOptions struct {
 	Name               string
-	DispatcherOpts     *worker.BaseSchedulerDispatcherOptions[*dto.LoginAttemptWorkerJob]
+	DispatcherOpts     *worker.PeriodicDispatcherOptions[*dto.LoginAttemptWorkerJob]
 	Receiver           broker.Receiver
 	AuthAuditUC        usecase.AuthAuditUseCase
 	BatchSize          int
@@ -35,7 +35,7 @@ func NewLoginAttemptsOptions() *LoginAttemptsOptions {
 	return &LoginAttemptsOptions{
 		BatchSize:        defaultBatchSize,
 		BatchReadTimeout: defaultBatchReadTimeout,
-		DispatcherOpts:   worker.NewBaseSchedulerDispatcherOptions[*dto.LoginAttemptWorkerJob](),
+		DispatcherOpts:   worker.NewPeriodicDispatcherOptions[*dto.LoginAttemptWorkerJob](),
 	}
 }
 
@@ -74,9 +74,9 @@ func WithLAOName(name string) LoginAttemptsOption {
 	}
 }
 
-func WithLAODispatcherOpts(options ...worker.BaseSchedulerDispatcherOption[*dto.LoginAttemptWorkerJob]) LoginAttemptsOption {
+func WithLAODispatcherOpts(options ...worker.PeriodicDispatcherOption[*dto.LoginAttemptWorkerJob]) LoginAttemptsOption {
 	return func(opts *LoginAttemptsOptions) {
-		opts.DispatcherOpts = worker.NewBaseSchedulerDispatcherOptions[*dto.LoginAttemptWorkerJob]()
+		opts.DispatcherOpts = worker.NewPeriodicDispatcherOptions[*dto.LoginAttemptWorkerJob]()
 		for _, option := range options {
 			option(opts.DispatcherOpts)
 		}

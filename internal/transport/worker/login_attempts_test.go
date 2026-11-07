@@ -41,12 +41,12 @@ func createTestWorker(
 		WithLAOLogger(mockLog),
 		// Передаем опции диспетчера в полном соответствии с сигнатурой WithLAODispatcherOpts
 		WithLAODispatcherOpts(
-			worker.WithSchedulerDispatcherPoolWorkerCount[*dto.LoginAttemptWorkerJob](1),
-			worker.WithSchedulerDispatcherPoolDataCapacity[*dto.LoginAttemptWorkerJob](10),
-			worker.WithSchedulerDispatcherPoolCompleteProcess[*dto.LoginAttemptWorkerJob](true),
-			worker.WithSchedulerDispatcherSchedulerStartInterval[*dto.LoginAttemptWorkerJob](time.Second),
-			worker.WithSchedulerDispatcherSchedulerScheduleInterval[*dto.LoginAttemptWorkerJob](time.Minute),
-			worker.WithSchedulerDispatcherStopTimeout[*dto.LoginAttemptWorkerJob](time.Second),
+			worker.WithPeriodicDispatcherPoolWorkerCount[*dto.LoginAttemptWorkerJob](1),
+			worker.WithPeriodicDispatcherPoolDataCapacity[*dto.LoginAttemptWorkerJob](10),
+			worker.WithPeriodicDispatcherPoolCompleteProcess[*dto.LoginAttemptWorkerJob](true),
+			worker.WithPeriodicDispatcherSchedulerStartInterval[*dto.LoginAttemptWorkerJob](time.Second),
+			worker.WithPeriodicDispatcherSchedulerScheduleInterval[*dto.LoginAttemptWorkerJob](time.Minute),
+			worker.WithPeriodicDispatcherStopTimeout[*dto.LoginAttemptWorkerJob](time.Second),
 		),
 		WithLAOReceiver(mockReceiver),
 		WithLAOAuthAuditUseCase(mockUC),

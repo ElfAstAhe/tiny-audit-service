@@ -15,6 +15,9 @@ import (
 	"github.com/ElfAstAhe/tiny-audit-service/internal/domain"
 )
 
+// DataAuditPgRepository репозиторий сущности domain.DataAudit
+//
+// Deprecated: DataAuditPgRepository реализация v1 repository
 type DataAuditPgRepository struct {
 	*librepo.CRUD[*domain.DataAudit, string]
 }

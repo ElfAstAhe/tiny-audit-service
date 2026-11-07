@@ -125,12 +125,12 @@ func (wc *WorkerContainer) providerLoginAttemptsListener() (any, error) {
 		worker.WithLAOBatchReadTimeout(confInst.LoginAttempts.BatchReadTimeout),
 		worker.WithLAOAcknowledgeTimeout(confInst.LoginAttempts.AcknowledgeTimeout),
 		worker.WithLAODispatcherOpts(
-			libworker.WithSchedulerDispatcherStopTimeout[*dto.LoginAttemptWorkerJob](confInst.LoginAttempts.ShutdownTimeout),
-			libworker.WithSchedulerDispatcherPoolWorkerCount[*dto.LoginAttemptWorkerJob](confInst.LoginAttempts.WorkerCount),
-			libworker.WithSchedulerDispatcherPoolDataCapacity[*dto.LoginAttemptWorkerJob](confInst.LoginAttempts.DataCapacity),
-			libworker.WithSchedulerDispatcherPoolCompleteProcess[*dto.LoginAttemptWorkerJob](confInst.LoginAttempts.CompleteProcessing),
-			libworker.WithSchedulerDispatcherSchedulerStartInterval[*dto.LoginAttemptWorkerJob](confInst.LoginAttempts.StartInterval),
-			libworker.WithSchedulerDispatcherSchedulerScheduleInterval[*dto.LoginAttemptWorkerJob](confInst.LoginAttempts.ScheduleInterval),
+			libworker.WithPeriodicDispatcherStopTimeout[*dto.LoginAttemptWorkerJob](confInst.LoginAttempts.ShutdownTimeout),
+			libworker.WithPeriodicDispatcherPoolWorkerCount[*dto.LoginAttemptWorkerJob](confInst.LoginAttempts.WorkerCount),
+			libworker.WithPeriodicDispatcherPoolDataCapacity[*dto.LoginAttemptWorkerJob](confInst.LoginAttempts.DataCapacity),
+			libworker.WithPeriodicDispatcherPoolCompleteProcess[*dto.LoginAttemptWorkerJob](confInst.LoginAttempts.CompleteProcessing),
+			libworker.WithPeriodicDispatcherSchedulerStartInterval[*dto.LoginAttemptWorkerJob](confInst.LoginAttempts.StartInterval),
+			libworker.WithPeriodicDispatcherSchedulerScheduleInterval[*dto.LoginAttemptWorkerJob](confInst.LoginAttempts.ScheduleInterval),
 		),
 	)
 	if err != nil {

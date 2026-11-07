@@ -19,7 +19,7 @@ func TestNewBaseAuditClientOptions_Defaults(t *testing.T) {
 	assert.Equal(t, DefaultWorkerCount, opts.Pool.WorkerCount)
 	assert.Equal(t, DefaultDataCapacity, opts.Pool.DataCapacity)
 	assert.Equal(t, DefaultCompleteProcess, opts.Pool.CompleteProcess)
-	assert.Equal(t, worker.DefaultPoolStopTimeout, opts.Pool.StopTimeout)
+	assert.Equal(t, worker.DefaultBoundedPoolStopTimeout, opts.Pool.StopTimeout)
 	assert.Empty(t, opts.Pool.Name)
 	assert.Nil(t, opts.Pool.Logger)
 }

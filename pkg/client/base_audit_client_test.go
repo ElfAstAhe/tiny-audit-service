@@ -72,7 +72,7 @@ func TestBaseAuditClient_Success(t *testing.T) {
 
 	// Отправляем тестовые данные в аудит
 	testData := &dto.AuthAuditDTO{Event: "user-login-event"}
-	err = bac.Audit(testData)
+	err = bac.Audit(t.Context(), testData)
 	assert.NoError(t, err)
 
 	// Ждем выполнения асинхронного экшена или таймаута
@@ -131,7 +131,7 @@ func TestBaseAuditClient_QueueOverflow(t *testing.T) {
 	mockTokenProvider.On("GetAccessToken").Return("token", nil).Maybe()
 
 	// 1. Этот элемент сразу заберет запущенный воркер в обработку и зависнет
-	err = bac.Audit(&dto.AuthAuditDTO{Event: "task-1"})
+	err = bac.Audit(t.Context(), &dto.AuthAuditDTO{Event: "task-1"})
 	assert.NoError(t, err)
 
 	// Ждем, пока воркер гарантированно займет задачу 1
@@ -142,12 +142,12 @@ func TestBaseAuditClient_QueueOverflow(t *testing.T) {
 	}
 
 	// 2. Этот элемент полностью забьет буфер канала (ёмкость 1)
-	err = bac.Audit(&dto.AuthAuditDTO{Event: "task-2"})
+	err = bac.Audit(t.Context(), &dto.AuthAuditDTO{Event: "task-2"})
 	assert.NoError(t, err)
 
 	// 3. Третий элемент уже не поместится ни в воркер, ни в буфер канала.
 	// TryPush вернет false, зафиксировав утерю данных.
-	err = bac.Audit(&dto.AuthAuditDTO{Event: "task-3-overflow"})
+	err = bac.Audit(t.Context(), &dto.AuthAuditDTO{Event: "task-3-overflow"})
 
 	// Проверяем, что зафиксирована ошибка переполнения очереди
 	require.Error(t, err)

@@ -19,7 +19,7 @@ type AppRouterOptions struct {
 	JWTHTTPHelper   *helper.JWTHTTPHelper
 	AuthHelper      auth.Helper
 	Health          *health.Health
-	Healthz         libhttp.HealthzFunc
+	Livez           libhttp.LivezFunc
 	Readyz          libhttp.ReadyzFunc
 	AuthAuditFacade facade.AuthAudit
 	DataAuditFacade facade.DataAudit
@@ -98,9 +98,9 @@ func WithHealth(healthInst *health.Health) Option {
 	}
 }
 
-func WithHealthz(healthz libhttp.HealthzFunc) Option {
+func WithLivez(livez libhttp.LivezFunc) Option {
 	return func(o *AppRouterOptions) {
-		o.Healthz = healthz
+		o.Livez = livez
 	}
 }
 

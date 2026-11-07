@@ -184,6 +184,7 @@ func (da *DataAudit) changer(ctx context.Context, querier db.Querier, entity *do
 	), nil
 }
 
+//goland:noinspection DuplicatedCode
 func (da *DataAudit) mapDefault(ctx context.Context, scannable librepo.Scannable, params ...any) (*domain.DataAudit, error) {
 	res := da.GetHelper().GetHooks().NewEntityFactory()
 	var valuesRaw []byte
@@ -219,14 +220,15 @@ func (da *DataAudit) mapTail(ctx context.Context, scannable librepo.Scannable, p
 	return res, nil
 }
 
+//goland:noinspection DuplicatedCode
 func (da *DataAudit) pgStatementsBuilder() *librepo.Statements[*domain.DataAudit, string] {
 	return librepo.NewStatements[*domain.DataAudit, string]().
-		WithStatement[*domain.DataAudit, string](librepo.StatementFind, librepo.NewStatement[*domain.DataAudit, string](postgres.SqlDataAuditFind, da.mapDefault)).
-		WithStatement[*domain.DataAudit, string](librepo.StatementList, librepo.NewStatement[*domain.DataAudit, string](postgres.SqlDataAuditList, da.mapDefault)).
-		WithStatement[*domain.DataAudit, string](librepo.StatementCreate, librepo.NewStatement[*domain.DataAudit, string](postgres.SqlDataAuditCreate, da.mapDefault)).
-		WithStatement[*domain.DataAudit, string](librepo.StatementChange, librepo.NewStatement[*domain.DataAudit, string](postgres.SqlDataAuditChange, da.mapDefault)).
-		WithStatement[*domain.DataAudit, string](librepo.StatementDelete, librepo.NewStatement[*domain.DataAudit, string](postgres.SqlDataAuditDelete, nil)).
-		WithStatement[*domain.DataAudit, string](statementDataGetTail, librepo.NewStatement[*domain.DataAudit, string](postgres.SqlDataAuditTailList, da.mapTail)).
-		WithStatement[*domain.DataAudit, string](statementDataListByPeriod, librepo.NewStatement[*domain.DataAudit, string](postgres.SqlDataAuditListByPeriod, da.mapDefault)).
-		WithStatement[*domain.DataAudit, string](statementDataListByInstance, librepo.NewStatement[*domain.DataAudit, string](postgres.SqlDataAuditListByInstance, da.mapDefault))
+		WithStatement(librepo.StatementFind, librepo.NewStatement(postgres.SqlDataAuditFind, da.mapDefault)).
+		WithStatement(librepo.StatementList, librepo.NewStatement(postgres.SqlDataAuditList, da.mapDefault)).
+		WithStatement(librepo.StatementCreate, librepo.NewStatement(postgres.SqlDataAuditCreate, da.mapDefault)).
+		WithStatement(librepo.StatementChange, librepo.NewStatement(postgres.SqlDataAuditChange, da.mapDefault)).
+		WithStatement(librepo.StatementDelete, librepo.NewStatement[*domain.DataAudit, string](postgres.SqlDataAuditDelete, nil)).
+		WithStatement(statementDataGetTail, librepo.NewStatement(postgres.SqlDataAuditTailList, da.mapTail)).
+		WithStatement(statementDataListByPeriod, librepo.NewStatement(postgres.SqlDataAuditListByPeriod, da.mapDefault)).
+		WithStatement(statementDataListByInstance, librepo.NewStatement(postgres.SqlDataAuditListByInstance, da.mapDefault))
 }

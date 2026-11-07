@@ -27,7 +27,7 @@ type AppChiRouter struct {
 	log             logger.Logger
 	config          *config.Config
 	health          *health.Health
-	healthz         libhttp.HealthzFunc
+	livez           libhttp.LivezFunc
 	readyz          libhttp.ReadyzFunc
 	authAuditFacade facade.AuthAudit
 	dataAuditFacade facade.DataAudit
@@ -54,7 +54,7 @@ func NewAppRouter(opts ...Option) (*AppChiRouter, error) {
 		options.JWTHTTPHelper,
 		options.AuthHelper,
 		options.Health,
-		options.Healthz,
+		options.Livez,
 		options.Readyz,
 		options.AuthAuditFacade,
 		options.DataAuditFacade,
@@ -68,7 +68,7 @@ func newAppChiRouter(
 	jwtHTTPHelper *helper.JWTHTTPHelper,
 	authHelper auth.Helper,
 	health *health.Health,
-	healthz libhttp.HealthzFunc,
+	livez libhttp.LivezFunc,
 	readyz libhttp.ReadyzFunc,
 	authAuditFacade facade.AuthAudit,
 	dataAuditFacade facade.DataAudit,
@@ -78,7 +78,7 @@ func newAppChiRouter(
 		log:             logger.GetLogger("app-chi-router"),
 		config:          config,
 		health:          health,
-		healthz:         healthz,
+		livez:           livez,
 		readyz:          readyz,
 		authAuditFacade: authAuditFacade,
 		dataAuditFacade: dataAuditFacade,
@@ -154,7 +154,7 @@ func (cr *AppChiRouter) setupMiddleware(
 			libhttp.NewPathMatcher(http.MethodGet, "/metrics", "^/metrics.*$"),
 			libhttp.NewPathMatcher(http.MethodGet, "/swagger", "^/swagger.*$"),
 			libhttp.NewPathMatcher(http.MethodGet, "/status", "^/status.*$"),
-			libhttp.NewPathMatcher(http.MethodGet, "/healthz", "^/healthz.*$"),
+			libhttp.NewPathMatcher(http.MethodGet, "/livez", "^/livez.*$"),
 			libhttp.NewPathMatcher(http.MethodGet, "/readyz", "^/readyz.*$"),
 			libhttp.NewPathMatcher(http.MethodGet, "/debug", "^/debug.*$"),
 			libhttp.NewPathMatcher(http.MethodGet, "/config", "^/config.*$"),
@@ -167,7 +167,7 @@ func (cr *AppChiRouter) setupMiddleware(
 
 func (cr *AppChiRouter) setupRoutes() {
 	// health check
-	cr.router.Get("/healthz", cr.getHealthz)
+	cr.router.Get("/livez", cr.getLivez)
 	// readiness check
 	cr.router.Get("/readyz", cr.getReadyz)
 	// config (debug)

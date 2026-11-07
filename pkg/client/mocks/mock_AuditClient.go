@@ -47,16 +47,16 @@ func (_m *MockAuditClient[A]) EXPECT() *MockAuditClient_Expecter[A] {
 }
 
 // Audit provides a mock function for the type MockAuditClient
-func (_mock *MockAuditClient[A]) Audit(data A) error {
-	ret := _mock.Called(data)
+func (_mock *MockAuditClient[A]) Audit(ctx context.Context, data A) error {
+	ret := _mock.Called(ctx, data)
 
 	if len(ret) == 0 {
 		panic("no return value specified for Audit")
 	}
 
 	var r0 error
-	if returnFunc, ok := ret.Get(0).(func(A) error); ok {
-		r0 = returnFunc(data)
+	if returnFunc, ok := ret.Get(0).(func(context.Context, A) error); ok {
+		r0 = returnFunc(ctx, data)
 	} else {
 		r0 = ret.Error(0)
 	}
@@ -69,19 +69,25 @@ type MockAuditClient_Audit_Call[A any] struct {
 }
 
 // Audit is a helper method to define mock.On call
+//   - ctx context.Context
 //   - data A
-func (_e *MockAuditClient_Expecter[A]) Audit(data any) *MockAuditClient_Audit_Call[A] {
-	return &MockAuditClient_Audit_Call[A]{Call: _e.mock.On("Audit", data)}
+func (_e *MockAuditClient_Expecter[A]) Audit(ctx any, data any) *MockAuditClient_Audit_Call[A] {
+	return &MockAuditClient_Audit_Call[A]{Call: _e.mock.On("Audit", ctx, data)}
 }
 
-func (_c *MockAuditClient_Audit_Call[A]) Run(run func(data A)) *MockAuditClient_Audit_Call[A] {
+func (_c *MockAuditClient_Audit_Call[A]) Run(run func(ctx context.Context, data A)) *MockAuditClient_Audit_Call[A] {
 	_c.Call.Run(func(args mock.Arguments) {
-		var arg0 A
+		var arg0 context.Context
 		if args[0] != nil {
-			arg0 = args[0].(A)
+			arg0 = args[0].(context.Context)
+		}
+		var arg1 A
+		if args[1] != nil {
+			arg1 = args[1].(A)
 		}
 		run(
 			arg0,
+			arg1,
 		)
 	})
 	return _c
@@ -92,7 +98,7 @@ func (_c *MockAuditClient_Audit_Call[A]) Return(err error) *MockAuditClient_Audi
 	return _c
 }
 
-func (_c *MockAuditClient_Audit_Call[A]) RunAndReturn(run func(data A) error) *MockAuditClient_Audit_Call[A] {
+func (_c *MockAuditClient_Audit_Call[A]) RunAndReturn(run func(ctx context.Context, data A) error) *MockAuditClient_Audit_Call[A] {
 	_c.Call.Return(run)
 	return _c
 }

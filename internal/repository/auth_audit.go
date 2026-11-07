@@ -192,12 +192,12 @@ func (aa *AuthAudit) mapTail(ctx context.Context, scannable librepo.Scannable, p
 
 func (aa *AuthAudit) pgStatementsBuilder() *librepo.Statements[*domain.AuthAudit, string] {
 	return librepo.NewStatements[*domain.AuthAudit, string]().
-		WithStatement[*domain.AuthAudit, string](librepo.StatementFind, librepo.NewStatement[*domain.AuthAudit, string](postgres.SqlAuthAuditFind, aa.mapDefault)).
-		WithStatement[*domain.AuthAudit, string](librepo.StatementList, librepo.NewStatement[*domain.AuthAudit, string](postgres.SqlAuthAuditList, aa.mapDefault)).
-		WithStatement[*domain.AuthAudit, string](librepo.StatementCreate, librepo.NewStatement[*domain.AuthAudit, string](postgres.SqlAuthAuditCreate, aa.mapDefault)).
-		WithStatement[*domain.AuthAudit, string](librepo.StatementChange, librepo.NewStatement[*domain.AuthAudit, string](postgres.SqlAuthAuditChange, aa.mapDefault)).
-		WithStatement[*domain.AuthAudit, string](librepo.StatementDelete, librepo.NewStatement[*domain.AuthAudit, string](postgres.SqlAuthAuditDelete, nil)).
-		WithStatement[*domain.AuthAudit, string](statementAuthGetTail, librepo.NewStatement[*domain.AuthAudit, string](postgres.SqlAuthAuditTailList, aa.mapTail)).
-		WithStatement[*domain.AuthAudit, string](statementAuthListByPeriod, librepo.NewStatement[*domain.AuthAudit, string](postgres.SqlAuthAuditListByPeriod, aa.mapDefault)).
-		WithStatement[*domain.AuthAudit, string](statementAuthListByUsername, librepo.NewStatement[*domain.AuthAudit, string](postgres.SqlAuthAuditListByUsername, aa.mapDefault))
+		WithStatement(librepo.StatementFind, librepo.NewStatement(postgres.SqlAuthAuditFind, aa.mapDefault)).
+		WithStatement(librepo.StatementList, librepo.NewStatement(postgres.SqlAuthAuditList, aa.mapDefault)).
+		WithStatement(librepo.StatementCreate, librepo.NewStatement(postgres.SqlAuthAuditCreate, aa.mapDefault)).
+		WithStatement(librepo.StatementChange, librepo.NewStatement(postgres.SqlAuthAuditChange, aa.mapDefault)).
+		WithStatement(librepo.StatementDelete, librepo.NewStatement[*domain.AuthAudit, string](postgres.SqlAuthAuditDelete, nil)).
+		WithStatement(statementAuthGetTail, librepo.NewStatement(postgres.SqlAuthAuditTailList, aa.mapTail)).
+		WithStatement(statementAuthListByPeriod, librepo.NewStatement(postgres.SqlAuthAuditListByPeriod, aa.mapDefault)).
+		WithStatement(statementAuthListByUsername, librepo.NewStatement(postgres.SqlAuthAuditListByUsername, aa.mapDefault))
 }

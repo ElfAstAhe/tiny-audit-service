@@ -49,14 +49,14 @@ func NewBaseAuditClient[D any](options ...BaseAuditClientOption[D]) (*BaseAuditC
 		log:           opts.Pool.Logger.GetLogger(fmt.Sprintf(baseAuditClientNameTemplate, opts.Pool.Name)),
 	}
 	// pool
-	workerPool, err := worker.NewBasePool[D](
-		worker.WithPoolName[D](opts.Pool.Name),
-		worker.WithPoolWorkerCount[D](opts.Pool.WorkerCount),
-		worker.WithPoolDataCapacity[D](opts.Pool.DataCapacity),
+	workerPool, err := worker.NewBoundedPool[D](
+		worker.WithBoundedPoolName[D](opts.Pool.Name),
+		worker.WithBoundedPoolWorkerCount[D](opts.Pool.WorkerCount),
+		worker.WithBoundedPoolDataCapacity[D](opts.Pool.DataCapacity),
 		worker.WithPoolCompleteProcess[D](opts.Pool.CompleteProcess),
-		worker.WithPoolStopTimeout[D](opts.Pool.StopTimeout),
-		worker.WithPoolJobHandler[D](res.jobHandler),
-		worker.WithPoolLogger[D](opts.Pool.Logger),
+		worker.WithBoundedPoolStopTimeout[D](opts.Pool.StopTimeout),
+		worker.WithBoundedPoolJobHandler[D](res.jobHandler),
+		worker.WithBoundedPoolLogger[D](opts.Pool.Logger),
 	)
 	if err != nil {
 		return nil, errs.NewCommonError("failed to create worker pool", err)
@@ -81,11 +81,11 @@ func (bac *BaseAuditClient[D]) Stop(ctx context.Context) error {
 	return bac.pool.Stop(ctx)
 }
 
-func (bac *BaseAuditClient[D]) Audit(data D) error {
+func (bac *BaseAuditClient[D]) Audit(ctx context.Context, data D) error {
 	bac.GetLogger().Debugf("Audit start")
 	defer bac.GetLogger().Debugf("Audit finish")
 
-	res := bac.pool.TryPush(data)
+	res := bac.pool.TryPush(ctx, data)
 	if !res {
 		bac.totalLost.Add(1)
 		return errs.NewCommonError("failed to push auth audit data", nil)
@@ -113,7 +113,7 @@ func (bac *BaseAuditClient[D]) jobHandler(ctx context.Context, workerIndex int, 
 	err = bac.auditAction(ctx, workerIndex, data, token)
 	if err != nil {
 		// try push for retry audit
-		if pushSuccess := bac.pool.TryPush(data); !pushSuccess {
+		if pushSuccess := bac.pool.TryPush(ctx, data); !pushSuccess {
 			bac.GetLogger().Warn("failed to enqueue audit data for retry; data has been lost")
 			bac.GetLogger().Warnf("lost audit data [%v]", data)
 			bac.totalLost.Add(1)
