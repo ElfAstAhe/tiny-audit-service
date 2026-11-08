@@ -30,7 +30,7 @@ func AuditRequestIDExtractorUnaryServerInterceptor(headers ...string) grpc.Unary
 			}
 		}
 		if requestID == "" {
-			requestID = "unknown"
+			requestID = utils.UnknownValue
 		}
 
 		return handler(utils.WithRequestID(ctx, requestID), req)
@@ -50,7 +50,7 @@ func AuditRequestIDExtractorStreamServerInterceptor(headers ...string) grpc.Stre
 			}
 		}
 		if requestID == "" {
-			requestID = "unknown"
+			requestID = utils.UnknownValue
 		}
 
 		return handler(srv, &serverStream{

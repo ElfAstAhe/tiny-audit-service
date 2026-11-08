@@ -9,14 +9,7 @@ import (
 	"github.com/ElfAstAhe/tiny-audit-service/pkg/domain"
 )
 
-// AuditRequestIDContextKey определяет изолированный тип ключа контекста для безопасного хранения Request ID.
-type AuditRequestIDContextKey struct{}
-
-// AuditTraceIDContextKey определяет изолированный тип ключа контекста для безопасного хранения Trace ID распределенной трассировки.
-type AuditTraceIDContextKey struct{}
-
-var AuditReqID = AuditRequestIDContextKey{}
-var AuditTrcID = AuditTraceIDContextKey{}
+const UnknownValue string = "unknown"
 
 // HasChanges выполняет сверку двух экземпляров сущностей на наличие изменений, сопоставляя их атомарные хэш-коды HashCode.
 func HasChanges(before, after domain.Auditable) bool {
@@ -98,38 +91,8 @@ func GetAuditStatus(err error) string {
 func UsernameFromContext(ctx context.Context) string {
 	subj := auth.FromContext(ctx)
 	if subj == nil {
-		return "unknown"
+		return UnknownValue
 	}
 
 	return subj.Name
-}
-
-// RequestIDFromContext выполняет безопасное извлечение и приведение типа для Request ID из контекста выполнения.
-func RequestIDFromContext(ctx context.Context) string {
-	val, ok := ctx.Value(AuditReqID).(string)
-	if !ok {
-		return "unknown"
-	}
-
-	return val
-}
-
-// TraceIDFromContext выполняет безопасное извлечение и приведение типа для Trace ID распределенной трассировки из контекста выполнения.
-func TraceIDFromContext(ctx context.Context) string {
-	val, ok := ctx.Value(AuditTrcID).(string)
-	if !ok {
-		return "unknown"
-	}
-
-	return val
-}
-
-// WithRequestID обогащает контекст выполнения уникальным идентификатором входящего запроса Request ID.
-func WithRequestID(ctx context.Context, requestID string) context.Context {
-	return context.WithValue(ctx, AuditReqID, requestID)
-}
-
-// WithTraceID обогащает контекст выполнения уникальным идентификатором распределенной трассировки Trace ID.
-func WithTraceID(ctx context.Context, traceID string) context.Context {
-	return context.WithValue(ctx, AuditTrcID, traceID)
 }

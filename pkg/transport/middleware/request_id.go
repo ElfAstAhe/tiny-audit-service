@@ -42,7 +42,7 @@ func (are *AuditRequestIDExtractor) Handle(next http.Handler) http.Handler {
 		}
 		// if none
 		if requestID == "" {
-			requestID = "unknown"
+			requestID = utils.UnknownValue
 		}
 		// wrap request
 		req := r.WithContext(utils.WithRequestID(r.Context(), requestID))
