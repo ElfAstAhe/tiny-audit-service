@@ -9,22 +9,29 @@ import (
 	"github.com/ElfAstAhe/tiny-audit-service/internal/domain"
 )
 
+// AuthListByUsernameUseCase определяет контракт бизнес-логики (Use Case)
+// для получения записей аудита событий аутентификации конкретного пользователя.
 type AuthListByUsernameUseCase interface {
 	List(ctx context.Context, username string, limit, offset int) ([]*domain.AuthAudit, error)
 }
 
+// AuthListByUsernameInteractor реализует интерфейс AuthListByUsernameUseCase, обеспечивая
+// чтение записей аудита событий аутентификации для выбранного пользователя из репозитория.
 type AuthListByUsernameInteractor struct {
 	authAuditRepo domain.AuthAuditRepository
 }
 
 var _ AuthListByUsernameUseCase = (*AuthListByUsernameInteractor)(nil)
 
-func NewAuthListByUsernameUseCase(authAuditRepo domain.AuthAuditRepository) *AuthListByUsernameInteractor {
+// NewAuthListByUsername создает и инициализирует новый экземпляр интерактора AuthListByUsernameInteractor.
+func NewAuthListByUsername(authAuditRepo domain.AuthAuditRepository) *AuthListByUsernameInteractor {
 	return &AuthListByUsernameInteractor{
 		authAuditRepo: authAuditRepo,
 	}
 }
 
+// List выполняет валидацию входных параметров имени пользователя и пагинации,
+// после чего запрашивает список записей аудита аутентификации из нижележащего репозитория.
 func (alu *AuthListByUsernameInteractor) List(ctx context.Context, username string, limit, offset int) ([]*domain.AuthAudit, error) {
 	if err := alu.validate(username, limit, offset); err != nil {
 		return nil, errs.NewBllValidateError("AuthListByUsernameInteractor.List", "validate income failed", err)

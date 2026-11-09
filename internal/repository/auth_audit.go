@@ -21,6 +21,8 @@ const (
 	statementAuthGetTail        string = "stetement-auth-get-tail"
 )
 
+// AuthAudit представляет собой базовый репозиторий для выполнения CRUD-операций
+// и специализированных выборок сущности domain.AuthAudit в базе данных.
 type AuthAudit struct {
 	*librepo.CRUD[*domain.AuthAudit, string]
 }
@@ -29,6 +31,8 @@ var _ libdom.CRUDRepository[*domain.AuthAudit, string] = (*AuthAudit)(nil)
 var _ domain.AuthAuditRepository = (*AuthAudit)(nil)
 var _ libextdom.TailRepository[string] = (*AuthAudit)(nil)
 
+// NewAuthAudit создает и инициализирует новый экземпляр репозитория AuthAudit,
+// регистрируя необходимые мапперы, хуки и SQL-инструкции для драйверов базы данных.
 func NewAuthAudit(
 	driverName string,
 	executor db.Executor,
@@ -60,6 +64,7 @@ func NewAuthAudit(
 	return res, nil
 }
 
+// GetTail возвращает список идентификаторов старых записей аудита, созданных до указанной даты.
 func (aa *AuthAudit) GetTail(ctx context.Context, tailDate time.Time) ([]string, error) {
 	// fail fast
 	if tailDate.IsZero() {
@@ -74,6 +79,7 @@ func (aa *AuthAudit) GetTail(ctx context.Context, tailDate time.Time) ([]string,
 	return libdom.MapEntitiesToIDs(res), nil
 }
 
+// CutTail выполняет физическое удаление записи аудита из "хвоста" таблицы по её идентификатору.
 func (aa *AuthAudit) CutTail(ctx context.Context, id string) error {
 	// fail fast
 	if strings.TrimSpace(id) == "" {
@@ -83,6 +89,7 @@ func (aa *AuthAudit) CutTail(ctx context.Context, id string) error {
 	return aa.Delete(ctx, id)
 }
 
+// ListByPeriod возвращает срез записей аудита аутентификации за указанный временной период с фильтрацией по лимиту и смещению.
 func (aa *AuthAudit) ListByPeriod(ctx context.Context, from, till time.Time, limit, offset int) ([]*domain.AuthAudit, error) {
 	// fail fast
 	if err := aa.validateListByPeriod(from, till, limit, offset); err != nil {
@@ -114,6 +121,7 @@ func (aa *AuthAudit) validateListByPeriod(from, till time.Time, limit, offset in
 	return nil
 }
 
+// ListByUsername возвращает срез записей аудита аутентификации для конкретного пользователя с поддержкой пагинации.
 func (aa *AuthAudit) ListByUsername(ctx context.Context, username string, offset, limit int) ([]*domain.AuthAudit, error) {
 	// fail fast
 	if err := aa.validateListByUsername(username, offset, limit); err != nil {
@@ -200,6 +208,7 @@ func (aa *AuthAudit) mapTail(ctx context.Context, scannable librepo.Scannable, p
 	return res, nil
 }
 
+//goland:noinspection DuplicatedCode
 func (aa *AuthAudit) pgStatementsBuilder() *librepo.Statements[*domain.AuthAudit, string] {
 	return librepo.NewStatements[*domain.AuthAudit, string]().
 		WithStatement(librepo.StatementFind, librepo.NewStatement(postgres.SqlAuthAuditFind, aa.mapDefault)).

@@ -12,6 +12,8 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
+// AuthExtractor представляет собой промежуточный слой (Middleware) для аутентификации,
+// выполняющий извлечение, валидацию JWT-токенов из заголовков или кук и проверку эмитентов.
 type AuthExtractor struct {
 	jwtHelper     *helper.JWTHelper
 	jwtHTTPHelper *helper.JWTHTTPHelper
@@ -21,6 +23,8 @@ type AuthExtractor struct {
 	acceptIssuers map[string]struct{}
 }
 
+// NewAuthExtractor создает и инициализирует новый экземпляр Middleware-экстрактора AuthExtractor,
+// формируя внутренний быстрый кэш разрешенных эмитентов (Issuers).
 func NewAuthExtractor(
 	jwtHelper *helper.JWTHelper,
 	jwtHTTPHelper *helper.JWTHTTPHelper,
@@ -44,6 +48,8 @@ func NewAuthExtractor(
 	}
 }
 
+// Handle встраивает проверку токена в каскадную цепочку обработки HTTP-запросов.
+// Пропускает защищенные пути, проверяет подпись, белый список эмитентов и внедряет Subject в контекст.
 func (aem *AuthExtractor) Handle(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
 		aem.log.Debug("AuthExtractor.Handle start")

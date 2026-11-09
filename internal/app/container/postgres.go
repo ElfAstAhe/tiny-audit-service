@@ -11,13 +11,20 @@ import (
 	"github.com/ElfAstAhe/go-service-template/pkg/migration"
 )
 
+// Константы, определяющие строковые идентификаторы инстансов базы данных, мигратора и менеджера транзакций в DI-контейнере.
 const (
-	InstanceDB         string = "DB"
+	// InstanceDB определяет имя инстанса подключения к базе данных.
+	InstanceDB string = "DB"
+
+	// InstanceDBMigrator определяет имя инстанса утилиты выполнения миграций БД.
 	InstanceDBMigrator string = "db-migrator"
-	InstanceTM         string = "transaction-manager"
+
+	// InstanceTM определяет имя инстанса менеджера транзакций (Transaction Manager).
+	InstanceTM string = "transaction-manager"
 )
 
-// PgContainer database connection and data migrations
+// PgContainer представляет собой ленивый (lazy) DI-контейнер для управления
+// жизненным циклом пула соединений PostgreSQL, пингования БД и автоматического наката миграций.
 type PgContainer struct {
 	*container.BaseLazyContainer
 }
@@ -25,6 +32,7 @@ type PgContainer struct {
 var _ container.Container = (*PgContainer)(nil)
 var _ container.LazyContainer = (*PgContainer)(nil)
 
+// NewPgContainer создает и инициализирует новый экземпляр контейнера базы данных PgContainer.
 func NewPgContainer(
 	orchestrator container.Orchestrator,
 	log logger.Logger,
@@ -38,6 +46,8 @@ func NewPgContainer(
 	}
 }
 
+// Init выполняет инициализацию контейнера: регистрирует провайдеры, пингует базу данных для проверки
+// связи, инициализирует мигратор и накатывает новые SQL-скрипты изменений (Migrate Up).
 func (pc *PgContainer) Init(initCtx context.Context) error {
 	// add providers
 	err := errors.Join(

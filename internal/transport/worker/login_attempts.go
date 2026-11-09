@@ -14,6 +14,8 @@ import (
 	"github.com/ElfAstAhe/tiny-audit-service/internal/usecase"
 )
 
+// LoginAttempts реализует логику фонового воркера для периодического вычитывания пачек
+// сообщений о попытках аутентификации из брокера, их трансформации и сохранения в базу данных.
 type LoginAttempts struct {
 	*worker.PeriodicDispatcher[*dto.LoginAttemptWorkerJob]
 	opts               *LoginAttemptsOptions
@@ -28,6 +30,8 @@ var _ worker.Scheduler = (*LoginAttempts)(nil)
 var _ worker.Common = (*LoginAttempts)(nil)
 var _ container.Runner = (*LoginAttempts)(nil)
 
+// NewLoginAttempts конструирует и инициализирует новый экземпляр воркера LoginAttempts,
+// разворачивая под капотом периодический диспетчер задач (PeriodicDispatcher) со всеми опциями.
 func NewLoginAttempts(options ...LoginAttemptsOption) (*LoginAttempts, error) {
 	opts := NewLoginAttemptsOptions()
 

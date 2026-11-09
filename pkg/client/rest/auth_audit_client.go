@@ -19,6 +19,8 @@ const (
 	authClientNameTemplate string = "rest-auth-audit-client-%s"
 )
 
+// AuthAuditClient представляет собой специализированный REST-клиент для отправки
+// аудит-логов аутентификации v1 посредством автоматически сгенерированного go-swagger SDK.
 type AuthAuditClient struct {
 	*client.BaseAuditClient[*dto.AuthAuditDTO]
 	name   string
@@ -31,6 +33,9 @@ var _ client.AuditClient[*dto.AuthAuditDTO] = (*AuthAuditClient)(nil)
 var _ client.AuthAuditClient = (*AuthAuditClient)(nil)
 var _ container.Runner = (*AuthAuditClient)(nil)
 
+// NewAuthAuditClient инициализирует опции, парсит базовый URL и конструирует
+// новый экземпляр клиента AuthAuditClient со встроенным асинхронным воркер-пулом.
+//
 //goland:noinspection DuplicatedCode
 func NewAuthAuditClient(options ...AuditClientOption[*dto.AuthAuditDTO]) (*AuthAuditClient, error) {
 	opts := NewAuditClientOptions[*dto.AuthAuditDTO]()
@@ -98,14 +103,17 @@ func (aac *AuthAuditClient) auditAction(
 	return nil
 }
 
+// GetName возвращает уникальное скомпонованное строковое имя клиента.
 func (aac *AuthAuditClient) GetName() string {
 	return aac.name
 }
 
+// GetOpts возвращает конфигурационные опции (таймауты, пулы, урлы), с которыми был инициализирован клиент.
 func (aac *AuthAuditClient) GetOpts() *AuditClientOptions[*dto.AuthAuditDTO] {
 	return aac.opts
 }
 
+// GetLogger возвращает изолированный и именованный инстанс логгера для текущего клиента.
 func (aac *AuthAuditClient) GetLogger() logger.Logger {
 	return aac.log
 }

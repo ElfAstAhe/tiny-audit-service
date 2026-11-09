@@ -9,6 +9,7 @@ import (
 	"github.com/ElfAstAhe/tiny-audit-service/pkg/domain"
 )
 
+// UnknownValue определяет строковый маркер по умолчанию для неопределенных параметров.
 const UnknownValue string = "unknown"
 
 // HasChanges выполняет сверку двух экземпляров сущностей на наличие изменений, сопоставляя их атомарные хэш-коды HashCode.

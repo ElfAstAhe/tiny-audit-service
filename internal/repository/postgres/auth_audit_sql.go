@@ -1,6 +1,8 @@
 package postgres
 
+// Константы, содержащие SQL-запросы для взаимодействия с таблицей auth_audit в СУБД PostgreSQL.
 const (
+	// SqlAuthAuditFind содержит SQL-запрос для выборки одной записи аудита аутентификации по её уникальному идентификатору.
 	SqlAuthAuditFind string = `
 select
     id,
@@ -19,6 +21,7 @@ from
 where
     id = $1
 `
+	// SqlAuthAuditList содержит SQL-запрос для постраничной выборки всех записей аудита аутентификации.
 	SqlAuthAuditList string = `
 select
     id,
@@ -40,6 +43,7 @@ order by
 offset $2
 limit $1
 `
+	// SqlAuthAuditListByPeriod содержит SQL-запрос для постраничной выборки записей аудита аутентификации за определенный период времени.
 	SqlAuthAuditListByPeriod string = `
 select
     id,
@@ -64,6 +68,7 @@ order by
 offset $4
 limit $3
 `
+	// SqlAuthAuditListByUsername содержит SQL-запрос для выборки записей событий аудита для конкретного пользователя.
 	SqlAuthAuditListByUsername string = `
 select
     id,
@@ -87,6 +92,7 @@ order by
 offset $3
 limit $2
 `
+	// SqlAuthAuditCreate содержит SQL-запрос для вставки новой записи в таблицу аудита аутентификации.
 	SqlAuthAuditCreate string = `
 insert into auth_audit (
     id,
@@ -118,6 +124,7 @@ returning
     created_at,
     updated_at
 `
+	// SqlAuthAuditChange содержит SQL-запрос для обновления существующей записи аудита аутентификации.
 	SqlAuthAuditChange string = `
 update
     auth_audit
@@ -148,6 +155,7 @@ returning
     created_at,
     updated_at
 `
+	// SqlAuthAuditDelete содержит SQL-запрос для удаления записи аудита аутентификации по её идентификатору.
 	SqlAuthAuditDelete string = `
 delete
 from
@@ -155,6 +163,7 @@ from
 where
     id = $1
 `
+	// SqlAuthAuditTailList содержит SQL-запрос для извлечения идентификаторов старых записей, попадающих под очистку хвостов таблиц auth_audit.
 	SqlAuthAuditTailList string = `
 select
     id

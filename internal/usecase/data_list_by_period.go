@@ -9,22 +9,29 @@ import (
 	"github.com/ElfAstAhe/tiny-audit-service/internal/domain"
 )
 
+// DataListByPeriodUseCase определяет контракт бизнес-логики (Use Case)
+// для получения архивных записей аудита изменений данных за указанный период времени.
 type DataListByPeriodUseCase interface {
 	List(ctx context.Context, from, till time.Time, limit int, offset int) ([]*domain.DataAudit, error)
 }
 
+// DataListByPeriodInteractor реализует интерфейс DataListByPeriodUseCase, обеспечивая
+// чтение записей аудита изменений данных за выбранный временной интервал из репозитория.
 type DataListByPeriodInteractor struct {
 	dataAuditRepo domain.DataAuditRepository
 }
 
 var _ DataListByPeriodUseCase = (*DataListByPeriodInteractor)(nil)
 
-func NewDataListByPeriodUseCase(dataAuditRepo domain.DataAuditRepository) *DataListByPeriodInteractor {
+// NewDataListByPeriod создает и инициализирует новый экземпляр интерактора DataListByPeriodInteractor.
+func NewDataListByPeriod(dataAuditRepo domain.DataAuditRepository) *DataListByPeriodInteractor {
 	return &DataListByPeriodInteractor{
 		dataAuditRepo: dataAuditRepo,
 	}
 }
 
+// List выполняет валидацию входных параметров времени и пагинации, после чего запрашивает
+// список записей аудита изменений данных из нижележащего репозитория.
 func (dlp *DataListByPeriodInteractor) List(ctx context.Context, from, till time.Time, limit int, offset int) ([]*domain.DataAudit, error) {
 	if err := dlp.validate(from, till, limit, offset); err != nil {
 		return nil, errs.NewBllValidateError("DataListByPeriodInteractor.List", "validate income failed", err)

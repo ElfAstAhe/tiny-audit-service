@@ -1,4 +1,4 @@
 package config
 
-type GRPCAuditClientConfig struct {
-}
+//type GRPCAuditClientConfig struct {
+//}

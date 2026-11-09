@@ -17,6 +17,8 @@ const (
 	baseAuditClientNameTemplate string = "base-audit-client-%s"
 )
 
+// BaseAuditClient представляет собой базовую обобщенную (generic) реализацию
+// асинхронного клиента для логирования и отправки записей аудита на базе воркер-пула.
 type BaseAuditClient[D any] struct {
 	name          string
 	pool          worker.Pool[D]
@@ -31,6 +33,8 @@ var _ AuditClient[*dto.AuthAuditDTO] = (*BaseAuditClient[*dto.AuthAuditDTO])(nil
 var _ AuditClient[*dto.DataAuditDTO] = (*BaseAuditClient[*dto.DataAuditDTO])(nil)
 var _ container.Runner = (*BaseAuditClient[*dto.DataAuditDTO])(nil)
 
+// NewBaseAuditClient создает и инициализирует новый экземпляр BaseAuditClient,
+// разворачивая внутренний ограниченный воркер-пул (BoundedPool) для обработки логов.
 func NewBaseAuditClient[D any](options ...BaseAuditClientOption[D]) (*BaseAuditClient[D], error) {
 	opts := NewBaseAuditClientOptions[D]()
 	for _, option := range options {
@@ -67,6 +71,7 @@ func NewBaseAuditClient[D any](options ...BaseAuditClientOption[D]) (*BaseAuditC
 	return res, nil
 }
 
+// Start выполняет запуск фонового пула воркеров для асинхронного обслуживания очереди аудит-логов.
 func (bac *BaseAuditClient[D]) Start(ctx context.Context) error {
 	bac.GetLogger().Debugf("Start start")
 	defer bac.GetLogger().Debugf("Start finish")
@@ -74,6 +79,7 @@ func (bac *BaseAuditClient[D]) Start(ctx context.Context) error {
 	return bac.pool.Start(ctx)
 }
 
+// Stop корректно останавливает выполнение пула воркеров, соблюдая правила Graceful Shutdown.
 func (bac *BaseAuditClient[D]) Stop(ctx context.Context) error {
 	bac.GetLogger().Debugf("Stop start")
 	defer bac.GetLogger().Debugf("Stop finish")
@@ -81,6 +87,8 @@ func (bac *BaseAuditClient[D]) Stop(ctx context.Context) error {
 	return bac.pool.Stop(ctx)
 }
 
+// Audit пытается отправить запись аудит-лога во внутреннюю очередь (пул воркеров).
+// Если очередь переполнена, увеличивает счетчик потерянных записей и возвращает ошибку.
 func (bac *BaseAuditClient[D]) Audit(ctx context.Context, data D) error {
 	bac.GetLogger().Debugf("Audit start")
 	defer bac.GetLogger().Debugf("Audit finish")
@@ -94,6 +102,7 @@ func (bac *BaseAuditClient[D]) Audit(ctx context.Context, data D) error {
 	return nil
 }
 
+// TotalLost атомарно загружает и возвращает суммарное число утерянных или сброшенных из-за ошибок логов.
 func (bac *BaseAuditClient[D]) TotalLost() int32 {
 	return bac.totalLost.Load()
 }
@@ -125,22 +134,27 @@ func (bac *BaseAuditClient[D]) jobHandler(ctx context.Context, workerIndex int, 
 	return nil
 }
 
+// GetOpts возвращает конфигурационные опции, примененные при сборке BaseAuditClient.
 func (bac *BaseAuditClient[D]) GetOpts() *BaseAuditClientOptions[D] {
 	return bac.opts
 }
 
+// GetLogger возвращает назначенный для данного компонента инстанс именованного логгера.
 func (bac *BaseAuditClient[D]) GetLogger() logger.Logger {
 	return bac.log
 }
 
+// IncLostCounter атомарно инкрементирует внутренний счетчик утерянных логов на единицу.
 func (bac *BaseAuditClient[D]) IncLostCounter() {
 	bac.totalLost.Add(1)
 }
 
+// GetName возвращает строковое имя, зарегистрированное для внутреннего пула воркеров.
 func (bac *BaseAuditClient[D]) GetName() string {
 	return bac.pool.GetName()
 }
 
+// IsRunning проверяет состояние жизненного цикла внутреннего пула и возвращает true, если воркеры активны.
 func (bac *BaseAuditClient[D]) IsRunning() bool {
 	return bac.pool.IsRunning()
 }

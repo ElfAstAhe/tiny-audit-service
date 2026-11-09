@@ -13,9 +13,14 @@ import (
 	"github.com/ElfAstAhe/tiny-audit-service/pkg/utils"
 )
 
+// AuditableMapperFunc определяет сигнатуру функции маппинга сущности репозитория в интерфейс аудита pkgdom.Auditable.
 type AuditableMapperFunc[E libdom.Entity[ID], ID comparable] func(entity E) pkgdom.Auditable
+
+// OutboxBuilderFunc определяет сигнатуру функции конструирования сущности outbox на основе объекта dto.DataAuditDTO.
 type OutboxBuilderFunc[E libextdom.Outbox[ID], ID comparable] func(context.Context, *dto.DataAuditDTO) (E, error)
 
+// AuditCRUD представляет собой универсальный (generic) декоратор CRUD-репозитория, перехватывающий
+// операции изменения данных для генерации и сохранения записей аудита через паттерн Transactional Outbox.
 type AuditCRUD[E pkgdom.AuditableEntity[ID], ID comparable] struct {
 	next         libdom.CRUDRepository[E, ID]
 	source       string
@@ -25,6 +30,7 @@ type AuditCRUD[E pkgdom.AuditableEntity[ID], ID comparable] struct {
 	nilInstance  E
 }
 
+// NewAuditCRUD создает и инициализирует новый экземпляр декоратора AuditCRUD.
 func NewAuditCRUD[E pkgdom.AuditableEntity[ID], ID comparable](
 	next libdom.CRUDRepository[E, ID],
 	source string,
@@ -41,14 +47,17 @@ func NewAuditCRUD[E pkgdom.AuditableEntity[ID], ID comparable](
 	}
 }
 
+// Find выполняет сквозной поиск сущности по её уникальному идентификатору через вложенный репозиторий.
 func (acr *AuditCRUD[E, ID]) Find(ctx context.Context, id ID) (E, error) {
 	return acr.next.Find(ctx, id)
 }
 
+// List возвращает список сущностей с учетом ограничений лимита и смещения через вложенный репозиторий.
 func (acr *AuditCRUD[E, ID]) List(ctx context.Context, limit, offset int) ([]E, error) {
 	return acr.next.List(ctx, limit, offset)
 }
 
+// Create создает новую сущность, формирует запись аудит-лога о создании и регистрирует её в таблице outbox.
 func (acr *AuditCRUD[E, ID]) Create(ctx context.Context, entity E) (E, error) {
 	// action
 	res, err := acr.next.Create(ctx, entity)
@@ -73,6 +82,8 @@ func (acr *AuditCRUD[E, ID]) Create(ctx context.Context, entity E) (E, error) {
 	return res, err
 }
 
+// Change фиксирует состояние сущности до модификации, выполняет обновление, фиксирует измененное состояние
+// и регистрирует запись аудит-лога со срезом изменений (diff) в таблице outbox.
 func (acr *AuditCRUD[E, ID]) Change(ctx context.Context, entity E) (E, error) {
 	// get before entity
 	beforeEntity, beforeErr := acr.next.Find(ctx, entity.GetID())
@@ -105,7 +116,7 @@ func (acr *AuditCRUD[E, ID]) Change(ctx context.Context, entity E) (E, error) {
 	return res, nil
 }
 
-// Delete перехватывает фазу удаления сущности, фиксирует ее финальное состояние до очистки сокетов БД и отправляет лог.
+// Delete перехватывает фазу удаления сущности, фиксирует ее финальное состояние до очистки записей БД и отправляет лог.
 func (acr *AuditCRUD[E, ID]) Delete(ctx context.Context, id ID) error {
 	// get before entity
 	beforeEntity, beforeErr := acr.next.Find(ctx, id)
@@ -163,19 +174,22 @@ func (acr *AuditCRUD[E, ID]) audit(ctx context.Context, builder *utils.DataAudit
 	return nil
 }
 
+// GetSource возвращает строковый идентификатор источника событий (компонента), настроенного для данного репозитория.
 func (acr *AuditCRUD[E, ID]) GetSource() string {
 	return acr.source
 }
 
-// Unwrap get decorable repository
+// Unwrap возвращает исходный декорируемый экземпляр CRUD-репозитория, находящийся под слоем аудита.
 func (acr *AuditCRUD[E, ID]) Unwrap() libdom.CRUDRepository[E, ID] {
 	return acr.next
 }
 
+// GetOutboxRepository возвращает используемый репозиторий таблицы outbox, в который записываются логи телеметрии изменений.
 func (acr *AuditCRUD[E, ID]) GetOutboxRepository() libextdom.OutboxRepository[libextdom.Outbox[ID], ID] {
 	return acr.outboxRepo
 }
 
+// GetNilInstance возвращает пустое (дефолтное) значение сущности E для безопасного возврата при возникновении критических ошибок.
 func (acr *AuditCRUD[E, ID]) GetNilInstance() E {
 	return acr.nilInstance
 }

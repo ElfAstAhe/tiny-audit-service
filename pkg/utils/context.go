@@ -10,12 +10,12 @@ type AuditRequestIDContextKey struct{}
 // AuditTraceIDContextKey определяет изолированный тип ключа контекста для безопасного хранения Trace ID распределенной трассировки.
 type AuditTraceIDContextKey struct{}
 
-var AuditReqID = AuditRequestIDContextKey{}
-var AuditTrcID = AuditTraceIDContextKey{}
+var auditReqIDCtxKey = AuditRequestIDContextKey{}
+var auditTrcIDCtxKey = AuditTraceIDContextKey{}
 
 // RequestIDFromContext выполняет безопасное извлечение и приведение типа для Request ID из контекста выполнения.
 func RequestIDFromContext(ctx context.Context) string {
-	val, ok := ctx.Value(AuditReqID).(string)
+	val, ok := ctx.Value(auditReqIDCtxKey).(string)
 	if !ok {
 		return UnknownValue
 	}
@@ -25,7 +25,7 @@ func RequestIDFromContext(ctx context.Context) string {
 
 // TraceIDFromContext выполняет безопасное извлечение и приведение типа для Trace ID распределенной трассировки из контекста выполнения.
 func TraceIDFromContext(ctx context.Context) string {
-	val, ok := ctx.Value(AuditTrcID).(string)
+	val, ok := ctx.Value(auditTrcIDCtxKey).(string)
 	if !ok {
 		return UnknownValue
 	}
@@ -35,10 +35,10 @@ func TraceIDFromContext(ctx context.Context) string {
 
 // WithRequestID обогащает контекст выполнения уникальным идентификатором входящего запроса Request ID.
 func WithRequestID(ctx context.Context, requestID string) context.Context {
-	return context.WithValue(ctx, AuditReqID, requestID)
+	return context.WithValue(ctx, auditReqIDCtxKey, requestID)
 }
 
 // WithTraceID обогащает контекст выполнения уникальным идентификатором распределенной трассировки Trace ID.
 func WithTraceID(ctx context.Context, traceID string) context.Context {
-	return context.WithValue(ctx, AuditTrcID, traceID)
+	return context.WithValue(ctx, auditTrcIDCtxKey, traceID)
 }

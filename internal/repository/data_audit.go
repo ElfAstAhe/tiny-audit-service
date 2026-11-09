@@ -22,6 +22,8 @@ const (
 	statementDataGetTail        string = "statement-data-get-tail"
 )
 
+// DataAudit представляет собой базовый репозиторий для выполнения CRUD-операций
+// и специализированных выборок сущности domain.DataAudit в базе данных.
 type DataAudit struct {
 	*librepo.CRUD[*domain.DataAudit, string]
 }
@@ -30,6 +32,8 @@ var _ libdom.CRUDRepository[*domain.DataAudit, string] = (*DataAudit)(nil)
 var _ domain.DataAuditRepository = (*DataAudit)(nil)
 var _ libextdom.TailRepository[string] = (*DataAudit)(nil)
 
+// NewDataAudit создает и инициализирует новый экземпляр репозитория DataAudit,
+// регистрируя необходимые мапперы, хуки и SQL-инструкции для драйверов базы данных.
 func NewDataAudit(
 	driverName string,
 	executor db.Executor,
@@ -61,6 +65,7 @@ func NewDataAudit(
 	return res, nil
 }
 
+// GetTail возвращает список идентификаторов старых записей аудита данных, созданных до указанной даты.
 func (da *DataAudit) GetTail(ctx context.Context, tailDate time.Time) ([]string, error) {
 	// fail fast
 	if tailDate.IsZero() {
@@ -75,6 +80,7 @@ func (da *DataAudit) GetTail(ctx context.Context, tailDate time.Time) ([]string,
 	return libdom.MapEntitiesToIDs(res), nil
 }
 
+// CutTail выполняет физическое удаление записи аудита данных из "хвоста" таблицы по её идентификатору.
 func (da *DataAudit) CutTail(ctx context.Context, id string) error {
 	// fail fast
 	if strings.TrimSpace(id) == "" {
@@ -84,6 +90,7 @@ func (da *DataAudit) CutTail(ctx context.Context, id string) error {
 	return da.Delete(ctx, id)
 }
 
+// ListByPeriod возвращает срез записей аудита данных за указанный временной период с фильтрацией по лимиту и смещению.
 func (da *DataAudit) ListByPeriod(ctx context.Context, from, till time.Time, limit, offset int) ([]*domain.DataAudit, error) {
 	// fail fast
 	if err := da.validateListByPeriod(from, till, limit, offset); err != nil {
@@ -115,6 +122,7 @@ func (da *DataAudit) validateListByPeriod(from, till time.Time, limit, offset in
 	return nil
 }
 
+// ListByInstance возвращает срез записей аудита для конкретного экземпляра сущности по её типу и уникальному ID.
 func (da *DataAudit) ListByInstance(ctx context.Context, typeName string, instanceID string, limit, offset int) ([]*domain.DataAudit, error) {
 	// fail fast
 	if err := da.validateListByInstance(typeName, instanceID, offset, limit); err != nil {

@@ -5,6 +5,8 @@ import (
 	"github.com/ElfAstAhe/tiny-audit-service/internal/domain"
 )
 
+// IsSubjectAdmin проверяет, обладает ли переданный субъект авторизации (пользователь)
+// глобальными административными правами доступа RoleAdmin.
 func IsSubjectAdmin(subject *auth.Subject) bool {
 	if subject == nil {
 		return false

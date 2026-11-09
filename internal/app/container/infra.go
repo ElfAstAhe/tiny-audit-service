@@ -37,11 +37,7 @@ func NewInfraContainer(
 //
 //goland:noinspection GoUnusedParameter
 func (ic *InfraContainer) Init(ctx context.Context) error {
-	err := errors.Join(
-	//ic.RegisterProvider(InstanceLoginAttemptsPublisher, ic.providerLoginAttemptsEventDispatcher),
-	//ic.RegisterProvider(InstanceLoginAttemptsAMQPSubscriber, ic.providerLoginAttemptsAMQPObserver),
-	//ic.RegisterProvider(InstanceLoginAttemptsKafkaSubscriber, ic.providerLoginAttemptsKafkaObserver),
-	)
+	err := errors.Join()
 	if err != nil {
 		return errs.NewContainerError(ic.GetName(), "container init: register providers failed", err)
 	}

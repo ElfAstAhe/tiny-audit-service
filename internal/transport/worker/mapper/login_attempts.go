@@ -10,6 +10,7 @@ import (
 	"github.com/ElfAstAhe/tiny-audit-service/internal/transport/worker/dto"
 )
 
+// MapMessageToLoginAttemptWorkerJob преобразует сообщение из брокера broker.Message в обертку задачи воркера dto.LoginAttemptWorkerJob, десериализуя его полезную нагрузку.
 func MapMessageToLoginAttemptWorkerJob(data broker.Message) (*dto.LoginAttemptWorkerJob, error) {
 	if utils.IsNil(data) {
 		return nil, nil
@@ -26,6 +27,7 @@ func MapMessageToLoginAttemptWorkerJob(data broker.Message) (*dto.LoginAttemptWo
 	}, nil
 }
 
+// MapMessageBinDataToLoginAttemptDTO выполняет десериализацию бинарных данных (JSON) в объект передачи данных события попытки входа dto.LoginAttemptEventDTO.
 func MapMessageBinDataToLoginAttemptDTO(data []byte) (*dto.LoginAttemptEventDTO, error) {
 	if len(data) == 0 {
 		return nil, errs.NewCommonError("empty data", nil)
@@ -40,6 +42,7 @@ func MapMessageBinDataToLoginAttemptDTO(data []byte) (*dto.LoginAttemptEventDTO,
 	return res, nil
 }
 
+// MapLoginAttemptEventDTOToAuthAuditModel транслирует входящий объект события воркера dto.LoginAttemptEventDTO в доменную модель записи аудита аутентификации domain.AuthAudit.
 func MapLoginAttemptEventDTOToAuthAuditModel(data *dto.LoginAttemptEventDTO) *domain.AuthAudit {
 	if utils.IsNil(data) {
 		return nil

@@ -1,4 +1,4 @@
-package telemetry
+package trace
 
 import (
 	"context"
@@ -12,21 +12,21 @@ import (
 	"go.opentelemetry.io/otel/codes"
 )
 
-// DataListByPeriodTraceInteractor implements the usecase.DataListByPeriodUseCase interface,
+// DataListByPeriodInteractor implements the usecase.DataListByPeriodUseCase interface,
 // acting as a non-invasive distributed tracing decorator component.
 // It manages OpenTelemetry span lifecycles and records parameter attributes for period-based audit data retrieval operations.
-type DataListByPeriodTraceInteractor struct {
+type DataListByPeriodInteractor struct {
 	*telemetry.BaseTelemetry                                 // Generic framework-level tracing base handle infrastructure
 	spanName                 string                          // Pre-calculated target telemetry instrumentation name for execution boundaries
 	next                     usecase.DataListByPeriodUseCase // Downstream execution layer or concrete application usecase interactor implementation path
 }
 
 // Compile-time interface compliance verification
-var _ usecase.DataListByPeriodUseCase = (*DataListByPeriodTraceInteractor)(nil)
+var _ usecase.DataListByPeriodUseCase = (*DataListByPeriodInteractor)(nil)
 
 // NewDataListByPeriodUseCase acts as a factory constructor mounting required tracing infrastructure over a domain usecase interactor.
-func NewDataListByPeriodUseCase(ucName string, next usecase.DataListByPeriodUseCase) *DataListByPeriodTraceInteractor {
-	return &DataListByPeriodTraceInteractor{
+func NewDataListByPeriodUseCase(ucName string, next usecase.DataListByPeriodUseCase) *DataListByPeriodInteractor {
+	return &DataListByPeriodInteractor{
 		spanName:      fmt.Sprintf("%s.List", ucName),
 		next:          next,
 		BaseTelemetry: telemetry.NewBaseTelemetry(ucName),
@@ -34,8 +34,8 @@ func NewDataListByPeriodUseCase(ucName string, next usecase.DataListByPeriodUseC
 }
 
 // List intercepts period-based lookup invocations, capturing context duration boundaries and injecting transaction state metadata into OpenTelemetry spans.
-func (pti *DataListByPeriodTraceInteractor) List(ctx context.Context, from, till time.Time, limit int, offset int) ([]*domain.DataAudit, error) {
-	ctx, span := pti.StartSpan(ctx, pti.spanName)
+func (pti *DataListByPeriodInteractor) List(ctx context.Context, from, till time.Time, limit int, offset int) ([]*domain.DataAudit, error) {
+	ucCtx, span := pti.StartSpan(ctx, pti.spanName)
 	defer span.End()
 
 	span.SetAttributes(
@@ -45,7 +45,7 @@ func (pti *DataListByPeriodTraceInteractor) List(ctx context.Context, from, till
 		attribute.Int("param.offset", offset),
 	)
 
-	res, err := pti.next.List(ctx, from, till, limit, offset)
+	res, err := pti.next.List(ucCtx, from, till, limit, offset)
 	if err != nil {
 		span.AddEvent("List_failed")
 		span.RecordError(err)

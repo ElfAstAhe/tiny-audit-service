@@ -1,4 +1,4 @@
-package telemetry
+package trace
 
 import (
 	"context"
@@ -10,6 +10,8 @@ import (
 	"go.opentelemetry.io/otel/codes"
 )
 
+// AuthAuditTraceInteractor представляет собой декоратор UseCase-слоя, предназначенный
+// для распределенной трассировки и логирования спанов при выполнении операций аудита аутентификации.
 type AuthAuditTraceInteractor struct {
 	*telemetry.BaseTelemetry
 	spanName string
@@ -18,6 +20,7 @@ type AuthAuditTraceInteractor struct {
 
 var _ usecase.AuthAuditUseCase = (*AuthAuditTraceInteractor)(nil)
 
+// NewAuthAuditUseCase создает и инициализирует новый экземпляр трассирующего декоратора AuthAuditTraceInteractor.
 func NewAuthAuditUseCase(
 	ucName string,
 	next usecase.AuthAuditUseCase,
@@ -29,11 +32,13 @@ func NewAuthAuditUseCase(
 	}
 }
 
+// Audit выполняет декорируемый вызов UseCase для регистрации записи аудита аутентификации,
+// обогащая текущий контекст и фиксируя в спане возникающие ошибки и их статус.
 func (aat *AuthAuditTraceInteractor) Audit(ctx context.Context, data *domain.AuthAudit) error {
-	ctx, span := aat.StartSpan(ctx, aat.spanName)
+	ucCtx, span := aat.StartSpan(ctx, aat.spanName)
 	defer span.End()
 
-	err := aat.next.Audit(ctx, data)
+	err := aat.next.Audit(ucCtx, data)
 	if err != nil {
 		span.AddEvent("Audit_failed")
 		span.RecordError(err)

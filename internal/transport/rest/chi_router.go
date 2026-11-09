@@ -22,6 +22,8 @@ import (
 	swagh "github.com/swaggo/http-swagger"
 )
 
+// AppChiRouter реализует интерфейс libhttp.Router, инкапсулируя мультиплексор chi.Mux,
+// системные мидлвари, эндпоинты проверки здоровья, метрики, Swagger и доменные роуты.
 type AppChiRouter struct {
 	router          *chi.Mux
 	log             logger.Logger
@@ -35,6 +37,8 @@ type AppChiRouter struct {
 
 var _ libhttp.Router = (*AppChiRouter)(nil)
 
+// NewAppRouter инициализирует конфигурационные опции роутера, проводит валидацию
+// зависимостей и возвращает настроенный экземпляр структуры AppChiRouter.
 func NewAppRouter(opts ...Option) (*AppChiRouter, error) {
 	options := &AppRouterOptions{}
 
@@ -107,6 +111,7 @@ func newAppChiRouter(
 	return res
 }
 
+// GetRouter возвращает нижележащий сконфигурированный обработчик http.Handler (chi.Mux) для запуска HTTP-сервера.
 func (cr *AppChiRouter) GetRouter() http.Handler {
 	return cr.router
 }
@@ -194,25 +199,6 @@ func (cr *AppChiRouter) setupRoutes() {
 					r.Post("/instance", cr.postAPIV1AuditDataInstance)
 				})
 			})
-			/*
-			   // crud, может и не нужен...
-			   // /auth
-			   r.Route("/auth", func(r chi.Router) {
-			       r.Get("/{id}", cr.getAPIV1AuthAudit)
-			       r.Get("/", cr.getAPIV1AuthAudits)
-			       r.Post("/", cr.postAPIV1Auth)
-			       r.Put("/{id}", cr.putAPIV1Auth)
-			       r.Delete("/{id}", cr.deleteAPIV1Auth)
-			   })
-			   // /data
-			   r.Route("/data", func(r chi.Router) {
-			       r.Get("/{id}", cr.getAPIV1DataAudit)
-			       r.Get("/", cr.getAPIV1DataAudits)
-			       r.Post("/", cr.postAPIV1DataAudit)
-			       r.Put("/{id}", cr.putAPIV1DataAudit)
-			       r.Delete("/{id}", cr.deleteAPIV1DataAudit)
-			   })
-			*/
 		})
 	})
 }

@@ -1,6 +1,8 @@
 package postgres
 
+// Константы, содержащие SQL-запросы для взаимодействия с таблицей data_audit в СУБД PostgreSQL.
 const (
+	// SqlDataAuditFind содержит SQL-запрос для выборки одной записи аудита данных по её уникальному идентификатору.
 	SqlDataAuditFind string = `
 select
     id,
@@ -24,6 +26,7 @@ from
 where
     id = $1
 `
+	// SqlDataAuditList содержит SQL-запрос для постраничной выборки всех записей аудита данных.
 	SqlDataAuditList string = `
 select
     id,
@@ -51,6 +54,7 @@ order by
 offset $2
 limit $1
 `
+	// SqlDataAuditListByPeriod содержит SQL-запрос для постраничной выборки записей аудита данных за определенный период времени.
 	SqlDataAuditListByPeriod string = `
 select
     id,
@@ -81,6 +85,7 @@ order by
 offset $4
 limit $3
 `
+	// SqlDataAuditListByInstance содержит SQL-запрос для выборки изменений конкретного экземпляра сущности по типу и ID.
 	SqlDataAuditListByInstance string = `
 select
     id,
@@ -109,6 +114,7 @@ order by
 offset $4
 limit $3
 `
+	// SqlDataAuditCreate содержит SQL-запрос для вставки новой записи в таблицу аудита данных.
 	SqlDataAuditCreate string = `
 insert into data_audit (
     id,
@@ -148,6 +154,7 @@ returning
     created_at,
     updated_at
 `
+	// SqlDataAuditChange содержит SQL-запрос для обновления существующей записи аудита данных.
 	SqlDataAuditChange string = `
 update
     data_audit
@@ -186,6 +193,7 @@ returning
     created_at,
     updated_at
 `
+	// SqlDataAuditDelete содержит SQL-запрос для удаления записи аудита данных по её идентификатору.
 	SqlDataAuditDelete string = `
 delete
 from
@@ -193,6 +201,7 @@ from
 where
     id = $1
 `
+	// SqlDataAuditTailList содержит SQL-запрос для извлечения идентификаторов старых записей, попадающих под очистку хвостов таблиц.
 	SqlDataAuditTailList string = `
 select
     id

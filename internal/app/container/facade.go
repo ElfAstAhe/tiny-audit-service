@@ -9,6 +9,7 @@ import (
 	"github.com/ElfAstAhe/go-service-template/pkg/logger"
 )
 
+// Константы, определяющие уникальные строковые идентификаторы инстансов фасадов и их RBAC-декораторов в DI-контейнере.
 const (
 	InstanceAuthFacade     string = "auth-facade"
 	InstanceDataFacade     string = "data-facade"
@@ -16,6 +17,8 @@ const (
 	InstanceRBACDataFacade string = "rbac-data-facade"
 )
 
+// FacadeContainer представляет собой ленивый (lazy) DI-контейнер для конфигурации,
+// регистрации и управления жизненным циклом прикладных фасадов приложения и слоев авторизации.
 type FacadeContainer struct {
 	*container.BaseLazyContainer
 }
@@ -23,6 +26,7 @@ type FacadeContainer struct {
 var _ container.Container = (*FacadeContainer)(nil)
 var _ container.LazyContainer = (*FacadeContainer)(nil)
 
+// NewFacadeContainer создает и инициализирует новый экземпляр контейнера прикладных фасадов FacadeContainer.
 func NewFacadeContainer(
 	orchestrator container.Orchestrator,
 	log logger.Logger,
@@ -36,6 +40,7 @@ func NewFacadeContainer(
 	}
 }
 
+// Init выполняет первичную инициализацию контейнера, регистрируя провайдеры для базовых фасадов и их RBAC-оберток.
 func (fc *FacadeContainer) Init(ctx context.Context) error {
 	err := errors.Join(
 		fc.RegisterProvider(InstanceAuthFacade, fc.providerAuthFacade),

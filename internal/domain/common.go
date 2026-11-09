@@ -7,6 +7,7 @@ import (
 	"github.com/ElfAstAhe/go-service-template/pkg/errs"
 )
 
+// commonAudit определяет внутренний контракт для извлечения сквозных метаданных логов аудита.
 type commonAudit interface {
 	GetSource() string
 	GetEventDate() time.Time
@@ -17,11 +18,13 @@ type commonAudit interface {
 	GetUsername() string
 }
 
+// Константы, определяющие прикладные статусы выполнения операций аудита.
 const (
 	AuditStatusSuccess string = "success"
 	AuditStatusFail    string = "fail"
 )
 
+// Константы, определяющие типы регистрируемых событий аутентификации.
 const (
 	AuthEventLogin   string = "login"
 	AuthEventLogoff  string = "logoff"
@@ -29,6 +32,7 @@ const (
 	AuthEventRevoke  string = "revoke"
 )
 
+// Константы, определяющие типы регистрируемых событий изменения состояния данных.
 const (
 	DataEventCreate string = "create"
 	DataEventChange string = "change"
@@ -53,6 +57,7 @@ var (
 	}
 )
 
+// validateAuditStatus проверяет строковое представление статуса аудита на вхождение в белый список допустимых значений.
 func validateAuditStatus(status string) error {
 	if _, ok := auditStatuses[status]; ok {
 		return nil
@@ -61,6 +66,7 @@ func validateAuditStatus(status string) error {
 	return errs.NewBllValidateError("validateAuditStatus", fmt.Sprintf("unknown audit status [%s]", status), nil)
 }
 
+// validateAuthEvent проверяет строковое представление события аутентификации на вхождение в белый список допустимых значений.
 func validateAuthEvent(event string) error {
 	if _, ok := authEvents[event]; ok {
 		return nil
@@ -69,6 +75,7 @@ func validateAuthEvent(event string) error {
 	return errs.NewBllValidateError("validateAuthEvent", fmt.Sprintf("unknown auth event '%s'", event), nil)
 }
 
+// validateDataEvent проверяет строковое представление события изменений данных на вхождение в белый список допустимых значений.
 func validateDataEvent(event string) error {
 	if _, ok := dataEvents[event]; ok {
 		return nil
@@ -77,6 +84,7 @@ func validateDataEvent(event string) error {
 	return errs.NewBllValidateError("validateDataEvent", fmt.Sprintf("unknown data event '%s'", event), nil)
 }
 
+// validateCommon выполняет комплексную валидацию общих обязательных полей для любого типа лога аудита.
 func validateCommon(commonAudit commonAudit) error {
 	if commonAudit.GetSource() == "" {
 		return errs.NewBllValidateError("validateCommon", "source must not be empty", nil)

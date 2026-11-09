@@ -9,10 +9,14 @@ import (
 	"github.com/ElfAstAhe/tiny-audit-service/internal/domain"
 )
 
+// DataAuditUseCase определяет контракт бизнес-логики (Use Case)
+// для регистрации и обработки событий аудита изменений данных.
 type DataAuditUseCase interface {
 	Audit(ctx context.Context, data *domain.DataAudit) error
 }
 
+// DataAuditInteractor реализует интерфейс DataAuditUseCase, обеспечивая
+// атомарное сохранение записей аудита данных с использованием паттерна Unit of Work.
 type DataAuditInteractor struct {
 	uw       libdom.UnitOfWork
 	dataRepo domain.DataAuditRepository
@@ -20,7 +24,8 @@ type DataAuditInteractor struct {
 
 var _ DataAuditUseCase = (*DataAuditInteractor)(nil)
 
-func NewDataAuditUseCase(
+// NewDataAudit создает и инициализирует новый экземпляр интерактора DataAuditInteractor.
+func NewDataAudit(
 	uw libdom.UnitOfWork,
 	dataRepo domain.DataAuditRepository,
 ) *DataAuditInteractor {
@@ -30,6 +35,8 @@ func NewDataAuditUseCase(
 	}
 }
 
+// Audit выполняет валидацию входящего лога аудита и атомарно сохраняет его в репозиторий
+// в рамках изолированного контекста транзакции Unit of Work.
 func (dai *DataAuditInteractor) Audit(ctx context.Context, data *domain.DataAudit) error {
 	if err := dai.validate(data); err != nil {
 		return errs.NewBllValidateError("DataAuditInteractor.Audit", "validate income failed", err)

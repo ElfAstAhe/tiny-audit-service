@@ -9,22 +9,29 @@ import (
 	"github.com/ElfAstAhe/tiny-audit-service/internal/domain"
 )
 
+// AuthListByPeriodUseCase определяет контракт бизнес-логики (Use Case)
+// для получения записей аудита событий аутентификации за указанный период времени.
 type AuthListByPeriodUseCase interface {
 	List(ctx context.Context, from, till time.Time, limit int, offset int) ([]*domain.AuthAudit, error)
 }
 
+// AuthListByPeriodInteractor реализует интерфейс AuthListByPeriodUseCase, обеспечивая
+// чтение записей аудита событий аутентификации за выбранный временной интервал из репозитория.
 type AuthListByPeriodInteractor struct {
 	authAuditRepo domain.AuthAuditRepository
 }
 
-var _ AuthListByPeriodUseCase = (*AuthListByPeriodInteractor)(nil)
+var _ AuthAuditUseCase = (*AuthAuditInteractor)(nil)
 
-func NewAuthListByPeriodUseCase(authAuditRepo domain.AuthAuditRepository) *AuthListByPeriodInteractor {
+// NewAuthListByPeriod создает и инициализирует новый экземпляр интерактора AuthListByPeriodInteractor.
+func NewAuthListByPeriod(authAuditRepo domain.AuthAuditRepository) *AuthListByPeriodInteractor {
 	return &AuthListByPeriodInteractor{
 		authAuditRepo: authAuditRepo,
 	}
 }
 
+// List выполняет валидацию входных параметров времени и пагинации, после чего запрашивает
+// список записей аудита аутентификации из нижележащего репозитория.
 func (alp *AuthListByPeriodInteractor) List(ctx context.Context, from, till time.Time, limit int, offset int) ([]*domain.AuthAudit, error) {
 	if err := alp.validate(from, till, limit, offset); err != nil {
 		return nil, errs.NewBllValidateError("AuthListByPeriodInteractor.List", "validate income failed", err)
@@ -38,6 +45,8 @@ func (alp *AuthListByPeriodInteractor) List(ctx context.Context, from, till time
 	return res, nil
 }
 
+// validate проверяет корректность переданных временных меток и параметров лимита/смещения.
+//
 //goland:noinspection DuplicatedCode
 func (alp *AuthListByPeriodInteractor) validate(from, till time.Time, limit int, offset int) error {
 	if from.IsZero() {

@@ -10,6 +10,8 @@ import (
 	"github.com/ElfAstAhe/go-service-template/pkg/utils"
 )
 
+// LoginAttemptsConfig содержит параметры конфигурации для воркера обработки попыток входа,
+// включая настройки очередей, лимиты пачек (batching), таймауты и специфичные конфиги для AMQP/Kafka.
 type LoginAttemptsConfig struct {
 	ReceiverKind       string                      `mapstructure:"receiver_kind" json:"receiver_kind,omitempty" yaml:"receiver_kind,omitempty"`
 	StartInterval      time.Duration               `mapstructure:"worker_start_interval" json:"worker_start_interval,omitempty" yaml:"worker_start_interval,omitempty"`
@@ -25,6 +27,7 @@ type LoginAttemptsConfig struct {
 	KafkaConfig        *config.KafkaReceiverConfig `mapstructure:"kafka_config" json:"kafka_config,omitempty" yaml:"kafka_config,omitempty"`
 }
 
+// NewLoginAttemptsConfig создает и инициализирует новый экземпляр конфигурации LoginAttemptsConfig с заданными параметрами.
 func NewLoginAttemptsConfig(
 	receiverKind string,
 	startInterval time.Duration,
@@ -55,6 +58,7 @@ func NewLoginAttemptsConfig(
 	}
 }
 
+// NewDefaultLoginAttemptsConfig создает экземпляр конфигурации LoginAttemptsConfig, заполненный дефолтными значениями.
 func NewDefaultLoginAttemptsConfig() *LoginAttemptsConfig {
 	return NewLoginAttemptsConfig(
 		defaultLoginAttemptsReceiverKind,
@@ -72,6 +76,7 @@ func NewDefaultLoginAttemptsConfig() *LoginAttemptsConfig {
 	)
 }
 
+// Validate проверяет валидность типа брокера (ReceiverKind), интервалов, размеров пачек и таймаутов структуры LoginAttemptsConfig.
 func (lac *LoginAttemptsConfig) Validate() error {
 	if !slices.Contains([]string{"amqp", "kafka"}, lac.ReceiverKind) {
 		return errs.NewConfigValidateError("login_attempts", "ReceiverKind", fmt.Sprintf("unknown receiver kind: %s", lac.ReceiverKind), nil)

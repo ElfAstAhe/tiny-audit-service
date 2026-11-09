@@ -9,10 +9,14 @@ import (
 	"github.com/ElfAstAhe/tiny-audit-service/internal/domain"
 )
 
+// AuthAuditUseCase определяет контракт бизнес-логики (Use Case)
+// для регистрации и обработки логов событий аутентификации.
 type AuthAuditUseCase interface {
 	Audit(ctx context.Context, data *domain.AuthAudit) error
 }
 
+// AuthAuditInteractor реализует интерфейс AuthAuditUseCase, обеспечивая
+// атомарное сохранение записей аудита аутентификации с использованием паттерна Unit of Work.
 type AuthAuditInteractor struct {
 	uw       libdom.UnitOfWork
 	authRepo domain.AuthAuditRepository
@@ -20,7 +24,8 @@ type AuthAuditInteractor struct {
 
 var _ AuthAuditUseCase = (*AuthAuditInteractor)(nil)
 
-func NewAuthAuditUseCase(
+// NewAuthAudit создает и инициализирует новый экземпляр интерактора AuthAuditInteractor.
+func NewAuthAudit(
 	uw libdom.UnitOfWork,
 	authRepo domain.AuthAuditRepository,
 ) *AuthAuditInteractor {
@@ -30,6 +35,8 @@ func NewAuthAuditUseCase(
 	}
 }
 
+// Audit выполняет валидацию входящего лога аутентификации и атомарно сохраняет его в репозиторий
+// в рамках изолированного контекста транзакции Unit of Work.
 func (aai *AuthAuditInteractor) Audit(ctx context.Context, data *domain.AuthAudit) error {
 	if err := aai.validate(data); err != nil {
 		return errs.NewBllValidateError("AuthAuditInteractor.Audit", "validate failed", err)

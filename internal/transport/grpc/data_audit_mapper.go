@@ -6,6 +6,7 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
+// MapDataAuditValueDTOToGRPC преобразует объект передачи данных dto.DataAuditValueDTO в protobuf-модель pb.DataAuditValue.
 func MapDataAuditValueDTOToGRPC(dataAuditValue *dto.DataAuditValueDTO) *pb.DataAuditValue {
 	if dataAuditValue == nil {
 		return nil
@@ -19,6 +20,7 @@ func MapDataAuditValueDTOToGRPC(dataAuditValue *dto.DataAuditValueDTO) *pb.DataA
 	}.Build()
 }
 
+// MapDataAuditValueGRPCToDTO преобразует protobuf-модель pb.DataAuditValue из gRPC-слоя в объект передачи данных dto.DataAuditValueDTO.
 func MapDataAuditValueGRPCToDTO(dataAuditValue *pb.DataAuditValue) *dto.DataAuditValueDTO {
 	if dataAuditValue == nil {
 		return nil
@@ -32,6 +34,7 @@ func MapDataAuditValueGRPCToDTO(dataAuditValue *pb.DataAuditValue) *dto.DataAudi
 	}
 }
 
+// MapDataAuditValuesGRPCToDTO выполняет множественное преобразование среза protobuf-моделей в срез объектов передачи данных []*dto.DataAuditValueDTO.
 func MapDataAuditValuesGRPCToDTO(dataAuditValues []*pb.DataAuditValue) []*dto.DataAuditValueDTO {
 	if dataAuditValues == nil {
 		return make([]*dto.DataAuditValueDTO, 0)
@@ -45,6 +48,7 @@ func MapDataAuditValuesGRPCToDTO(dataAuditValues []*pb.DataAuditValue) []*dto.Da
 	return res
 }
 
+// MapDataAuditValuesDTOToGRPC выполняет множественное преобразование среза объектов dto.DataAuditValueDTO в срез protobuf-моделей []*pb.DataAuditValue.
 func MapDataAuditValuesDTOToGRPC(dataAuditValues []*dto.DataAuditValueDTO) []*pb.DataAuditValue {
 	if len(dataAuditValues) == 0 {
 		return make([]*pb.DataAuditValue, 0)
@@ -57,6 +61,7 @@ func MapDataAuditValuesDTOToGRPC(dataAuditValues []*dto.DataAuditValueDTO) []*pb
 	return res
 }
 
+// MapDataAuditDTOToGRPC преобразует объект передачи данных dto.DataAuditDTO со всеми вложенными значениями в protobuf-модель pb.DataAudit.
 func MapDataAuditDTOToGRPC(dataAudit *dto.DataAuditDTO) *pb.DataAudit {
 	if dataAudit == nil {
 		return nil
@@ -82,6 +87,7 @@ func MapDataAuditDTOToGRPC(dataAudit *dto.DataAuditDTO) *pb.DataAudit {
 	}.Build()
 }
 
+// MapDataAuditsDTOToGRPC выполняет множественное преобразование среза объектов dto.DataAuditDTO в срез моделей []*pb.DataAudit.
 func MapDataAuditsDTOToGRPC(dataAudits []*dto.DataAuditDTO) []*pb.DataAudit {
 	if len(dataAudits) == 0 {
 		return make([]*pb.DataAudit, 0)
@@ -95,6 +101,7 @@ func MapDataAuditsDTOToGRPC(dataAudits []*dto.DataAuditDTO) []*pb.DataAudit {
 	return res
 }
 
+// MapDataAuditGRPCToDTO преобразует protobuf-модель pb.DataAudit из gRPC-слоя в результирующий объект передачи данных dto.DataAuditDTO.
 func MapDataAuditGRPCToDTO(dataAudit *pb.DataAudit) *dto.DataAuditDTO {
 	if dataAudit == nil {
 		return nil
@@ -120,6 +127,7 @@ func MapDataAuditGRPCToDTO(dataAudit *pb.DataAudit) *dto.DataAuditDTO {
 	}
 }
 
+// MapAuditInstanceGRPCToDTO транслирует входящий gRPC-запрос pb.ListByInstanceRequest в объект параметров dto.AuditInstanceDTO.
 func MapAuditInstanceGRPCToDTO(req *pb.ListByInstanceRequest) *dto.AuditInstanceDTO {
 	if req == nil {
 		return nil
