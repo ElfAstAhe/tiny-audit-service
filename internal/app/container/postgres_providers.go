@@ -5,12 +5,13 @@ import (
 
 	"github.com/ElfAstAhe/go-service-template/pkg/container"
 	"github.com/ElfAstAhe/go-service-template/pkg/db"
+	"github.com/ElfAstAhe/go-service-template/pkg/db/postgres"
 	"github.com/ElfAstAhe/go-service-template/pkg/errs"
 	"github.com/ElfAstAhe/go-service-template/pkg/logger"
 	"github.com/ElfAstAhe/go-service-template/pkg/migration/goose"
 	"github.com/ElfAstAhe/tiny-audit-service/internal/config"
-	"github.com/ElfAstAhe/tiny-audit-service/internal/repository/postgres"
 	_ "github.com/ElfAstAhe/tiny-audit-service/migrations/audit"
+	_ "github.com/jackc/pgx/v5/stdlib"
 )
 
 func (pc *PgContainer) providerDB() (any, error) {
@@ -18,7 +19,7 @@ func (pc *PgContainer) providerDB() (any, error) {
 	if err != nil {
 		return nil, errs.NewContainerError(pc.GetName(), "provider: retrieve instance failed", err)
 	}
-	res, err := postgres.NewPgDB(confInst.DB)
+	res, err := postgres.New(confInst.DB)
 	if err != nil {
 		return nil, errs.NewContainerError(pc.GetName(), fmt.Sprintf("provider: create %s instance failed", InstanceDB), err)
 	}

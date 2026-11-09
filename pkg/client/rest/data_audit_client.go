@@ -19,6 +19,8 @@ const (
 	dataClientNameTemplate string = "rest-data-audit-client-%s"
 )
 
+// DataAuditClient представляет собой специализированный REST-клиент для асинхронной
+// отправки логов аудита изменений данных посредством сгенерированного OpenAPI SDK.
 type DataAuditClient struct {
 	*client.BaseAuditClient[*dto.DataAuditDTO]
 	name   string
@@ -31,23 +33,27 @@ var _ client.AuditClient[*dto.DataAuditDTO] = (*DataAuditClient)(nil)
 var _ client.DataAuditClient = (*DataAuditClient)(nil)
 var _ container.Runner = (*DataAuditClient)(nil)
 
+// NewDataAuditClient инициализирует опции, валидирует параметры и конструирует
+// новый экземпляр клиента DataAuditClient со встроенным воркер-пулом.
+//
+//goland:noinspection DuplicatedCode
 func NewDataAuditClient(options ...AuditClientOption[*dto.DataAuditDTO]) (*DataAuditClient, error) {
 	opts := NewAuditClientOptions[*dto.DataAuditDTO]()
 	for _, option := range options {
 		option(opts)
 	}
 	if err := opts.Validate(); err != nil {
-		return nil, errs.NewTlCommonError("NewAuthAuditClient", "client options validation failed", err)
+		return nil, errs.NewTlCommonError("NewDataAuditClient", "client options validation failed", err)
 	}
 	u, err := url.Parse(opts.BaseURL)
 	if err != nil {
-		return nil, errs.NewTlCommonError("NewAuthAuditClient", "failed to parse base url", err)
+		return nil, errs.NewTlCommonError("NewDataAuditClient", "failed to parse base url", err)
 	}
 	// instance
 	res := &DataAuditClient{
-		name:   fmt.Sprintf(authClientNameTemplate, opts.Pool.Name),
+		name:   fmt.Sprintf(dataClientNameTemplate, opts.Pool.Name),
 		opts:   opts,
-		log:    opts.Pool.Logger.GetLogger(fmt.Sprintf(authClientNameTemplate, opts.Pool.Name)),
+		log:    opts.Pool.Logger.GetLogger(fmt.Sprintf(dataClientNameTemplate, opts.Pool.Name)),
 		client: audit.NewClientWithBearerToken(u.Host, u.Path, u.Scheme, ""),
 	}
 	// base
@@ -61,7 +67,7 @@ func NewDataAuditClient(options ...AuditClientOption[*dto.DataAuditDTO]) (*DataA
 		client.WithPoolStopTimeout[*dto.DataAuditDTO](opts.Pool.StopTimeout),
 	)
 	if err != nil {
-		return nil, errs.NewTlCommonError("NewAuthAuditClient", "failed to create base audit client", err)
+		return nil, errs.NewTlCommonError("NewDataAuditClient", "failed to create base audit client", err)
 	}
 	// setup
 	res.BaseAuditClient = base
@@ -97,14 +103,17 @@ func (dac *DataAuditClient) auditAction(
 	return nil
 }
 
+// GetName возвращает строковое имя текущего экземпляра REST-клиента.
 func (dac *DataAuditClient) GetName() string {
 	return dac.name
 }
 
+// GetConfig возвращает конфигурационные параметры и настройки пула, примененные для данного клиента.
 func (dac *DataAuditClient) GetConfig() *AuditClientOptions[*dto.DataAuditDTO] {
 	return dac.opts
 }
 
+// GetLogger возвращает именованный логгер, назначенный для текущего REST-клиента.
 func (dac *DataAuditClient) GetLogger() logger.Logger {
 	return dac.log
 }

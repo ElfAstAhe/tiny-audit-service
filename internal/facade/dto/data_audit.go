@@ -4,10 +4,12 @@ import (
 	"time"
 )
 
+// DataAuditDTO представляет собой объект передачи данных (DTO) для сериализации
+// и десериализации записей аудита изменений данных на внешнем API-слое.
 type DataAuditDTO struct {
 	ID               string               `json:"id,omitempty"`
 	Source           string               `json:"source,omitempty"`
-	EventDate        time.Time            `json:"event_date,omitempty"`
+	EventDate        time.Time            `json:"event_date,omitzero"`
 	Event            string               `json:"event,omitempty"`
 	Status           string               `json:"status,omitempty"`
 	RequestID        string               `json:"request_id,omitempty"`
@@ -19,6 +21,6 @@ type DataAuditDTO struct {
 	InstanceID       string               `json:"instance_id,omitempty"`
 	InstanceName     string               `json:"instance_name,omitempty"`
 	Values           []*DataAuditValueDTO `json:"values,omitempty"`
-	CreatedAt        time.Time            `json:"created_at,omitempty"`
-	UpdatedAt        time.Time            `json:"updated_at,omitempty"`
+	CreatedAt        time.Time            `json:"created_at,omitzero"`
+	UpdatedAt        time.Time            `json:"updated_at,omitzero"`
 } // @name DataAuditDTO

@@ -9,22 +9,29 @@ import (
 	"github.com/ElfAstAhe/tiny-audit-service/internal/domain"
 )
 
+// DataListByInstanceUseCase определяет контракт бизнес-логики (Use Case)
+// для получения записей аудита изменений по конкретному типу и идентификатору экземпляра сущности.
 type DataListByInstanceUseCase interface {
 	List(ctx context.Context, typeName, instanceID string, limit, offset int) ([]*domain.DataAudit, error)
 }
 
+// DataListByInstanceInteractor реализует интерфейс DataListByInstanceUseCase, обеспечивая
+// чтение записей аудита изменений данных для выбранного инстанса из репозитория.
 type DataListByInstanceInteractor struct {
 	dataAuditRepo domain.DataAuditRepository
 }
 
 var _ DataListByInstanceUseCase = (*DataListByInstanceInteractor)(nil)
 
-func NewDataListByInstanceUseCase(dataAuditRepo domain.DataAuditRepository) *DataListByInstanceInteractor {
+// NewDataListByInstance создает и инициализирует новый экземпляр интерактора DataListByInstanceInteractor.
+func NewDataListByInstance(dataAuditRepo domain.DataAuditRepository) *DataListByInstanceInteractor {
 	return &DataListByInstanceInteractor{
 		dataAuditRepo: dataAuditRepo,
 	}
 }
 
+// List выполняет валидацию входных параметров типа, идентификатора инстанса и пагинации,
+// после чего запрашивает список записей аудита изменений данных из нижележащего репозитория.
 func (dli *DataListByInstanceInteractor) List(ctx context.Context, typeName, instanceID string, limit, offset int) ([]*domain.DataAudit, error) {
 	if err := dli.validate(typeName, instanceID, limit, offset); err != nil {
 		return nil, errs.NewBllValidateError("DataListByInstanceInteractor.List", "validate income failed", err)

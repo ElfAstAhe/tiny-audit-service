@@ -32,7 +32,7 @@ func AuditTraceIDExtractorUnaryServerInterceptor(headers ...string) grpc.UnarySe
 			}
 		}
 		if traceID == "" {
-			traceID = "unknown"
+			traceID = utils.UnknownValue
 		}
 
 		return handler(utils.WithTraceID(ctx, traceID), req)
@@ -52,7 +52,7 @@ func AuditTraceIDExtractorStreamServerInterceptor(headers ...string) grpc.Stream
 			}
 		}
 		if traceID == "" {
-			traceID = "unknown"
+			traceID = utils.UnknownValue
 		}
 
 		return handler(srv, &serverStream{

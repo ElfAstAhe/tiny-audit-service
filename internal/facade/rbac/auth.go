@@ -10,6 +10,8 @@ import (
 	"github.com/ElfAstAhe/tiny-audit-service/internal/facade/dto"
 )
 
+// AuthAudit представляет собой декоратор контроля доступа (RBAC) для фасада facade.AuthAudit,
+// перехватывающий вызовы для валидации ролей пользователя (Subject) в контексте выполнения.
 type AuthAudit struct {
 	authHelper auth.Helper
 	next       facade.AuthAudit
@@ -17,6 +19,7 @@ type AuthAudit struct {
 
 var _ facade.AuthAudit = (*AuthAudit)(nil)
 
+// NewAuthAudit создает и инициализирует новый экземпляр RBAC-декоратора AuthAudit.
 func NewAuthAudit(
 	helper auth.Helper,
 	next facade.AuthAudit,
@@ -27,6 +30,7 @@ func NewAuthAudit(
 	}
 }
 
+// Audit извлекает субъект из контекста и проверяет наличие ролей Writer или Admin перед передачей вызова на запись аудит-лога.
 func (aa *AuthAudit) Audit(ctx context.Context, data *dto.AuthAuditDTO) error {
 	// subject
 	subj, err := aa.authHelper.SubjectFromContext(ctx)
@@ -41,6 +45,7 @@ func (aa *AuthAudit) Audit(ctx context.Context, data *dto.AuthAuditDTO) error {
 	return aa.next.Audit(ctx, data)
 }
 
+// ListByPeriod извлекает субъект из контекста и проверяет наличие ролей Reader или Admin перед чтением логов за период.
 func (aa *AuthAudit) ListByPeriod(ctx context.Context, auditPeriod *dto.AuditPeriodDTO) ([]*dto.AuthAuditDTO, error) {
 	// subject
 	subj, err := aa.authHelper.SubjectFromContext(ctx)
@@ -55,6 +60,7 @@ func (aa *AuthAudit) ListByPeriod(ctx context.Context, auditPeriod *dto.AuditPer
 	return aa.next.ListByPeriod(ctx, auditPeriod)
 }
 
+// ListByUsername извлекает субъект из контекста и проверяет наличие ролей Reader или Admin перед поиском логов по имени пользователя.
 func (aa *AuthAudit) ListByUsername(ctx context.Context, auditUser *dto.AuditUserDTO) ([]*dto.AuthAuditDTO, error) {
 	// subject
 	subj, err := aa.authHelper.SubjectFromContext(ctx)

@@ -1,7 +1,9 @@
 package postgres
 
+// Константы, содержащие SQL-запросы для взаимодействия с таблицей auth_audit в СУБД PostgreSQL.
 const (
-	sqlAuthAuditFind string = `
+	// SqlAuthAuditFind содержит SQL-запрос для выборки одной записи аудита аутентификации по её уникальному идентификатору.
+	SqlAuthAuditFind string = `
 select
     id,
     source,
@@ -19,7 +21,8 @@ from
 where
     id = $1
 `
-	sqlAuthAuditList string = `
+	// SqlAuthAuditList содержит SQL-запрос для постраничной выборки всех записей аудита аутентификации.
+	SqlAuthAuditList string = `
 select
     id,
     source,
@@ -40,7 +43,8 @@ order by
 offset $2
 limit $1
 `
-	sqlAuthAuditListByPeriod string = `
+	// SqlAuthAuditListByPeriod содержит SQL-запрос для постраничной выборки записей аудита аутентификации за определенный период времени.
+	SqlAuthAuditListByPeriod string = `
 select
     id,
     source,
@@ -64,7 +68,8 @@ order by
 offset $4
 limit $3
 `
-	sqlAuthAuditListByUsername string = `
+	// SqlAuthAuditListByUsername содержит SQL-запрос для выборки записей событий аудита для конкретного пользователя.
+	SqlAuthAuditListByUsername string = `
 select
     id,
     source,
@@ -87,7 +92,8 @@ order by
 offset $3
 limit $2
 `
-	sqlAuthAuditCreate string = `
+	// SqlAuthAuditCreate содержит SQL-запрос для вставки новой записи в таблицу аудита аутентификации.
+	SqlAuthAuditCreate string = `
 insert into auth_audit (
     id,
     source,
@@ -118,7 +124,8 @@ returning
     created_at,
     updated_at
 `
-	sqlAuthAuditChange string = `
+	// SqlAuthAuditChange содержит SQL-запрос для обновления существующей записи аудита аутентификации.
+	SqlAuthAuditChange string = `
 update
     auth_audit
 set
@@ -148,14 +155,16 @@ returning
     created_at,
     updated_at
 `
-	sqlAuthAuditDelete string = `
+	// SqlAuthAuditDelete содержит SQL-запрос для удаления записи аудита аутентификации по её идентификатору.
+	SqlAuthAuditDelete string = `
 delete
 from
     auth_audit
 where
     id = $1
 `
-	sqlAuthAuditTailList string = `
+	// SqlAuthAuditTailList содержит SQL-запрос для извлечения идентификаторов старых записей, попадающих под очистку хвостов таблиц auth_audit.
+	SqlAuthAuditTailList string = `
 select
     id
 from

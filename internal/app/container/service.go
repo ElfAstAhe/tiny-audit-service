@@ -13,10 +13,13 @@ import (
 	healthPg "github.com/hellofresh/health-go/v5/checks/pgx5"
 )
 
+// InstanceHealthStatus определяет строковый идентификатор инстанса службы проверки здоровья (Health) в DI-контейнере.
 const (
 	InstanceHealthStatus string = "health-status"
 )
 
+// ServiceContainer представляет собой ленивый (lazy) DI-контейнер для конфигурации
+// и инициализации внутренних инфраструктурных служб, таких как проверки работоспособности (Health Checks).
 type ServiceContainer struct {
 	*container.BaseLazyContainer
 }
@@ -24,6 +27,7 @@ type ServiceContainer struct {
 var _ container.Container = (*ServiceContainer)(nil)
 var _ container.LazyContainer = (*ServiceContainer)(nil)
 
+// NewServiceContainer создает и инициализирует новый экземпляр ленивого контейнера служб ServiceContainer.
 func NewServiceContainer(
 	orchestrator container.Orchestrator,
 	log logger.Logger,
@@ -37,6 +41,8 @@ func NewServiceContainer(
 	}
 }
 
+// Init выполняет первичную инициализацию контейнера ServiceContainer, регистрируя провайдеры
+// и настраивая автоматические проверки доступности базы данных (PostgreSQL) в системе Health Check.
 func (sc *ServiceContainer) Init(initCtx context.Context) error {
 	// add providers
 	err := errors.Join(

@@ -6,6 +6,7 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
+// MapAuthAuditGRPCToDTO преобразует protobuf-модель AuthAudit из gRPC-слоя в объект передачи данных dto.AuthAuditDTO.
 func MapAuthAuditGRPCToDTO(authAudit *pb.AuthAudit) *dto.AuthAuditDTO {
 	if authAudit == nil {
 		return nil
@@ -27,6 +28,7 @@ func MapAuthAuditGRPCToDTO(authAudit *pb.AuthAudit) *dto.AuthAuditDTO {
 	}
 }
 
+// MapAuthAuditDTOToGRPC преобразует объект передачи данных dto.AuthAuditDTO в сгенерированную protobuf-модель pb.AuthAudit.
 func MapAuthAuditDTOToGRPC(authAudit *dto.AuthAuditDTO) *pb.AuthAudit {
 	if authAudit == nil {
 		return nil
@@ -48,6 +50,7 @@ func MapAuthAuditDTOToGRPC(authAudit *dto.AuthAuditDTO) *pb.AuthAudit {
 	}.Build()
 }
 
+// MapAuthAuditDTOsToGRPCs выполняет множественное преобразование среза объектов dto.AuthAuditDTO в срез protobuf-моделей []*pb.AuthAudit.
 func MapAuthAuditDTOsToGRPCs(authAudits []*dto.AuthAuditDTO) []*pb.AuthAudit {
 	res := make([]*pb.AuthAudit, 0, len(authAudits))
 
@@ -58,6 +61,7 @@ func MapAuthAuditDTOsToGRPCs(authAudits []*dto.AuthAuditDTO) []*pb.AuthAudit {
 	return res
 }
 
+// MapAuthAuditUserGRPCToDTO транслирует входящий gRPC-запросpb.AuthListByUsernameRequest в объект параметров dto.AuditUserDTO.
 func MapAuthAuditUserGRPCToDTO(auditUser *pb.AuthListByUsernameRequest) *dto.AuditUserDTO {
 	if auditUser == nil {
 		return nil

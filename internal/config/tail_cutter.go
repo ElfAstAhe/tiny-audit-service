@@ -7,12 +7,15 @@ import (
 	"github.com/ElfAstAhe/go-service-template/pkg/errs"
 )
 
+// TailCutterConfig объединяет настройки базового шедулера-диспетчера
+// и специфичные параметры для периодической очистки ("обрезания") старых хвостов таблиц.
 type TailCutterConfig struct {
 	*config.SchedulerDispatcherConfig `mapstructure:",squash"`
 	TailInterval                      time.Duration `mapstructure:"tail_interval" json:"tail_interval,omitempty" yaml:"tail_interval,omitempty"`
 	TailCut                           bool          `mapstructure:"tail_cut" json:"tail_cut,omitempty" yaml:"tail_cut,omitempty"`
 }
 
+// NewTailCutterConfig создает и инициализирует новый экземпляр конфигурации TailCutterConfig с заданными параметрами.
 func NewTailCutterConfig(
 	startInterval time.Duration,
 	scheduleInterval time.Duration,
@@ -37,6 +40,7 @@ func NewTailCutterConfig(
 	}
 }
 
+// NewDefaultTailCutterConfig создает экземпляр конфигурации TailCutterConfig, заполненный значениями по умолчанию.
 func NewDefaultTailCutterConfig() *TailCutterConfig {
 	return NewTailCutterConfig(
 		defaultAuthTCStartInterval,
@@ -50,6 +54,7 @@ func NewDefaultTailCutterConfig() *TailCutterConfig {
 	)
 }
 
+// Validate проверяет корректность выставленных интервалов, количества воркеров и таймаутов в структуре TailCutterConfig.
 func (tcc *TailCutterConfig) Validate() error {
 	if tcc.StartInterval <= 0 {
 		return errs.NewConfigValidateError("tail cutter", "start interval", "must be greater zero", nil)

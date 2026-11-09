@@ -11,16 +11,20 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-// Вспомогательная структура для подмены контекста в стриме
+// wrappedStream переопределяет интерфейс grpc.ServerStream, позволяя
+// безопасно подменять встроенный context.Context дочерних gRPC-потоков.
 type wrappedStream struct {
 	grpc.ServerStream
 	ctx context.Context
 }
 
+// Context возвращает текущий (в том числе кастомный или обогащенный) контекст gRPC-стрима.
 func (w *wrappedStream) Context() context.Context {
 	return w.ctx
 }
 
+// AuthExtractor представляет собой интерцептор для gRPC-сервера, выполняющий
+// извлечение, валидацию JWT-токенов из метаданных контекста и авторизацию субъектов.
 type AuthExtractor struct {
 	jwtHelper     *helper.JWTHelper
 	jwtGRPCHelper *helper.JWTGRPCHelper
@@ -30,6 +34,8 @@ type AuthExtractor struct {
 	acceptIssuers map[string]struct{}
 }
 
+// NewAuthExtractor создает и инициализирует новый экземпляр gRPC-интерцептора AuthExtractor,
+// формируя хэш-карты для быстрой проверки белых списков публичных методов и доверенных эмитентов.
 func NewAuthExtractor(
 	jwtHelper *helper.JWTHelper,
 	jwtGRPCHelper *helper.JWTGRPCHelper,
@@ -57,6 +63,8 @@ func NewAuthExtractor(
 	}
 }
 
+// UnaryServerInterceptor осуществляет перехват унарных gRPC-вызовов для извлечения JWT-токена,
+// проверки его эмитента и последующего внедрения авторизованного субъекта в контекст запроса.
 func (ae *AuthExtractor) UnaryServerInterceptor(ctx context.Context, req any, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (any, error) {
 	ae.log.Debugf("UnaryServerInterceptor start with req: [%v]", req)
 	defer ae.log.Debug("UnaryServerInterceptor finish")
@@ -93,6 +101,8 @@ func (ae *AuthExtractor) UnaryServerInterceptor(ctx context.Context, req any, in
 	return handler(secureCtx, req)
 }
 
+// StreamServerInterceptor осуществляет перехват потоковых (streaming) gRPC-вызовов, проверяя
+// авторизационные метаданные и оборачивая исходный поток для подмены контекста авторизованным субъектом.
 func (ae *AuthExtractor) StreamServerInterceptor(srv interface{}, stream grpc.ServerStream, info *grpc.StreamServerInfo, handler grpc.StreamHandler) error {
 	ae.log.Debugf("StreamServerInterceptor start: method [%v]", info.FullMethod)
 	defer ae.log.Debugf("StreamServerInterceptor finish: method [%v]", info.FullMethod)

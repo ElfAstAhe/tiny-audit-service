@@ -9,12 +9,15 @@ import (
 	"github.com/ElfAstAhe/go-service-template/pkg/logger"
 )
 
+// Константы, определяющие уникальные имена регистрируемых инстансов воркеров и слушателей в DI-контейнере.
 const (
 	InstanceAuthAuditTailCutter   string = "authAuditTailCutter"
 	InstanceDataAuditTailCutter   string = "dataAuditTailCutter"
 	InstanceLoginAttemptsListener string = "login-attempts-listener"
 )
 
+// WorkerContainer представляет собой ленивый (lazy) DI-контейнер для управления
+// жизненным циклом фоновых воркеров, слушателей очередей и планировщиков очистки хвостов таблиц.
 type WorkerContainer struct {
 	*container.BaseLazyContainer
 }
@@ -22,6 +25,7 @@ type WorkerContainer struct {
 var _ container.Container = (*WorkerContainer)(nil)
 var _ container.LazyContainer = (*WorkerContainer)(nil)
 
+// NewWorkerContainer создает и инициализирует новый экземпляр контейнера фоновых воркеров WorkerContainer.
 func NewWorkerContainer(
 	orchestrator container.Orchestrator,
 	log logger.Logger,
@@ -35,6 +39,7 @@ func NewWorkerContainer(
 	}
 }
 
+// Init выполняет первичную инициализацию контейнера, регистрируя провайдеры для всех фоновых задач.
 func (wc *WorkerContainer) Init(initCtx context.Context) error {
 	err := errors.Join(
 		wc.RegisterProvider(InstanceAuthAuditTailCutter, wc.providerAuthAuditTailCutter),

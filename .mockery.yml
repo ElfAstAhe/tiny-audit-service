@@ -40,3 +40,12 @@ packages:
   github.com/ElfAstAhe/tiny-audit-service/pkg/client/grpc:
     config:
       all: true
+  github.com/ElfAstAhe/tiny-audit-service/pkg/repository:
+    config:
+      all: true
+  github.com/ElfAstAhe/tiny-audit-service/pkg/transport/worker:
+    config:
+      all: true
+  github.com/ElfAstAhe/tiny-audit-service/pkg/usecase:
+    config:
+      all: true

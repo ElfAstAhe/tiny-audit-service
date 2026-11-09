@@ -3,6 +3,7 @@ package utils
 import (
 	"time"
 
+	"github.com/ElfAstAhe/go-service-template/pkg/utils"
 	"github.com/ElfAstAhe/tiny-audit-service/pkg/client/dto"
 )
 
@@ -11,6 +12,8 @@ import (
 type DataAuditBuilder struct {
 	instance *dto.DataAuditDTO // Underlying core data transfer object instance state payload
 }
+
+var _ utils.Builder[*dto.DataAuditDTO] = (*DataAuditBuilder)(nil)
 
 // NewDataAuditBuilder acts as a factory constructor allocating a fresh builder state holding an empty data target.
 func NewDataAuditBuilder() *DataAuditBuilder {

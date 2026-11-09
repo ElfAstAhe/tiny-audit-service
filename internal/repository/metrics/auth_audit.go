@@ -9,22 +9,28 @@ import (
 	"github.com/ElfAstAhe/tiny-audit-service/internal/domain"
 )
 
-type AuthAuditMetricsRepository struct {
-	*metrics.BaseCRUDMetricsRepository[*domain.AuthAudit, string]
+// AuthAuditRepository представляет собой декоратор репозитория, предназначенный
+// для автоматического сбора и замера бизнес-метрик операций аудита аутентификации.
+type AuthAuditRepository struct {
+	*metrics.CRUD[*domain.AuthAudit, string]
 	next domain.AuthAuditRepository
 }
 
-var _ libdom.CRUDRepository[*domain.AuthAudit, string] = (*AuthAuditMetricsRepository)(nil)
-var _ domain.AuthAuditRepository = (*AuthAuditMetricsRepository)(nil)
+var _ libdom.CRUDRepository[*domain.AuthAudit, string] = (*AuthAuditRepository)(nil)
+var _ domain.AuthAuditRepository = (*AuthAuditRepository)(nil)
 
-func NewAuthAuditMetricsRepository(next domain.AuthAuditRepository) *AuthAuditMetricsRepository {
-	return &AuthAuditMetricsRepository{
-		next:                      next,
-		BaseCRUDMetricsRepository: metrics.NewBaseCRUDMetricsRepository[*domain.AuthAudit, string]("AuthAuditRepository", next),
+// NewAuthAuditRepository создает новый экземпляр декоратора AuthAuditRepository
+// для автоматического замера метрик выполнения операций с БД.
+func NewAuthAuditRepository(next domain.AuthAuditRepository) *AuthAuditRepository {
+	return &AuthAuditRepository{
+		next: next,
+		CRUD: metrics.NewCRUD[*domain.AuthAudit, string]("AuthAuditRepository", next),
 	}
 }
 
-func (aam *AuthAuditMetricsRepository) ListByPeriod(ctx context.Context, from, till time.Time, limit, offset int) (res []*domain.AuthAudit, err error) {
+// ListByPeriod возвращает список записей аудита за указанный промежуток времени,
+// автоматически замеряя время выполнения операции и фиксируя метрики ошибок.
+func (aam *AuthAuditRepository) ListByPeriod(ctx context.Context, from, till time.Time, limit, offset int) (res []*domain.AuthAudit, err error) {
 	defer func(start time.Time) {
 		metrics.ObserveRepositoryOp(aam.GetRepositoryName(), "ListByPeriod", err, start)
 	}(time.Now())
@@ -32,7 +38,9 @@ func (aam *AuthAuditMetricsRepository) ListByPeriod(ctx context.Context, from, t
 	return aam.next.ListByPeriod(ctx, from, till, limit, offset)
 }
 
-func (aam *AuthAuditMetricsRepository) ListByUsername(ctx context.Context, username string, offset, limit int) (res []*domain.AuthAudit, err error) {
+// ListByUsername возвращает список записей аудита для конкретного пользователя,
+// автоматически замеряя время выполнения операции и фиксируя метрики ошибок.
+func (aam *AuthAuditRepository) ListByUsername(ctx context.Context, username string, offset, limit int) (res []*domain.AuthAudit, err error) {
 	defer func(start time.Time) {
 		metrics.ObserveRepositoryOp(aam.GetRepositoryName(), "ListByUsername", err, start)
 	}(time.Now())

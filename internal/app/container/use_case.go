@@ -9,20 +9,44 @@ import (
 	"github.com/ElfAstAhe/go-service-template/pkg/logger"
 )
 
+// Константы, определяющие строковые идентификаторы инстансов бизнес-сценариев (Use Cases) и Unit of Work в DI-контейнере.
 const (
-	InstanceUnitOfWork           string = "unit-of-work"
-	InstanceAuthAuditUC          string = "AuthAuditUC"
-	InstanceAuthListByPeriodUC   string = "AuthListByPeriodUC"
+	// InstanceUnitOfWork определяет имя инстанса паттерна Unit of Work для управления транзакциями.
+	InstanceUnitOfWork string = "unit-of-work"
+
+	// InstanceAuthAuditUC определяет имя инстанса UseCase регистрации событий аудита аутентификации.
+	InstanceAuthAuditUC string = "AuthAuditUC"
+
+	// InstanceAuthListByPeriodUC определяет имя инстанса UseCase получения списка логов аутентификации за период.
+	InstanceAuthListByPeriodUC string = "AuthListByPeriodUC"
+
+	// InstanceAuthListByUsernameUC определяет имя инстанса UseCase получения логов аутентификации конкретного пользователя.
 	InstanceAuthListByUsernameUC string = "AuthListByUsernameUC"
-	InstanceDataAuditUC          string = "DataAuditUC"
-	InstanceDataListByPeriodUC   string = "DataListByPeriodUC"
+
+	// InstanceDataAuditUC определяет имя инстанса UseCase регистрации событий аудита изменений данных.
+	InstanceDataAuditUC string = "DataAuditUC"
+
+	// InstanceDataListByPeriodUC определяет имя инстанса UseCase получения списка логов изменений данных за период.
+	InstanceDataListByPeriodUC string = "DataListByPeriodUC"
+
+	// InstanceDataListByInstanceUC определяет имя инстанса UseCase получения логов изменений конкретного инстанса данных.
 	InstanceDataListByInstanceUC string = "DataListByInstanceUC"
-	InstanceAuthAuditTailGetUC   string = "AuthAuditTailGetUC"
-	InstanceAuthAuditTailCutUC   string = "AuthAuditTailCutUC"
-	InstanceDataAuditTailGetUC   string = "DataAuditTailGetUC"
-	InstanceDataAuditTailCutUC   string = "DataAuditTailCutUC"
+
+	// InstanceAuthAuditTailGetUC определяет имя инстанса UseCase извлечения устаревших "хвостов" таблиц аудита аутентификации.
+	InstanceAuthAuditTailGetUC string = "AuthAuditTailGetUC"
+
+	// InstanceAuthAuditTailCutUC определяет имя инстанса UseCase удаления устаревших "хвостов" таблиц аудита аутентификации.
+	InstanceAuthAuditTailCutUC string = "AuthAuditTailCutUC"
+
+	// InstanceDataAuditTailGetUC определяет имя инстанса UseCase извлечения устаревших "хвостов" таблиц аудита данных.
+	InstanceDataAuditTailGetUC string = "DataAuditTailGetUC"
+
+	// InstanceDataAuditTailCutUC определяет имя инстанса UseCase удаления устаревших "хвостов" таблиц аудита данных.
+	InstanceDataAuditTailCutUC string = "DataAuditTailCutUC"
 )
 
+// UseCaseContainer представляет собой ленивый (lazy) DI-контейнер для конфигурации,
+// регистрации и управления жизненным циклом прикладных сценариев и интеракторов бизнес-логики (BLL).
 type UseCaseContainer struct {
 	*container.BaseLazyContainer
 }
@@ -30,6 +54,7 @@ type UseCaseContainer struct {
 var _ container.Container = (*UseCaseContainer)(nil)
 var _ container.LazyContainer = (*UseCaseContainer)(nil)
 
+// NewUseCaseContainer создает и инициализирует новый экземпляр ленивого контейнера сценариев UseCaseContainer.
 func NewUseCaseContainer(
 	orchestrator container.Orchestrator,
 	log logger.Logger,
@@ -43,6 +68,7 @@ func NewUseCaseContainer(
 	}
 }
 
+// Init выполняет первичную инициализацию контейнера UseCaseContainer, регистрируя провайдеры для Unit of Work и всех UseCase.
 func (ucc *UseCaseContainer) Init(ctx context.Context) error {
 	err := errors.Join(
 		ucc.RegisterProvider(InstanceUnitOfWork, ucc.providerUnitOfWork),

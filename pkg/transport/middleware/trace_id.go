@@ -51,7 +51,7 @@ func (ate *AuditTraceIDExtractor) Handle(next http.Handler) http.Handler {
 		}
 		// if none
 		if traceID == "" {
-			traceID = "unknown"
+			traceID = utils.UnknownValue
 		}
 		// wrap request
 		req := r.WithContext(utils.WithTraceID(r.Context(), traceID))

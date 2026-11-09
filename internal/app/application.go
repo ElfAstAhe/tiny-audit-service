@@ -11,6 +11,8 @@ import (
 	"github.com/ElfAstAhe/tiny-audit-service/internal/config"
 )
 
+// Application является главным входным компонентом микросервиса,
+// инкапсулирующим конфигурацию, логгер и оркестратор всех DI-контейнеров приложения.
 type Application struct {
 	*app.BaseApplication
 	conf *config.Config
@@ -19,6 +21,8 @@ type Application struct {
 
 var _ app.Application = (*Application)(nil)
 
+// NewApplication инициализирует функциональные опции, конструирует глобальный оркестратор,
+// монтирует полный стек слоеных DI-контейнеров инфраструктуры и возвращает инстанс Application.
 func NewApplication(opts ...Option) (*Application, error) {
 	// create instance
 	res := &Application{}
@@ -70,6 +74,8 @@ func NewApplication(opts ...Option) (*Application, error) {
 	return res, nil
 }
 
+// Init выполняет регистрацию инстанса самого приложения во внутреннем DI-контейнере и запускает
+// последовательную фазу инициализации всех зарегистрированных в оркестраторе компонентов.
 func (app *Application) Init() error {
 	appCnt, err := app.GetOrchestrator().GetContainer(container.AppContainerName)
 	if err != nil {

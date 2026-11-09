@@ -12,23 +12,30 @@ import (
 	"go.opentelemetry.io/otel/codes"
 )
 
+// AuthAuditTraceRepository представляет собой декоратор репозитория, предназначенный
+// для автоматического сбора распределенной телеметрии и трассировки операций аудита аутентификации.
 type AuthAuditTraceRepository struct {
-	*trace.BaseCRUDTraceRepository[*domain.AuthAudit, string]
+	*trace.CRUD[*domain.AuthAudit, string]
 	next domain.AuthAuditRepository
 }
 
 var _ libdom.CRUDRepository[*domain.AuthAudit, string] = (*AuthAuditTraceRepository)(nil)
 var _ domain.AuthAuditRepository = (*AuthAuditTraceRepository)(nil)
 
-func NewAuthAuditTraceRepository(next domain.AuthAuditRepository) *AuthAuditTraceRepository {
+// NewAuthAuditRepository создает новый экземпляр трассирующего декоратора AuthAuditTraceRepository.
+func NewAuthAuditRepository(next domain.AuthAuditRepository) *AuthAuditTraceRepository {
 	return &AuthAuditTraceRepository{
-		next:                    next,
-		BaseCRUDTraceRepository: trace.NewBaseCRUDTraceRepository[*domain.AuthAudit, string]("AuthAuditRepository", next),
+		next: next,
+		CRUD: trace.NewCRUD[*domain.AuthAudit, string]("AuthAuditRepository", next),
 	}
 }
 
+// ListByPeriod возвращает список записей аудита за указанный временной интервал,
+// фиксируя в атрибутах спана временные границы, лимиты, события ошибок и статус операции.
+//
+//goland:noinspection DuplicatedCode
 func (aat *AuthAuditTraceRepository) ListByPeriod(ctx context.Context, from, till time.Time, limit, offset int) ([]*domain.AuthAudit, error) {
-	ctx, span := aat.StartSpan(ctx, fmt.Sprintf("%s.ListByPeriod", aat.GetRepositoryName()))
+	repoCtx, span := aat.StartSpan(ctx, fmt.Sprintf("%s.ListByPeriod", aat.GetRepositoryName()))
 	defer span.End()
 
 	span.SetAttributes(
@@ -38,7 +45,7 @@ func (aat *AuthAuditTraceRepository) ListByPeriod(ctx context.Context, from, til
 		attribute.Int("param.offset", offset),
 	)
 
-	res, err := aat.next.ListByPeriod(ctx, from, till, limit, offset)
+	res, err := aat.next.ListByPeriod(repoCtx, from, till, limit, offset)
 	if err != nil {
 		span.AddEvent("ListByPeriod_failed")
 		span.RecordError(err)
@@ -48,8 +55,10 @@ func (aat *AuthAuditTraceRepository) ListByPeriod(ctx context.Context, from, til
 	return res, err
 }
 
+// ListByUsername возвращает список записей аудита для конкретного пользователя,
+// фиксируя имя пользователя, параметры пагинации, события ошибок и статус операции в текущем спане.
 func (aat *AuthAuditTraceRepository) ListByUsername(ctx context.Context, username string, offset, limit int) ([]*domain.AuthAudit, error) {
-	ctx, span := aat.StartSpan(ctx, fmt.Sprintf("%s.ListByUsername", aat.GetRepositoryName()))
+	repoCtx, span := aat.StartSpan(ctx, fmt.Sprintf("%s.ListByUsername", aat.GetRepositoryName()))
 	defer span.End()
 
 	span.SetAttributes(
@@ -58,7 +67,7 @@ func (aat *AuthAuditTraceRepository) ListByUsername(ctx context.Context, usernam
 		attribute.Int("param.offset", offset),
 	)
 
-	res, err := aat.next.ListByUsername(ctx, username, offset, limit)
+	res, err := aat.next.ListByUsername(repoCtx, username, offset, limit)
 	if err != nil {
 		span.AddEvent("ListByUsername_failed")
 		span.RecordError(err)

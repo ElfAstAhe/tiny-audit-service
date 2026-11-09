@@ -8,6 +8,8 @@ import (
 	"github.com/ElfAstAhe/go-service-template/pkg/errs"
 )
 
+// DataAudit представляет собой доменную модель (Entity) для хранения,
+// валидации и логирования записей аудита изменений сущностей данных.
 type DataAudit struct {
 	ID               string
 	Source           string
@@ -30,6 +32,7 @@ type DataAudit struct {
 var _ libdomain.Entity[string] = (*DataAudit)(nil)
 var _ commonAudit = (*DataAudit)(nil)
 
+// NewEmptyDataAudit возвращает новый экземпляр DataAudit с пустым слайсом изменений и предустановленными метками времени.
 func NewEmptyDataAudit() *DataAudit {
 	return &DataAudit{
 		Values:    make([]*DataAuditValue, 0),
@@ -38,18 +41,22 @@ func NewEmptyDataAudit() *DataAudit {
 	}
 }
 
+// GetID возвращает уникальный строковый идентификатор текущей записи аудита данных.
 func (da *DataAudit) GetID() string {
 	return da.ID
 }
 
+// SetID принудительно устанавливает уникальный строковый идентификатор для текущей записи аудита данных.
 func (da *DataAudit) SetID(id string) {
 	da.ID = id
 }
 
+// IsExists проверяет, была ли данная сущность уже сохранена в базе данных (имеет ли она заполненный ID).
 func (da *DataAudit) IsExists() bool {
 	return da.ID != ""
 }
 
+// ValidateCreate осуществляет проверку бизнес-правил доменного слоя и вложенных значений полей, необходимых для создания записи.
 func (da *DataAudit) ValidateCreate() error {
 	if da.ID != "" {
 		return errs.NewBllValidateError("DataAudit.ValidateCreate", "id must be empty", nil)
@@ -71,6 +78,7 @@ func (da *DataAudit) ValidateCreate() error {
 	return nil
 }
 
+// ValidateChange осуществляет проверку бизнес-правил доменного слоя и вложенных значений полей, необходимых для обновления записи.
 func (da *DataAudit) ValidateChange() error {
 	if da.ID == "" {
 		return errs.NewBllValidateError("DataAudit.ValidateChange", "id must not be empty", nil)
@@ -92,6 +100,7 @@ func (da *DataAudit) ValidateChange() error {
 	return nil
 }
 
+// BeforeCreate выполняет хук жизненного цикла перед сохранением: генерирует UUIDv7 и выставляет метки времени.
 func (da *DataAudit) BeforeCreate() error {
 	if err := libdomain.AssignUUIDv7(da); err != nil {
 		return errs.NewBllError("DataAudit.BeforeCreate", "default before create failed", err)
@@ -105,36 +114,44 @@ func (da *DataAudit) BeforeCreate() error {
 	return nil
 }
 
+// BeforeChange выполняет хук жизненного цикла перед обновлением сущности, актуализируя метку времени UpdatedAt.
 func (da *DataAudit) BeforeChange() error {
 	da.UpdatedAt = time.Now()
 
 	return nil
 }
 
+// GetSource возвращает наименование компонента-источника события изменения данных.
 func (da *DataAudit) GetSource() string {
 	return da.Source
 }
 
+// GetEventDate возвращает точную дату и время фиксации события мутации данных.
 func (da *DataAudit) GetEventDate() time.Time {
 	return da.EventDate
 }
 
+// GetEvent возвращает строковый маркер типа события изменения данных (create/change/remove).
 func (da *DataAudit) GetEvent() string {
 	return da.Event
 }
 
+// GetStatus возвращает статус завершения операции (success/fail).
 func (da *DataAudit) GetStatus() string {
 	return da.Status
 }
 
+// GetRequestID возвращает сквозной идентификатор HTTP/gRPC запроса.
 func (da *DataAudit) GetRequestID() string {
 	return da.RequestID
 }
 
+// GetTraceID возвращает идентификатор распределенной трассировки OpenTelemetry.
 func (da *DataAudit) GetTraceID() string {
 	return da.TraceID
 }
 
+// GetUsername возвращает имя пользователя, совершившего изменение.
 func (da *DataAudit) GetUsername() string {
 	return da.Username
 }

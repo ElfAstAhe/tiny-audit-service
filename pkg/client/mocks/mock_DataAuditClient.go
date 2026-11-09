@@ -48,16 +48,16 @@ func (_m *MockDataAuditClient) EXPECT() *MockDataAuditClient_Expecter {
 }
 
 // Audit provides a mock function for the type MockDataAuditClient
-func (_mock *MockDataAuditClient) Audit(data *dto.DataAuditDTO) error {
-	ret := _mock.Called(data)
+func (_mock *MockDataAuditClient) Audit(ctx context.Context, data *dto.DataAuditDTO) error {
+	ret := _mock.Called(ctx, data)
 
 	if len(ret) == 0 {
 		panic("no return value specified for Audit")
 	}
 
 	var r0 error
-	if returnFunc, ok := ret.Get(0).(func(*dto.DataAuditDTO) error); ok {
-		r0 = returnFunc(data)
+	if returnFunc, ok := ret.Get(0).(func(context.Context, *dto.DataAuditDTO) error); ok {
+		r0 = returnFunc(ctx, data)
 	} else {
 		r0 = ret.Error(0)
 	}
@@ -70,19 +70,25 @@ type MockDataAuditClient_Audit_Call struct {
 }
 
 // Audit is a helper method to define mock.On call
+//   - ctx context.Context
 //   - data *dto.DataAuditDTO
-func (_e *MockDataAuditClient_Expecter) Audit(data any) *MockDataAuditClient_Audit_Call {
-	return &MockDataAuditClient_Audit_Call{Call: _e.mock.On("Audit", data)}
+func (_e *MockDataAuditClient_Expecter) Audit(ctx any, data any) *MockDataAuditClient_Audit_Call {
+	return &MockDataAuditClient_Audit_Call{Call: _e.mock.On("Audit", ctx, data)}
 }
 
-func (_c *MockDataAuditClient_Audit_Call) Run(run func(data *dto.DataAuditDTO)) *MockDataAuditClient_Audit_Call {
+func (_c *MockDataAuditClient_Audit_Call) Run(run func(ctx context.Context, data *dto.DataAuditDTO)) *MockDataAuditClient_Audit_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		var arg0 *dto.DataAuditDTO
+		var arg0 context.Context
 		if args[0] != nil {
-			arg0 = args[0].(*dto.DataAuditDTO)
+			arg0 = args[0].(context.Context)
+		}
+		var arg1 *dto.DataAuditDTO
+		if args[1] != nil {
+			arg1 = args[1].(*dto.DataAuditDTO)
 		}
 		run(
 			arg0,
+			arg1,
 		)
 	})
 	return _c
@@ -93,7 +99,7 @@ func (_c *MockDataAuditClient_Audit_Call) Return(err error) *MockDataAuditClient
 	return _c
 }
 
-func (_c *MockDataAuditClient_Audit_Call) RunAndReturn(run func(data *dto.DataAuditDTO) error) *MockDataAuditClient_Audit_Call {
+func (_c *MockDataAuditClient_Audit_Call) RunAndReturn(run func(ctx context.Context, data *dto.DataAuditDTO) error) *MockDataAuditClient_Audit_Call {
 	_c.Call.Return(run)
 	return _c
 }

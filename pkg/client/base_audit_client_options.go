@@ -24,7 +24,7 @@ type BaseAuditClientOption[D any] func(options *BaseAuditClientOptions[D])
 // BaseAuditClientOptions содержит конфигурационные параметры для базового клиента аудита.
 // Использует generic-тип D для определения структуры передаваемых данных аудита.
 type BaseAuditClientOptions[D any] struct {
-	Pool          *worker.BasePoolOptions[D]
+	Pool          *worker.BoundedPoolOptions[D]
 	TokenProvider auth.TokenProvider
 	AuditAction   AuditAction[D]
 }
@@ -33,7 +33,7 @@ type BaseAuditClientOptions[D any] struct {
 // с заполненными значениями по умолчанию.
 func NewBaseAuditClientOptions[D any]() *BaseAuditClientOptions[D] {
 	res := &BaseAuditClientOptions[D]{
-		Pool: worker.NewBasePoolOptions[D](),
+		Pool: worker.NewBoundedPoolOptions[D](),
 	}
 	res.Pool.WorkerCount = DefaultWorkerCount
 	res.Pool.DataCapacity = DefaultDataCapacity

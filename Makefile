@@ -122,7 +122,7 @@ run: build ## Собрать проект и запустить бинарник
 		--login-attempts-receiver-kafka-shutdown-timeout "3s" \
 		--login-attempts-receiver-kafka-min-bytes "1024" \
 		--login-attempts-receiver-kafka-max-bytes "10000000" \
-		--login-attempts-receiver-kafka-max-wait "500ms" \
+		--login-attempts-receiver-kafka-max-wait "5s" \
 		--login-attempts-receiver-kafka-heartbeat-interval "3s" \
 		--login-attempts-receiver-kafka-session-timeout "30s" \
 		--login-attempts-receiver-kafka-rebalance-timeout "45s" \
@@ -223,7 +223,7 @@ run-kafka: build ## Собрать проект и запустить бинар
 		--login-attempts-receiver-kafka-shutdown-timeout "3s" \
 		--login-attempts-receiver-kafka-min-bytes "1024" \
 		--login-attempts-receiver-kafka-max-bytes "10000000" \
-		--login-attempts-receiver-kafka-max-wait "500ms" \
+		--login-attempts-receiver-kafka-max-wait "5s" \
 		--login-attempts-receiver-kafka-heartbeat-interval "3s" \
 		--login-attempts-receiver-kafka-session-timeout "30s" \
 		--login-attempts-receiver-kafka-rebalance-timeout "45s" \

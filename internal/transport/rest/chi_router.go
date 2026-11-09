@@ -22,12 +22,14 @@ import (
 	swagh "github.com/swaggo/http-swagger"
 )
 
+// AppChiRouter реализует интерфейс libhttp.Router, инкапсулируя мультиплексор chi.Mux,
+// системные мидлвари, эндпоинты проверки здоровья, метрики, Swagger и доменные роуты.
 type AppChiRouter struct {
 	router          *chi.Mux
 	log             logger.Logger
 	config          *config.Config
 	health          *health.Health
-	healthz         libhttp.HealthzFunc
+	livez           libhttp.LivezFunc
 	readyz          libhttp.ReadyzFunc
 	authAuditFacade facade.AuthAudit
 	dataAuditFacade facade.DataAudit
@@ -35,6 +37,8 @@ type AppChiRouter struct {
 
 var _ libhttp.Router = (*AppChiRouter)(nil)
 
+// NewAppRouter инициализирует конфигурационные опции роутера, проводит валидацию
+// зависимостей и возвращает настроенный экземпляр структуры AppChiRouter.
 func NewAppRouter(opts ...Option) (*AppChiRouter, error) {
 	options := &AppRouterOptions{}
 
@@ -54,7 +58,7 @@ func NewAppRouter(opts ...Option) (*AppChiRouter, error) {
 		options.JWTHTTPHelper,
 		options.AuthHelper,
 		options.Health,
-		options.Healthz,
+		options.Livez,
 		options.Readyz,
 		options.AuthAuditFacade,
 		options.DataAuditFacade,
@@ -68,7 +72,7 @@ func newAppChiRouter(
 	jwtHTTPHelper *helper.JWTHTTPHelper,
 	authHelper auth.Helper,
 	health *health.Health,
-	healthz libhttp.HealthzFunc,
+	livez libhttp.LivezFunc,
 	readyz libhttp.ReadyzFunc,
 	authAuditFacade facade.AuthAudit,
 	dataAuditFacade facade.DataAudit,
@@ -78,7 +82,7 @@ func newAppChiRouter(
 		log:             logger.GetLogger("app-chi-router"),
 		config:          config,
 		health:          health,
-		healthz:         healthz,
+		livez:           livez,
 		readyz:          readyz,
 		authAuditFacade: authAuditFacade,
 		dataAuditFacade: dataAuditFacade,
@@ -107,6 +111,7 @@ func newAppChiRouter(
 	return res
 }
 
+// GetRouter возвращает нижележащий сконфигурированный обработчик http.Handler (chi.Mux) для запуска HTTP-сервера.
 func (cr *AppChiRouter) GetRouter() http.Handler {
 	return cr.router
 }
@@ -154,7 +159,7 @@ func (cr *AppChiRouter) setupMiddleware(
 			libhttp.NewPathMatcher(http.MethodGet, "/metrics", "^/metrics.*$"),
 			libhttp.NewPathMatcher(http.MethodGet, "/swagger", "^/swagger.*$"),
 			libhttp.NewPathMatcher(http.MethodGet, "/status", "^/status.*$"),
-			libhttp.NewPathMatcher(http.MethodGet, "/healthz", "^/healthz.*$"),
+			libhttp.NewPathMatcher(http.MethodGet, "/livez", "^/livez.*$"),
 			libhttp.NewPathMatcher(http.MethodGet, "/readyz", "^/readyz.*$"),
 			libhttp.NewPathMatcher(http.MethodGet, "/debug", "^/debug.*$"),
 			libhttp.NewPathMatcher(http.MethodGet, "/config", "^/config.*$"),
@@ -167,7 +172,7 @@ func (cr *AppChiRouter) setupMiddleware(
 
 func (cr *AppChiRouter) setupRoutes() {
 	// health check
-	cr.router.Get("/healthz", cr.getHealthz)
+	cr.router.Get("/livez", cr.getLivez)
 	// readiness check
 	cr.router.Get("/readyz", cr.getReadyz)
 	// config (debug)
@@ -194,25 +199,6 @@ func (cr *AppChiRouter) setupRoutes() {
 					r.Post("/instance", cr.postAPIV1AuditDataInstance)
 				})
 			})
-			/*
-			   // crud, может и не нужен...
-			   // /auth
-			   r.Route("/auth", func(r chi.Router) {
-			       r.Get("/{id}", cr.getAPIV1AuthAudit)
-			       r.Get("/", cr.getAPIV1AuthAudits)
-			       r.Post("/", cr.postAPIV1Auth)
-			       r.Put("/{id}", cr.putAPIV1Auth)
-			       r.Delete("/{id}", cr.deleteAPIV1Auth)
-			   })
-			   // /data
-			   r.Route("/data", func(r chi.Router) {
-			       r.Get("/{id}", cr.getAPIV1DataAudit)
-			       r.Get("/", cr.getAPIV1DataAudits)
-			       r.Post("/", cr.postAPIV1DataAudit)
-			       r.Put("/{id}", cr.putAPIV1DataAudit)
-			       r.Delete("/{id}", cr.deleteAPIV1DataAudit)
-			   })
-			*/
 		})
 	})
 }
