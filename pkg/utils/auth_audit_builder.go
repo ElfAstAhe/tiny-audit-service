@@ -3,12 +3,15 @@ package utils
 import (
 	"time"
 
+	"github.com/ElfAstAhe/go-service-template/pkg/utils"
 	"github.com/ElfAstAhe/tiny-audit-service/pkg/client/dto"
 )
 
 type AuthAuditBuilder struct {
 	instance *dto.AuthAuditDTO
 }
+
+var _ utils.Builder[*dto.AuthAuditDTO] = (*AuthAuditBuilder)(nil)
 
 func NewAuthAuditBuilder() *AuthAuditBuilder {
 	return &AuthAuditBuilder{

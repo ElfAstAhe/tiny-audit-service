@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"strings"
 	"time"
 
 	"github.com/ElfAstAhe/go-service-template/pkg/db"
@@ -71,6 +72,15 @@ func (aa *AuthAudit) GetTail(ctx context.Context, tailDate time.Time) ([]string,
 	}
 
 	return libdom.MapEntitiesToIDs(res), nil
+}
+
+func (aa *AuthAudit) CutTail(ctx context.Context, id string) error {
+	// fail fast
+	if strings.TrimSpace(id) == "" {
+		return errs.NewInvalidArgumentError("ID", "id can not be empty")
+	}
+
+	return aa.Delete(ctx, id)
 }
 
 func (aa *AuthAudit) ListByPeriod(ctx context.Context, from, till time.Time, limit, offset int) ([]*domain.AuthAudit, error) {

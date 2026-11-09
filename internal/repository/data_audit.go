@@ -75,6 +75,15 @@ func (da *DataAudit) GetTail(ctx context.Context, tailDate time.Time) ([]string,
 	return libdom.MapEntitiesToIDs(res), nil
 }
 
+func (da *DataAudit) CutTail(ctx context.Context, id string) error {
+	// fail fast
+	if strings.TrimSpace(id) == "" {
+		return errs.NewInvalidArgumentError("ID", "id can not be empty")
+	}
+
+	return da.Delete(ctx, id)
+}
+
 func (da *DataAudit) ListByPeriod(ctx context.Context, from, till time.Time, limit, offset int) ([]*domain.DataAudit, error) {
 	// fail fast
 	if err := da.validateListByPeriod(from, till, limit, offset); err != nil {
