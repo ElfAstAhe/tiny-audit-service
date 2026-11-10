@@ -90,7 +90,7 @@ func (ucc *UseCaseContainer) providerAuthAuditTailGetUC() (any, error) {
 		return nil, errs.NewContainerError(ucc.GetName(), "provider: retrieve instance failed", err)
 	}
 
-	return libextuc.NewTailGetUseCase[string](tailRepoInst), nil
+	return libextuc.NewTailGet[string](tailRepoInst), nil
 }
 
 //goland:noinspection DuplicatedCode
@@ -104,7 +104,7 @@ func (ucc *UseCaseContainer) providerAuthAuditTailCutUC() (any, error) {
 		return nil, errs.NewContainerError(ucc.GetName(), "provider: retrieve instance failed", err)
 	}
 
-	return libextuc.NewTailCutUseCase[string](uwInst, tailRepoInst), nil
+	return libextuc.NewTailCut[string](uwInst, tailRepoInst), nil
 }
 
 func (ucc *UseCaseContainer) providerDataAuditTailGetUC() (any, error) {
@@ -113,7 +113,7 @@ func (ucc *UseCaseContainer) providerDataAuditTailGetUC() (any, error) {
 		return nil, errs.NewContainerError(ucc.GetName(), "provider: retrieve instance failed", err)
 	}
 
-	return libextuc.NewTailGetUseCase[string](tailRepoInst), nil
+	return libextuc.NewTailGet[string](tailRepoInst), nil
 }
 
 //goland:noinspection DuplicatedCode
@@ -127,5 +127,5 @@ func (ucc *UseCaseContainer) providerDataAuditTailCutUC() (any, error) {
 		return nil, errs.NewContainerError(ucc.GetName(), "provider: retrieve instance failed", err)
 	}
 
-	return libextuc.NewTailCutUseCase[string](uwInst, tailRepoInst), nil
+	return libextuc.NewTailCut[string](uwInst, tailRepoInst), nil
 }
