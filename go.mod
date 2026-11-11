@@ -4,7 +4,7 @@ go 1.26.0
 
 require (
 	github.com/Azure/go-amqp v1.7.0
-	github.com/ElfAstAhe/go-service-template v0.0.130
+	github.com/ElfAstAhe/go-service-template v0.0.131
 	github.com/ElfAstAhe/tiny-auth-service v0.0.37
 	github.com/go-chi/chi/v5 v5.5.0
 	github.com/go-openapi/errors v0.22.9
@@ -16,7 +16,7 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/hellofresh/health-go/v5 v5.5.5
 	github.com/jackc/pgx/v5 v5.12.0
-	github.com/pressly/goose/v3 v3.29.0
+	github.com/pressly/goose/v3 v3.30.0
 	github.com/prometheus/client_golang v1.25.0
 	github.com/riandyrn/otelchi v0.12.3
 	github.com/spf13/pflag v1.1.0
