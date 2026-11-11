@@ -19,7 +19,6 @@ type AuditCRUDOptions[E pkgdom.AuditableEntity[ID], O libextdom.Outbox[ID], ID c
 	Source          string
 	Next            libdom.CRUDRepository[E, ID]
 	AuditableMapper AuditableMapperFunc[E, ID]
-	PayloadBuilder  OutboxPayloadBuilderFunc
 	OutboxBuilder   OutboxBuilderFunc[O, ID]
 	OutboxRepo      libextdom.OutboxRepository[O, ID]
 }
@@ -36,9 +35,6 @@ func (aco *AuditCRUDOptions[E, O, ID]) Validate() error {
 	}
 	if utils.IsNil(aco.Next) {
 		return errs.NewAuditError("AuditCRUDOptions[E, O, ID].Validate", "next repository required", nil)
-	}
-	if utils.IsNil(aco.PayloadBuilder) {
-		return errs.NewAuditError("AuditCRUDOptions[E, O, ID].Validate", "payload builder required", nil)
 	}
 	if utils.IsNil(aco.OutboxBuilder) {
 		return errs.NewAuditError("AuditCRUDOptions[E, O, ID].Validate", "outbox builder required", nil)
@@ -69,13 +65,6 @@ func WithAuditNext[E pkgdom.AuditableEntity[ID], O libextdom.Outbox[ID], ID comp
 func WithAuditAuditableMapper[E pkgdom.AuditableEntity[ID], O libextdom.Outbox[ID], ID comparable](mapper AuditableMapperFunc[E, ID]) AuditCRUDOption[E, O, ID] {
 	return func(options *AuditCRUDOptions[E, O, ID]) {
 		options.AuditableMapper = mapper
-	}
-}
-
-// WithAuditPayloadBuilder возвращает опцию для передачи конструктора полезной нагрузки (payload) сообщения Outbox.
-func WithAuditPayloadBuilder[E pkgdom.AuditableEntity[ID], O libextdom.Outbox[ID], ID comparable](builder OutboxPayloadBuilderFunc) AuditCRUDOption[E, O, ID] {
-	return func(options *AuditCRUDOptions[E, O, ID]) {
-		options.PayloadBuilder = builder
 	}
 }
 

@@ -17,11 +17,8 @@ import (
 // AuditableMapperFunc определяет сигнатуру функции маппинга сущности репозитория в интерфейс аудита pkgdom.Auditable.
 type AuditableMapperFunc[E libdom.Entity[ID], ID comparable] func(entity E) (pkgdom.Auditable, error)
 
-// OutboxPayloadBuilderFunc определяет сигнатуру функции сериализации произвольных данных в бинарную полезную нагрузку для Transactional Outbox.
-type OutboxPayloadBuilderFunc func(data any) ([]byte, error)
-
 // OutboxBuilderFunc определяет сигнатуру функции конструирования сущности domain.Outbox.
-type OutboxBuilderFunc[O libextdom.Outbox[ID], ID comparable] func(ctx context.Context, payload []byte) (O, error)
+type OutboxBuilderFunc[O libextdom.Outbox[ID], ID comparable] func(ctx context.Context, builder *pkgutl.DataAuditBuilder) (O, error)
 
 // AuditCRUD представляет собой универсальный (generic) декоратор CRUD-репозитория, перехватывающий
 // операции изменения данных для генерации и сохранения записей аудита через паттерн Transactional Outbox.
@@ -29,7 +26,6 @@ type AuditCRUD[E pkgdom.AuditableEntity[ID], O libextdom.Outbox[ID], ID comparab
 	next            libdom.CRUDRepository[E, ID]
 	source          string
 	auditableMapper AuditableMapperFunc[E, ID]
-	payloadBuilder  OutboxPayloadBuilderFunc
 	outboxBuilder   OutboxBuilderFunc[O, ID]
 	outboxRepo      libextdom.OutboxRepository[O, ID]
 	nilInstance     E
@@ -53,7 +49,6 @@ func NewAuditCRUD[E pkgdom.AuditableEntity[ID], O libextdom.Outbox[ID], ID compa
 		source:          opts.Source,
 		next:            opts.Next,
 		auditableMapper: opts.AuditableMapper,
-		payloadBuilder:  opts.PayloadBuilder,
 		outboxBuilder:   opts.OutboxBuilder,
 		outboxRepo:      opts.OutboxRepo,
 	}, nil
@@ -205,17 +200,8 @@ func (acr *AuditCRUD[E, O, ID]) builder(ctx context.Context, auditEntity pkgdom.
 }
 
 func (acr *AuditCRUD[E, O, ID]) audit(ctx context.Context, builder *pkgutl.DataAuditBuilder) error {
-	// audit data
-	auditDTO := builder.Build()
-
-	// outbox payload
-	payload, err := acr.payloadBuilder(auditDTO)
-	if err != nil {
-		return pkgerrs.NewAuditError("AuditCRUD[E, ID].buildPayload", "unable to build audit payload", err)
-	}
-
 	// outbox
-	entity, err := acr.outboxBuilder(ctx, payload)
+	entity, err := acr.outboxBuilder(ctx, builder)
 	if err != nil {
 		return pkgerrs.NewAuditError("AuditCRUD[E, ID].audit", "build outbox entity failed", err)
 	}
