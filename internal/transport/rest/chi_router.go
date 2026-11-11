@@ -122,10 +122,19 @@ func (cr *AppChiRouter) setupMiddleware(
 	authHelper auth.Helper,
 	logger logger.Logger,
 ) {
+	// 1. CRITICAL: Recoverer must be placed at the absolute top of the stack to intercept panics from all downstream handlers.
+	cr.router.Use(middleware.Recoverer)
+
+	// 2. LOGGING: HTTPRequestLogger records every single inbound request, including those that panic or fail auth validation.
+	cr.router.Use(libmware.NewHTTPRequestLogger(logger).Handle)
+
+	// 3. TELEMETRY & OBSERVABILITY: OpenTelemetry and Prometheus catch the final HTTP execution states and write precise metrics.
 	// tracing
 	cr.router.Use(otelchi.Middleware(cr.config.Telemetry.ServiceName, otelchi.WithChiRoutes(cr.router)))
 	// metrics
 	cr.router.Use(libmware.MetricsMiddleware)
+
+	// 4. REQUEST IDENTIFICATION: Correlation tokens propagation for end-to-end distributed tracking.
 	// requestID
 	cr.router.Use(middleware.RequestID)
 	// requestID (own implementation)
@@ -136,11 +145,11 @@ func (cr *AppChiRouter) setupMiddleware(
 	cr.router.Use(pkgmware.NewDefaultAuditRequestIDExtractor().Handle)
 	// audit trace id
 	cr.router.Use(pkgmware.NewDefaultAuditTraceIDExtractor().Handle)
-	// realIP
-	//	cr.router.Use(middleware.RealIP)
+
+	// 5. NETWORKING CORE: Real IP extraction boundaries.
 	cr.router.Use(libmware.NewDefaultRealIPExtractor().Handler)
-	// recoverer
-	cr.router.Use(middleware.Recoverer)
+
+	// 6. RESOURCE BUDGETING & PROTECTION: Network stream limits and defensive runtime constraints.
 	// timeout
 	cr.router.Use(middleware.Timeout(cr.config.HTTP.ReadTimeout))
 	// compress (add any content-types)
@@ -149,6 +158,9 @@ func (cr *AppChiRouter) setupMiddleware(
 	).Handle)
 	// decompress
 	cr.router.Use(libmware.NewDecompress(int64(cr.config.HTTP.MaxRequestBodySize), logger).Handle)
+
+	// 7. SECURITY BOUNDARY: Authentication extraction executes right before routing to core application aggregates.
+	// ROUTING OPTIMIZATION NOTICE: PathMatchers match regex rules against raw endpoint patterns securely.
 	// jwt auth extractor - extract user info from token
 	cr.router.Use(appmware.NewAuthExtractor(
 		jwtHelper,
@@ -166,8 +178,6 @@ func (cr *AppChiRouter) setupMiddleware(
 		}),
 		cr.config.App.AcceptTokenIssuers,
 	).Handle)
-	// income/outcome logger
-	cr.router.Use(libmware.NewHTTPRequestLogger(logger).Handle)
 }
 
 func (cr *AppChiRouter) setupRoutes() {
