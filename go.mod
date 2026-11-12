@@ -4,7 +4,7 @@ go 1.26.0
 
 require (
 	github.com/Azure/go-amqp v1.7.0
-	github.com/ElfAstAhe/go-service-template v0.0.131
+	github.com/ElfAstAhe/go-service-template v0.0.132
 	github.com/ElfAstAhe/tiny-auth-service v0.0.37
 	github.com/go-chi/chi/v5 v5.5.0
 	github.com/go-openapi/errors v0.22.9
@@ -15,7 +15,8 @@ require (
 	github.com/golang-jwt/jwt/v5 v5.3.1
 	github.com/google/uuid v1.6.0
 	github.com/hellofresh/health-go/v5 v5.5.5
-	github.com/jackc/pgx/v5 v5.12.0
+	github.com/jackc/pgx/v5 v5.13.0
+	github.com/pelletier/go-toml/v2 v2.4.3
 	github.com/pressly/goose/v3 v3.30.0
 	github.com/prometheus/client_golang v1.25.0
 	github.com/riandyrn/otelchi v0.12.3
@@ -25,6 +26,7 @@ require (
 	github.com/swaggo/http-swagger v1.3.4
 	github.com/swaggo/swag v1.16.6
 	go.opentelemetry.io/otel v1.47.0
+	go.yaml.in/yaml/v3 v3.0.6
 	google.golang.org/grpc v1.85.0
 	google.golang.org/protobuf v1.36.12
 )
@@ -64,7 +66,6 @@ require (
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
 	github.com/oklog/ulid/v2 v2.1.2 // indirect
 	github.com/pandatix/go-abnf v0.5.5 // indirect
-	github.com/pelletier/go-toml/v2 v2.4.3 // indirect
 	github.com/pierrec/lz4/v4 v4.1.33 // indirect
 	github.com/prometheus/client_model v0.6.3 // indirect
 	github.com/prometheus/common v0.73.1 // indirect
@@ -89,8 +90,7 @@ require (
 	go.opentelemetry.io/proto/otlp v1.11.1 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	go.uber.org/zap v1.28.0 // indirect
-	go.yaml.in/yaml/v3 v3.0.6 // indirect
-	golang.org/x/crypto v0.58.0 // indirect
+	golang.org/x/crypto v0.59.0 // indirect
 	golang.org/x/mod v0.43.0 // indirect
 	golang.org/x/net v0.62.0 // indirect
 	golang.org/x/sync v0.25.0 // indirect
