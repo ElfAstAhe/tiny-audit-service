@@ -29,7 +29,7 @@ func BuildTOMLPayload(data any) ([]byte, error) {
 // buildPayload проверяет входные данные на nil и выполняет их сериализацию с помощью переданной функции marshaller.
 func buildPayload(data any, marshaller func(any) ([]byte, error)) ([]byte, error) {
 	if utils.IsNil(data) {
-		return nil, errs.NewInvalidArgumentError("data", "required")
+		return nil, errs.NewInvalidArgumentError("data", "is required")
 	}
 
 	res, err := marshaller(data)
